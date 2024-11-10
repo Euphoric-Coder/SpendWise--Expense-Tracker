@@ -54,7 +54,9 @@ const DashboardLayout = ({ children }) => {
       {/* Main Content */}
       <div className="flex-1 md:ml-72">
         <DashboardHeader />
-        <div className="p-6">{children}</div>
+        <div className="p-6 bg-gradient-to-b from-white via-blue-50 to-indigo-50 rounded-3xl shadow-xl min-h-screen">
+          {children}
+        </div>
       </div>
     </div>
   );
