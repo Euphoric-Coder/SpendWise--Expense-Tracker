@@ -2,11 +2,13 @@ import React from "react";
 import CountUp from "react-countup";
 
 const BudgetItem = ({ budget }) => {
-  const formattedCurrency = new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    minimumFractionDigits: 2, // Adjust as needed
-  }).format(budget.amount);
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      minimumFractionDigits: 2, // Adjust as needed
+    }).format(amount);
+  };
 
   return (
     <div className="p-5 border-2 rounded-3xl bg-gradient-to-b from-white via-blue-50 to-indigo-50 shadow-lg hover:shadow-xl transition-transform transform hover:scale-105 cursor-pointer">
@@ -25,17 +27,17 @@ const BudgetItem = ({ budget }) => {
           </div>
         </div>
         <h2 className="font-bold text-lg text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-teal-500 to-purple-500">
-          {formattedCurrency}
+          {formatCurrency(budget.amount)}
         </h2>
       </div>
 
       <div className="mt-5">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-xs text-gray-500">
-            Rs. {budget.totalSpend ? budget.totalSpend : 0} Spent
+            {formatCurrency(budget.totalSpend ? budget.totalSpend : 0)} Spent
           </h2>
           <h2 className="text-xs text-gray-500">
-            Rs. {budget.amount - budget.totalSpend} Remaining
+            {formatCurrency(budget.amount - budget.totalSpend)} Remaining
           </h2>
         </div>
         <div className="w-full bg-gray-300 h-2 rounded-full">
