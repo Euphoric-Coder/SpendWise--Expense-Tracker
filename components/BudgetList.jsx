@@ -7,6 +7,7 @@ import { eq, getTableColumns, sql } from "drizzle-orm";
 import { Budgets, Expenses } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import BudgetItem from "./BudgetItem";
+import { Skeleton } from "./ui/skeleton";
 const BudgetList = () => {
 
   const [BudgetList, setBudgetList] = useState([])
@@ -24,17 +25,26 @@ const BudgetList = () => {
     }).from(Budgets)
     .leftJoin(Expenses, eq(Budgets.id, Expenses.budgetId))
     .where(eq(Budgets.createdBy,user?.primaryEmailAddress?.emailAddress))
-    .groupBy(Budgets.id);
-
+    .groupBy(Budgets.id)
     setBudgetList(result)
   }
   return (
     <div className="mt-5">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-        <CreateBudget />
-        {BudgetList.map((budget, index) => (
-          <BudgetItem key={index} budget={budget} />
-        ))}
+        <CreateBudget refreshData={() => getBudgetList()} />
+        {BudgetList?.length > 0
+          ? BudgetList.map((budget, index) => (
+              <BudgetItem key={index} budget={budget} />
+            ))
+          : [1, 2, 3, 4, 5, 6].map((item, index) => (
+            <div key={index}>
+              <Skeleton className="h-[145px] rounded-3xl bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 shadow-lg" />
+              <div className="mt-2 space-y-2">
+                <Skeleton className="h-4 bg-slate-300" />
+                <Skeleton className="h-4 w-[75%] bg-slate-300" />
+              </div>
+            </div>
+            ))}
       </div>
     </div>
   );

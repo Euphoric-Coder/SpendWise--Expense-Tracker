@@ -18,11 +18,12 @@ import { db } from "@/utils/dbConfig";
 import { Button } from "./ui/button";
 import { Budgets } from "@/utils/schema";
 import { Input } from "./ui/input";
+import { useRouter } from "next/navigation";
 
-const CreateBudget = () => {
+const CreateBudget = ({refreshData}) => {
   const [emojiIcon, setEmojiIcon] = useState("😀");
   const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
-
+  const router = useRouter();
   const [name, setname] = useState();
   const [amount, setamount] = useState();
 
@@ -38,6 +39,7 @@ const CreateBudget = () => {
       })
       .returning({ insertedId: Budgets.id });
     if (result) {
+      refreshData()
       toast("New Budget Created!");
     }
   };

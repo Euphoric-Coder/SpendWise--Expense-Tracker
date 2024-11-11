@@ -41,7 +41,7 @@ const BudgetItem = ({ budget }) => {
         <div className="w-full bg-gray-300 h-2 rounded-full">
           <div
             className="h-2 rounded-full bg-gradient-to-r from-purple-500 to-blue-500"
-            style={{ width: `${(budget.totalSpend / budget.amount) * 100}%` }}
+            style={{ width: `${(2000 / budget.amount) * 100}%` }}
           ></div>
         </div>
       </div>
