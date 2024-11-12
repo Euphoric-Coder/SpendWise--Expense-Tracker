@@ -34,7 +34,7 @@ const BudgetList = () => {
         <CreateBudget refreshData={() => getBudgetList()} />
         {BudgetList?.length > 0
           ? BudgetList.map((budget, index) => (
-              <BudgetItem key={index} budget={budget} />
+              <BudgetItem key={index} budget={budget} isBudget={true}/>
             ))
           : [1, 2, 3, 4, 5, 6].map((item, index) => (
             <div key={index}>

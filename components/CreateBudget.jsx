@@ -104,7 +104,7 @@ const CreateBudget = ({refreshData}) => {
         <DialogFooter className="sm:justify-start">
           <DialogClose asChild>
             <Button
-              className="mt-5 w-full rounded-2xl bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white hover:opacity-90 transition-opacity"
+              className={`mt-5 w-full rounded-2xl bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white hover:opacity-90 transition-opacity`}
               onClick={() => onCreateBudget()}
               disabled={!(name && amount)}
             >

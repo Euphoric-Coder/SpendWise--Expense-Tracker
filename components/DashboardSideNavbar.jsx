@@ -30,9 +30,9 @@ const DashboardSideNavbar = () => {
     },
     {
       id: 4,
-      name: "Upgrade",
+      name: "Feedback",
       icon: ShieldCheck,
-      path: "/dashboard/upgrade",
+      path: "/dashboard/feedback",
     },
   ];
 
@@ -56,7 +56,7 @@ const DashboardSideNavbar = () => {
             <div
               key={menu.id}
               className={`flex items-center gap-4 px-6 py-3 rounded-lg cursor-pointer transition-all duration-200 hover:bg-gradient-to-r from-teal-100 to-indigo-100 hover:shadow-md transform hover:scale-105 ${
-                path == menu.path &&
+                path == menu.path && 
                 "bg-gradient-to-r from-teal-100 to-indigo-100"
               }`}
             >
