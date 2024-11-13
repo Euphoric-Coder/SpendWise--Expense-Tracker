@@ -6,8 +6,8 @@ import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Budgets } from "@/utils/schema";
 import { db } from "@/utils/dbConfig";
-import DashboardHeader from "@/components/DashboardHeader";
-import DashboardSideNavbar from "@/components/DashboardSideNavbar";
+import DashboardHeader from "@/components/Dashboard/DashboardHeader";
+import DashboardSideNavbar from "@/components/Dashboard/DashboardSideNavbar";
 
 const DashboardLayout = ({ children }) => {
   const { user } = useUser();

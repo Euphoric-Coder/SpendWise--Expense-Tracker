@@ -1,7 +1,7 @@
 "use client";
 
 import { UserButton, useClerk } from "@clerk/nextjs";
-import { LayoutGrid, PiggyBank, ReceiptText, ShieldCheck } from "lucide-react";
+import { DollarSign, LayoutGrid, PiggyBank, ReceiptText, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -18,18 +18,24 @@ const DashboardSideNavbar = () => {
     },
     {
       id: 2,
+      name: "Income",
+      icon: DollarSign,
+      path: "/dashboard/income",
+    },
+    {
+      id: 3,
       name: "Budgets",
       icon: PiggyBank,
       path: "/dashboard/budgets",
     },
     {
-      id: 3,
+      id: 4,
       name: "Expenses",
       icon: ReceiptText,
       path: "/dashboard/expenses",
     },
     {
-      id: 4,
+      id: 5,
       name: "Feedback",
       icon: ShieldCheck,
       path: "/dashboard/feedback",

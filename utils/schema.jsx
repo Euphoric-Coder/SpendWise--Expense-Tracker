@@ -3,6 +3,7 @@ import {
   numeric,
   pgTable,
   serial,
+  uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core";
 
@@ -21,3 +22,26 @@ export const Expenses = pgTable("expenses", {
   budgetId: integer("budgetId").references(() => Budgets.id),
   createdAt: varchar("createdAt").notNull(),
 });
+
+export const Incomes = pgTable("incomes", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  amount: varchar("amount").notNull(),
+  icon: varchar("icon"),
+  createdBy: varchar("createdBy").notNull(),
+});
+
+export const Feedback = pgTable(
+  "feedback",
+  {
+    id: serial("id").primaryKey(),
+    username: varchar("username").notNull(),
+    avatar: varchar("avatar"),
+    rating: integer("rating").notNull(),
+    comments: varchar("comments"),
+    createdBy: varchar("createdBy").notNull(),
+  },
+  (feedback) => ({
+    uniqueCreatedBy: uniqueIndex("unique_created_by").on(feedback.createdBy),
+  })
+);
