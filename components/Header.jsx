@@ -5,7 +5,7 @@ import React from "react";
 import { Button } from "./ui/button";
 import { UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
-import UserMenu from "./UserButton";
+import { UserMenu } from "./UserButton";
 
 const Header = () => {
   const { user, isSignedIn } = useUser();

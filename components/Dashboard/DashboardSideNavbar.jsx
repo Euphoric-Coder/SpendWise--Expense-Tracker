@@ -5,6 +5,7 @@ import { DollarSign, LayoutGrid, PiggyBank, ReceiptText, ShieldCheck } from "luc
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { UserButtonMenu } from "../UserButton";
 
 const DashboardSideNavbar = () => {
   const { openUserProfile } = useClerk();
@@ -47,13 +48,17 @@ const DashboardSideNavbar = () => {
   return (
     <div className="h-screen p-6 border shadow-2xl bg-gradient-to-b from-white via-blue-50 to-indigo-50 rounded-3xl flex flex-col items-center space-y-8 font-mono text-gray-800">
       {/* Logo */}
-      <Image
+      {/* <Image
         src={"/logo.svg"}
         alt="Logo of SpendWise"
         width={160}
         height={100}
         className="mb-8"
-      />
+      /> */}
+      <div className="flex flex-row items-center gap-2">
+        <Image src={"/logo.png"} alt="logo" width={100} height={25} />
+        <span className="text-blue-800 font-bold text-2xl">SpendWise</span>
+      </div>
 
       {/* Menu List */}
       <div className="w-full flex flex-col space-y-3">
@@ -62,7 +67,7 @@ const DashboardSideNavbar = () => {
             <div
               key={menu.id}
               className={`flex items-center gap-4 px-6 py-3 rounded-lg cursor-pointer transition-all duration-200 hover:bg-gradient-to-r from-teal-100 to-indigo-100 hover:shadow-md transform hover:scale-105 ${
-                path == menu.path && 
+                path == menu.path &&
                 "bg-gradient-to-r from-teal-100 to-indigo-100"
               }`}
             >
@@ -79,7 +84,7 @@ const DashboardSideNavbar = () => {
       <div className="mt-auto w-full flex justify-center fixed bottom-12">
         <div className="relative mx-4 px-6 py-4 bg-gradient-to-r from-white to-indigo-50 rounded-2xl shadow-xl hover:shadow-2xl transition-transform duration-300 flex items-center gap-4 border border-transparent bg-clip-padding backdrop-filter backdrop-blur-lg">
           {/* User Avatar */}
-          <UserButton />
+          <UserButtonMenu />
 
           {/* Profile Info */}
           <div className="flex flex-col">
