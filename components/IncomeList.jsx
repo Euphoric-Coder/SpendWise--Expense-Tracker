@@ -7,10 +7,12 @@ import { useUser } from "@clerk/nextjs";
 import CreateIncomes from "./CreateIncome";
 import IncomeItem from "./IncomeItem";
 import { Skeleton } from "./ui/skeleton";
+import { getIncomelist } from "@/utils/utilities";
 
 function IncomeList() {
   const [incomelist, setIncomelist] = useState([]);
   const { user } = useUser();
+
   useEffect(() => {
     user && getIncomelist();
   }, [user]);
@@ -32,7 +34,7 @@ function IncomeList() {
 
   return (
     <div className="mt-7">
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-5">
         <CreateIncomes refreshData={() => getIncomelist()} />
         {incomelist?.length > 0
           ? incomelist.map((budget, index) => (

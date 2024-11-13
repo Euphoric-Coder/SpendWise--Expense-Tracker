@@ -24,6 +24,7 @@ import { Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const ExpensesDashboard = ({ params }) => {
   const { user } = useUser();
@@ -78,7 +79,7 @@ const ExpensesDashboard = ({ params }) => {
     <div className="p-10 bg-gradient-to-b from-white via-blue-50 to-indigo-50 rounded-3xl shadow-2xl">
       <h2 className="flex justify-between text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-bl from-purple-600 to-yellow-500 via-blue-500 mb-4">
         My Expenses
-        <span>
+        <span className="flex gap-4 items-center">
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="destructive" className="flex gap-2">
@@ -91,8 +92,9 @@ const ExpensesDashboard = ({ params }) => {
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
                   This action cannot be undone. This will permanently delete
-                  your current budget "{budgetInfo ? budgetInfo.name : ""}" along
-                  with all its expenses and remove your data from the servers.
+                  your current budget "{budgetInfo ? budgetInfo.name : ""}"
+                  along with all its expenses and remove your data from the
+                  servers.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -103,6 +105,9 @@ const ExpensesDashboard = ({ params }) => {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
+          <Link href={'/dashboard/budgets'}>
+            <Button>Goto Budgets</Button>
+          </Link>
         </span>
       </h2>
       {/* Budget Item and Skeleton Placeholder */}
@@ -114,7 +119,7 @@ const ExpensesDashboard = ({ params }) => {
         )}
         <AddExpense
           budgetId={params.id}
-          budgetAmount={budgetInfo? budgetInfo.amount : 0}
+          budgetAmount={budgetInfo ? budgetInfo.amount : 0}
           user={user}
           refreshData={() => getBudgetInfo()}
         />

@@ -1,6 +1,3 @@
-import { useUser } from "@clerk/nextjs";
-import { db } from "./dbConfig";
-import { Incomes } from "./schema";
 
 const formatCurrency = (amount) => {
   let formattedAmount;
