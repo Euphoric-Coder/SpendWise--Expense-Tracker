@@ -10,17 +10,17 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./ui/dialog";
+} from "../ui/dialog";
 import EmojiPicker from "emoji-picker-react";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { db } from "@/utils/dbConfig";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { Budgets } from "@/utils/schema";
-import { Input } from "./ui/input";
+import { Input } from "../ui/input";
 import { useRouter } from "next/navigation";
 
-const CreateBudget = ({refreshData}) => {
+const CreateBudget = ({ refreshData }) => {
   const [emojiIcon, setEmojiIcon] = useState("😀");
   const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
   const router = useRouter();
@@ -39,7 +39,7 @@ const CreateBudget = ({refreshData}) => {
       })
       .returning({ insertedId: Budgets.id });
     if (result) {
-      refreshData()
+      refreshData();
       toast("New Budget Created!");
     }
   };

@@ -1,4 +1,4 @@
-import BudgetList from "@/components/BudgetList";
+import BudgetList from "@/components/Budgets/BudgetList";
 import React from "react";
 
 const page = () => {

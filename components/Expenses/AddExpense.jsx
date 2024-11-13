@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 import { db } from "@/utils/dbConfig";
 import { Budgets, Expenses } from "@/utils/schema";
 import { toast } from "sonner";
@@ -10,10 +10,10 @@ import moment from "moment";
 import { eq, getTableColumns, sql } from "drizzle-orm";
 import { useUser } from "@clerk/nextjs";
 import { AlertCircle } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 const AddExpense = ({ budgetId, refreshData, budgetAmount }) => {
-  const {user } = useUser();
+  const { user } = useUser();
   const [name, setname] = useState();
   const [amount, setamount] = useState();
   const [overBudget, setOverBudget] = useState(false);

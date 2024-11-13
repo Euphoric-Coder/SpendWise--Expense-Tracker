@@ -8,7 +8,7 @@ import { Feedback } from "@/utils/schema";
 import { toast } from "sonner";
 import { useUser } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
-import TestimonialsCarousel from "@/components/Testimonials";
+import TestimonialsCarousel from "@/components/Feedback/Testimonials";
 
 const FeedbackForm = () => {
   const { user } = useUser();

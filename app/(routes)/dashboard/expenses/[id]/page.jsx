@@ -1,8 +1,8 @@
 "use client";
 
-import AddExpense from "@/components/AddExpense";
-import BudgetItem from "@/components/BudgetItem";
-import ExpenseTable from "@/components/ExpenseTable";
+import AddExpense from "@/components/Expenses/AddExpense";
+import BudgetItem from "@/components/Budgets/BudgetItem";
+import ExpenseTable from "@/components/Expenses/ExpenseTable";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -60,13 +60,13 @@ const ExpensesDashboard = ({ params }) => {
     setExpensesList(result);
   };
 
-  const deleteBudget=async ()=>{
+  const deleteBudget = async () => {
     const deleteExpenseItems = await db
-    .delete(Expenses)
-    .where(eq(Expenses.budgetId, params.id))
-    .returning();
+      .delete(Expenses)
+      .where(eq(Expenses.budgetId, params.id))
+      .returning();
 
-    if(deleteExpenseItems) {
+    if (deleteExpenseItems) {
       const result = await db
         .delete(Budgets)
         .where(eq(Budgets.id, params.id))
@@ -74,7 +74,7 @@ const ExpensesDashboard = ({ params }) => {
     }
     toast(`Budget "${budgetInfo.name}" has been deleted!`);
     route.replace("/dashboard/budgets");
-  }
+  };
   return (
     <div className="p-10 bg-gradient-to-b from-white via-blue-50 to-indigo-50 rounded-3xl shadow-2xl">
       <h2 className="flex justify-between text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-bl from-purple-600 to-yellow-500 via-blue-500 mb-4">
@@ -105,7 +105,7 @@ const ExpensesDashboard = ({ params }) => {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-          <Link href={'/dashboard/budgets'}>
+          <Link href={"/dashboard/budgets"}>
             <Button>Goto Budgets</Button>
           </Link>
         </span>

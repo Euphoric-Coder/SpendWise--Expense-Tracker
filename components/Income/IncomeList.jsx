@@ -6,8 +6,7 @@ import { Incomes, Expenses } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import CreateIncomes from "./CreateIncome";
 import IncomeItem from "./IncomeItem";
-import { Skeleton } from "./ui/skeleton";
-import { getIncomelist } from "@/utils/utilities";
+import { Skeleton } from "../ui/skeleton";
 
 function IncomeList() {
   const [incomelist, setIncomelist] = useState([]);
