@@ -55,4 +55,3 @@ export const UserButtonMenu = () => {
   );
 };
 
-// export default {UserMenu, UserButtonMenu};

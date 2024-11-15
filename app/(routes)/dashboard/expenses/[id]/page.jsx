@@ -20,11 +20,12 @@ import { db } from "@/utils/dbConfig";
 import { Budgets, Expenses } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import { desc, eq, getTableColumns, sql } from "drizzle-orm";
-import { Trash2 } from "lucide-react";
+import { PenBox, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import EditBudget from "@/components/Budgets/EditBudget";
 
 const ExpensesDashboard = ({ params }) => {
   const { user } = useUser();
@@ -80,6 +81,7 @@ const ExpensesDashboard = ({ params }) => {
       <h2 className="flex justify-between text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-bl from-purple-600 to-yellow-500 via-blue-500 mb-4">
         My Expenses
         <span className="flex gap-4 items-center">
+          <EditBudget budgetInfo={budgetInfo} refreshData={() => getBudgetInfo()}/>
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="destructive" className="flex gap-2">

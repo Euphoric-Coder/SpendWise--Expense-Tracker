@@ -8,6 +8,7 @@ import { Budgets } from "@/utils/schema";
 import { db } from "@/utils/dbConfig";
 import DashboardHeader from "@/components/Dashboard/DashboardHeader";
 import DashboardSideNavbar from "@/components/Dashboard/DashboardSideNavbar";
+import Loading from "@/components/Loader";
 
 const DashboardLayout = ({ children }) => {
   const { user } = useUser();
@@ -26,7 +27,8 @@ const DashboardLayout = ({ children }) => {
             eq(Budgets.createdBy, user?.primaryEmailAddress?.emailAddress)
           );
 
-        if (result?.length === 0) {
+        console.log(result?.length);
+        if (result?.length == 0) {
           router.replace("/dashboard/budgets");
         } else {
           setChecking(false); // Allow rendering if the check passes
@@ -36,12 +38,12 @@ const DashboardLayout = ({ children }) => {
       }
     };
 
-    checkUserBudgets();
+    user && checkUserBudgets();
   }, [pathname, user, router]);
 
   // Render loading state if check is still in progress
   if (checking) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (

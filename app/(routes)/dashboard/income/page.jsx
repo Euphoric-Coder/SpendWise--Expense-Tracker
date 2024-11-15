@@ -7,10 +7,10 @@ import React from "react";
 function Income() {
   return (
     <div className="p-10">
-      <div className="flex justify-between">
+      {/* <div className="flex justify-between">
         <h2 className="font-bold text-3xl">My Income Streams</h2>
         <DeleteIncome />
-      </div>
+      </div> */}
       <IncomeList />
     </div>
   );

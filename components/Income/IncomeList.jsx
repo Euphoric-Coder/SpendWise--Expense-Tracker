@@ -8,6 +8,7 @@ import { useUser } from "@clerk/nextjs";
 import CreateIncomes from "./CreateIncome";
 import IncomeItem from "./IncomeItem";
 import { Skeleton } from "../ui/skeleton";
+import DeleteIncome from "./DeleteIncome";
 
 function IncomeList() {
   const [incomelist, setIncomelist] = useState([]);
@@ -34,6 +35,10 @@ function IncomeList() {
 
   return (
     <div className="mt-7">
+      <div className="flex justify-between mb-7">
+        <h2 className="font-bold text-3xl">My Income Streams</h2>
+        <DeleteIncome incomeData={incomelist} refreshData={() => getIncomelist()}/>
+      </div>
       <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-5">
         <CreateIncomes refreshData={() => getIncomelist()} />
         {incomelist?.length > 0

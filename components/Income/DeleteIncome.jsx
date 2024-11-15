@@ -1,190 +1,140 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Button } from "../ui/button";
-import { Trash2, RefreshCw } from "lucide-react";
-import { Expenses, Incomes } from "@/utils/schema";
-import { desc, eq, getTableColumns, sql } from "drizzle-orm";
-import { useUser } from "@clerk/nextjs";
-import { db } from "@/utils/dbConfig";
+import { useState } from "react";
 import {
   Dialog,
+  DialogTrigger,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
+  DialogFooter,
+} from "@/components/ui/dialog";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../ui/tooltip";
-import { Checkbox } from "../ui/checkbox";
-import { useRouter } from "next/navigation";
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogFooter,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { eq } from "drizzle-orm";
 import { toast } from "sonner";
-import { ScrollArea } from "../ui/scroll-area";
-import { Separator } from "../ui/separator";
+import { db } from "@/utils/dbConfig";
+import { Incomes } from "@/utils/schema";
 
-const DeleteIncome = () => {
-  const [incomelist, setIncomelist] = useState([]);
-  const [selectedIncome, setSelectedIncome] = useState(null);
-  const [isCheckboxChecked, setCheckboxChecked] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const { user } = useUser();
-  const route = useRouter();
+const DeleteIncome = ({ incomeData, refreshData }) => {
+  const [selectedIncomes, setSelectedIncomes] = useState([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
 
-  useEffect(() => {
-    user && getIncomelist();
-  }, [user]);
-
-  const getIncomelist = async () => {
-    const result = await db
-      .select({
-        ...getTableColumns(Incomes),
-        totalSpend: sql`sum(${Expenses.amount})`.mapWith(Number),
-        totalItem: sql`count(${Expenses.id})`.mapWith(Number),
-      })
-      .from(Incomes)
-      .leftJoin(Expenses, eq(Incomes.id, Expenses.budgetId))
-      .where(eq(Incomes.createdBy, user?.primaryEmailAddress?.emailAddress))
-      .groupBy(Incomes.id)
-      .orderBy(desc(Incomes.id));
-    setIncomelist(result);
-  };
-
-  const handleDeleteClick = (income) => {
-    setSelectedIncome(income);
-  };
-
-  // reload the browser when dialog is closed
-  const handleDialogClose = (isOpen) => {
-    setDialogOpen(isOpen);
-    if(isOpen === false) {
-      location.reload()
-    }
+  const handleCheckboxChange = (incomeId) => {
+    setSelectedIncomes((prev) =>
+      prev.includes(incomeId)
+        ? prev.filter((id) => id !== incomeId)
+        : [...prev, incomeId]
+    );
   };
 
   const confirmDelete = async () => {
-    if (isCheckboxChecked && selectedIncome) {
-      const incomeName = selectedIncome.name
-      await db.delete(Incomes).where(eq(Incomes.id, selectedIncome.id));
-      setCheckboxChecked(false);
-      toast.success(`Income "${incomeName}" Deleted Successfuly`);
+    try {
+      const deletedIncomeNames = [];
+
+      for (const incomeId of selectedIncomes) {
+        const income = incomeData.find((item) => item.id === incomeId);
+        await db.delete(Incomes).where(eq(Incomes.id, income.id)).returning();
+        deletedIncomeNames.push(income?.name);
+      }
+
+      setSelectedIncomes([]);
+      setIsAlertOpen(false);
+      setIsDialogOpen(false); // Close the main dialog
+      refreshData();
+
+      toast.success(
+        `The following incomes were deleted successfully: ${deletedIncomeNames.join(
+          ", "
+        )}`
+      );
+    } catch (error) {
+      toast.error("Failed to delete selected incomes");
     }
-    getIncomelist()
   };
 
+  const selectedIncomeNames = selectedIncomes
+    .map(
+      (incomeId) => incomeData.find((income) => income.id === incomeId)?.name
+    )
+    .filter(Boolean);
+
   return (
-    <div className="flex gap-2 items-center">
-      <Dialog open={dialogOpen} onOpenChange={handleDialogClose}>
+    <>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
-          <Button variant="destructive" className="flex gap-2">
-            <Trash2 />
-            Delete
-          </Button>
+          <Button variant="destructive">Delete Incomes</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <div className="mt-5 p-1 flex items-center justify-between">
-              <DialogTitle>Select Incomes to Delete</DialogTitle>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      onClick={() => getIncomelist()}
-                      variant="outline"
-                      className="w-[10%]"
-                    >
-                      <RefreshCw />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Refresh</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
+            <DialogTitle>Select Incomes to Delete</DialogTitle>
           </DialogHeader>
-          <ScrollArea className="h-72 w-auto border rounded-lg p-4">
-            {incomelist.map((income) => (
-              <>
-                <div
-                  key={income.id}
-                  className="flex items-center justify-between mb-4 mt-2"
-                >
-                  <h3>
-                    {income.name} - ${income.amount}
-                  </h3>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button
-                        variant="destructive"
-                        onClick={() => handleDeleteClick(income)}
-                      >
-                        <Trash2 /> Delete
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Confirm Deletion</DialogTitle>
-                        <DialogDescription>
-                          Are you sure you want to delete this income?
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="my-4">
-                        <p>
-                          Income: <strong>{selectedIncome?.name}</strong> of
-                          amount ${selectedIncome?.amount}
-                        </p>
-                      </div>
-                      <DialogFooter>
-                        <div className="flex items-center justify-between w-full">
-                          <div className="flex gap-2">
-                            <Checkbox
-                              id="confirm-checkbox"
-                              checked={isCheckboxChecked}
-                              onCheckedChange={(checked) =>
-                                setCheckboxChecked(checked)
-                              }
-                              className="text-red-500 bg-white border-red-500 data-[state=checked]:bg-red-500 focus:ring-red-500"
-                            />
-                            <label
-                              htmlFor="confirm-checkbox"
-                              className="text-sm font-medium text-red-600 leading-none cursor-pointer transition duration-150 hover:text-red-700 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            >
-                              I Understand & Accept T&C
-                            </label>
-                          </div>
-                          <Button
-                            onClick={confirmDelete}
-                            disabled={!isCheckboxChecked}
-                            variant="destructive"
-                          >
-                            Delete
-                          </Button>
-                        </div>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-                <Separator className='my-2'/>
-              </>
+          <div className="space-y-4">
+            {incomeData.map((income) => (
+              <div key={income.id} className="flex items-center space-x-4">
+                <Checkbox
+                  checked={selectedIncomes.includes(income.id)}
+                  onCheckedChange={() => handleCheckboxChange(income.id)}
+                />
+                <span>
+                  {income.name} - ${income.amount}
+                </span>
+              </div>
             ))}
-          </ScrollArea>
+          </div>
+          <DialogFooter>
+            <Button variant="secondary" onClick={() => setIsDialogOpen(false)}>
+              Cancel
+            </Button>
+            <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="destructive"
+                  disabled={selectedIncomes.length === 0}
+                  onClick={() => setIsAlertOpen(true)}
+                >
+                  Delete Selected
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Are you sure you want to delete the following incomes?
+                  </AlertDialogTitle>
+                </AlertDialogHeader>
+                <div className="mt-2 space-y-1">
+                  {selectedIncomeNames.map((name, index) => (
+                    <div key={index} className="text-sm text-muted-foreground">
+                      {name}
+                    </div>
+                  ))}
+                </div>
+                <AlertDialogFooter>
+                  <Button
+                    variant="secondary"
+                    onClick={() => setIsAlertOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button variant="destructive" onClick={confirmDelete}>
+                    Confirm Delete
+                  </Button>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
-      <Button
-        variant="outline"
-        onClick={() => {
-          location.reload();
-        }}
-      >
-        <RefreshCw />
-      </Button>
-    </div>
+    </>
   );
 };
 
