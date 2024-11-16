@@ -26,8 +26,6 @@ const DashboardLayout = ({ children }) => {
           .where(
             eq(Budgets.createdBy, user?.primaryEmailAddress?.emailAddress)
           );
-
-        console.log(result?.length);
         if (result?.length == 0) {
           router.replace("/dashboard/budgets");
         } else {

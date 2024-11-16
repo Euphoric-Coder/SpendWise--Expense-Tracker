@@ -17,12 +17,12 @@ const Header = () => {
         className="hover:scale-105 transition-all duration-300 ease-in hover:animate-pulse flex items-center gap-3"
       >
         <Image
-          src={"/logo.png"}
+          src={"/favicon.png"}
           alt="Logo of Spend Wise"
-          width={100}
+          width={60}
           height={100}
         />
-        <span className="text-blue-800  font-bold text-2xl">SpendWise</span>
+        <span className="text-blue-800  font-bold text-3xl">SpendWise</span>
       </Link>
       {isSignedIn ? (
         <UserMenu />

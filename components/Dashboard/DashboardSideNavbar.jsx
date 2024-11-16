@@ -25,18 +25,24 @@ const DashboardSideNavbar = () => {
     },
     {
       id: 3,
+      name: "Extra Income",
+      icon: ReceiptText,
+      path: "/dashboard/extra-income",
+    },
+    {
+      id: 4,
       name: "Budgets",
       icon: PiggyBank,
       path: "/dashboard/budgets",
     },
     {
-      id: 4,
+      id: 5,
       name: "Expenses",
       icon: ReceiptText,
       path: "/dashboard/expenses",
     },
     {
-      id: 5,
+      id: 6,
       name: "Feedback",
       icon: ShieldCheck,
       path: "/dashboard/feedback",
@@ -56,7 +62,7 @@ const DashboardSideNavbar = () => {
         className="mb-8"
       /> */}
       <div className="flex flex-row items-center gap-2">
-        <Image src={"/logo.png"} alt="logo" width={100} height={25} />
+        <Image src={"/favicon.png"} alt="logo" width={60} height={25} />
         <span className="text-blue-800 font-bold text-2xl">SpendWise</span>
       </div>
 
