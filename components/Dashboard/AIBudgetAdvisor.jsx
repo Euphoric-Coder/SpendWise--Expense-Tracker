@@ -1,8 +1,11 @@
-import { getFinancialAdvice } from "@/utils";
-import React from "react";
+import React from 'react'
 
-const AIBudgetAdvisor = () => {
-  return <div></div>;
-};
+const AIBudgetAdvisor = ({totalBudget, totalIncome, totalSpend}) => {
+  return (
+    <div>
+      
+    </div>
+  )
+}
 
-export default AIBudgetAdvisor;
+export default AIBudgetAdvisor

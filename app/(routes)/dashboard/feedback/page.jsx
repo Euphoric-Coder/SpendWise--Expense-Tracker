@@ -91,7 +91,8 @@ const FeedbackForm = () => {
 
   return (
     <div>
-      <div className="max-w-md mx-auto p-6 border rounded-lg shadow-lg bg-white">
+      <h1 className="text-3xl font-bold mt-40 text-center text-gray-600 animate-pulse">Still Working on it....</h1>
+      {/* <div className="max-w-md mx-auto p-6 border rounded-lg shadow-lg bg-white">
         <h2 className="text-2xl font-bold text-center mb-4">Feedback Form</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex items-center mb-2">
@@ -151,7 +152,7 @@ const FeedbackForm = () => {
           )}
         </form>
       </div>
-      <TestimonialsCarousel />
+      <TestimonialsCarousel /> */}
     </div>
   );
 };

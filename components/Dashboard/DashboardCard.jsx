@@ -1,3 +1,4 @@
+import GiveFinancialAdvice from "@/utils/aiAdvisor";
 import { formatCurrencyDashboard } from "@/utils/utilities";
 import {
   PiggyBank,
@@ -19,10 +20,41 @@ function DashboardCard({ budgetList, incomeList, expenseList }) {
   const [highestExpense, setHighestExpense] = useState(0);
   const [savings, setSavings] = useState(0);
   const [incomeSavedPercentage, setIncomeSavedPercentage] = useState(0);
+  const [financialAdvice, setFinancialAdvice] = useState("");
+
+  // useEffect(() => {
+  //   if (budgetList.length > 0 || incomeList.length > 0) {
+  //     CalculateCardInfo();
+  //   }
+  // }, [budgetList, incomeList, expenseList]);
 
   useEffect(() => {
     if (budgetList.length > 0 || incomeList.length > 0) {
       CalculateCardInfo();
+      const fetchFinancialAdvice = async () => {
+        console.log(
+          totalBudget,
+          totalIncome,
+          totalSpend,
+          largestBudget,
+          highestExpense,
+          totalDebt,
+          debtToIncomeRatio
+        );
+        const advice = await GiveFinancialAdvice(
+          totalBudget,
+          totalIncome,
+          totalSpend,
+          largestBudget,
+          highestExpense,
+          totalDebt,
+          debtToIncomeRatio
+        );
+        setFinancialAdvice(advice);
+        console.log(advice)
+      };
+
+      fetchFinancialAdvice();
     }
   }, [budgetList, incomeList, expenseList]);
 
@@ -82,6 +114,33 @@ function DashboardCard({ budgetList, incomeList, expenseList }) {
 
   return (
     <div>
+      {/* Financial Advisor Section */}
+      <div className="p-7 border mt-4 -mb-1 rounded-2xl flex items-center justify-between">
+        <div className="">
+          <div className="flex mb-2 flex-row space-x-1 items-center">
+            <h2 className="text-md">FinSmart AI</h2>
+            <Sparkles
+              className="rounded-full text-white w-10 h-10 p-2
+      bg-gradient-to-r
+      from-pink-500
+      via-red-500
+      to-yellow-500
+      background-animate"
+            />
+            <p className="text-lg text-gray-600 font-semibold animate-pulse">
+              (Still Working on this feature...)
+            </p>
+          </div>
+          <h2
+            className="text-md"
+            dangerouslySetInnerHTML={{
+              __html: financialAdvice || "Loading financial advice...",
+            }}
+          ></h2>
+        </div>
+      </div>
+
+      {/* Card Section  */}
       <div className="mt-7 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {/* Budget Summary */}
         <DetailedCard

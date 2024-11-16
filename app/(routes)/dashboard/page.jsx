@@ -1,5 +1,6 @@
 "use client";
 
+import AIBudgetAdvisor from "@/components/Dashboard/AIBudgetAdvisor";
 import BarChartDashboard from "@/components/Dashboard/DashboardBarChart";
 import DashboardCard from "@/components/Dashboard/DashboardCard";
 import { db } from "@/utils/dbConfig";
