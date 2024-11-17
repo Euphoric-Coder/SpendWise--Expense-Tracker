@@ -98,48 +98,6 @@ const page = () => {
       <p className="text-gray-500">
         Here's what happening with your money, Let's Manage your expense
       </p>
-      {/* {budgetList.map((budget, index) => (
-        <div key={index}>
-          <div className="flex justify-between">
-            <h2 className="font-bold text-3xl">{budget.name}</h2>
-            <div className="flex gap-4">
-              <p className="text-gray-500">Total Spend: {budget.totalSpend}</p>
-              <p className="text-gray-500">Total Item: {budget.totalItem}</p>
-            </div>
-          </div>
-          <div className="flex justify-between items-center">
-            <p className="text-gray-500">Total Spend: {budget.totalSpend}</p>
-            <p className="text-gray-500">Total Item: {budget.totalItem}</p>
-          </div>
-        </div>
-      ))}
-      {incomeList.map((income, index) => (
-        <div key={index}>
-          <div className="flex justify-between">
-            <h2 className="font-bold text-3xl">{income.name}</h2>
-            <div className="flex gap-4">
-              <p className="text-gray-500">Total Spend: {income.totalAmount}</p>
-            </div>
-          </div>
-          <div className="flex justify-between items-center">
-            <p className="text-gray-500">Total Spend: {income.totalAmount}</p>
-          </div>
-        </div>
-      ))} */}
-      {/* {expensesList.map((expense, index) => (
-        <div key={index}>
-          <div className="flex justify-between">
-            <h2 className="font-bold text-3xl">{expense.name}</h2>
-            <div className="flex gap-4">
-              <p className="text-gray-500">Total Spend: {expense.amount}</p>
-            </div>
-          </div>
-          <div className="flex justify-between items-center">
-            <p className="text-gray-500">Total Spend: {expense.amount}</p>
-          </div>
-        </div>
-      ))} */}
-
       <DashboardCard
         budgetList={budgetList}
         incomeList={incomeList}
