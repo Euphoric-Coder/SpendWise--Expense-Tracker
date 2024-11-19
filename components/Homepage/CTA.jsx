@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 const CTASection = () => {
   return (
-    <section className="relative py-20 bg-gradient-to-br from-white via-white to-indigo-100 flex flex-col items-center justify-center text-center px-6 md:px-12 lg:px-24">
+    <section id="cta" className="relative py-20 bg-gradient-to-br from-white via-white to-indigo-100 flex flex-col items-center justify-center text-center px-6 md:px-12 lg:px-24">
       {/* Background decorative elements */}
       <div className="absolute hidden md:block top-0 left-8 w-16 h-16 bg-gradient-to-r from-yellow-300 to-pink-300 rounded-full shadow-lg"></div>
       <div className="absolute hidden md:block top-20 right-20 w-10 h-10 bg-gradient-to-r from-purple-400 to-blue-300 rounded-full shadow-md"></div>

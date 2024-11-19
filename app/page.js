@@ -1,12 +1,12 @@
-'use client'
+"use client";
 
-import AnimatedScrollDashboardImg from "@/components/AnimatedScrollDashboardImg";
-import AppTitle from "@/components/AppTitle";
-import CTASection from "@/components/CTA";
-import Header from "@/components/Header";
-import Hero from "@/components/Hero";
-import HowItWorks from "@/components/HowItWorks";
-import KeyFeatures from "@/components/KeyFeatures";
+import AnimatedScrollDashboardImg from "@/components/Homepage/AnimatedScrollDashboardImg";
+import AppTitle from "@/components/Homepage/AppTitle";
+import CTASection from "@/components/Homepage/CTA";
+import Header from "@/components/Homepage/Header";
+import Hero from "@/components/Homepage/Hero";
+import HowItWorks from "@/components/Homepage/HowItWorks";
+import KeyFeatures from "@/components/Homepage/KeyFeatures";
 import React from "react";
 
 const page = () => {

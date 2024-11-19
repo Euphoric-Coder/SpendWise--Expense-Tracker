@@ -1,6 +1,6 @@
-import React from 'react'
-import { ContainerScroll } from './ui/container-scroll-animation'
-import Image from 'next/image';
+import React from "react";
+import { ContainerScroll } from "../ui/container-scroll-animation";
+import Image from "next/image";
 
 const AnimatedScrollDashboardImg = () => {
   return (
@@ -21,8 +21,8 @@ const AnimatedScrollDashboardImg = () => {
               your spending patterns and goals. It identifies trends, predicts
               future expenses, and provides actionable recommendations to
               optimize your finances. Make smarter, faster decisions with the
-              power of Finora&apos;s intelligent algorithms designed to simplify your
-              financial journey.
+              power of Finora&apos;s intelligent algorithms designed to simplify
+              your financial journey.
             </p>
           </>
         }
@@ -38,6 +38,6 @@ const AnimatedScrollDashboardImg = () => {
       </ContainerScroll>
     </div>
   );
-}
+};
 
-export default AnimatedScrollDashboardImg
+export default AnimatedScrollDashboardImg;

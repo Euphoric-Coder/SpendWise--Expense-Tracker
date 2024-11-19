@@ -8,7 +8,7 @@ import { Feedback } from "@/utils/schema";
 import { toast } from "sonner";
 import { useUser } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
-import TestimonialsCarousel from "@/components/Feedback/Testimonials";
+import TestimonialsCarousel from "@/components/Homepage/Feedback/Testimonials";
 
 const FeedbackForm = () => {
   const { user } = useUser();
@@ -91,7 +91,9 @@ const FeedbackForm = () => {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mt-40 text-center text-gray-600 animate-pulse">Still Working on it....</h1>
+      <h1 className="text-3xl font-bold mt-40 text-center text-gray-600 animate-pulse">
+        Still Working on it....
+      </h1>
       {/* <div className="max-w-md mx-auto p-6 border rounded-lg shadow-lg bg-white">
         <h2 className="text-2xl font-bold text-center mb-4">Feedback Form</h2>
         <form onSubmit={handleSubmit} className="space-y-4">

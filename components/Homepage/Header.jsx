@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
-import { Button } from "./ui/button";
-import { UserButton, useUser } from "@clerk/nextjs";
+import { Button } from "../ui/button";
+import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import {
@@ -13,7 +13,7 @@ import {
   AiOutlineExperiment,
   AiOutlineRocket,
 } from "react-icons/ai";
-import { UserMenu } from "./UserButton";
+import { UserMenu } from "../UserButton";
 
 const Header = () => {
   const { user, isSignedIn } = useUser();
