@@ -106,7 +106,7 @@ const page = () => {
 
   return (
     <div>
-      <IncomeVisualization incomeList={incomeList} totalIncome={totalIncome}/>
+      <IncomeVisualization incomeList={incomeList} totalIncome={totalIncome} totalExpense={350000}/>
     </div>
   )
 }
