@@ -1,7 +1,6 @@
 "use client";
 
 import AIBudgetAdvisor from "@/components/Dashboard/AIBudgetAdvisor";
-import BarChartDashboard from "@/components/Dashboard/DashboardBarChart";
 import DashboardCard from "@/components/Dashboard/DashboardCard";
 import { db } from "@/utils/dbConfig";
 import { Budgets, Expenses, Incomes } from "@/utils/schema";
@@ -103,8 +102,6 @@ const page = () => {
         incomeList={incomeList}
         expensesList={expensesList}
       />
-
-      <BarChartDashboard budgetList={budgetList}/>
       
     </div>
   );

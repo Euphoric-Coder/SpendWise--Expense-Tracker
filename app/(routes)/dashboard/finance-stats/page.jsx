@@ -1,5 +1,7 @@
 'use client';
 
+import BudgetExpenseChart from '@/components/Finance/BudgetExpenseChart';
+import BudgetSpentChart from '@/components/Finance/BudgetSpentAnalysis';
 import IncomeVisualization from '@/components/Finance/IncomeVisualization';
 import { db } from '@/utils/dbConfig';
 import { Budgets, Expenses, Incomes } from '@/utils/schema';
@@ -83,8 +85,6 @@ const page = () => {
           console.error("Error fetching income list or total income:", error);
         }
       };
-
-
       /**
        * Used to get All expenses belong to users
        */
@@ -95,6 +95,7 @@ const page = () => {
             name: Expenses.name,
             amount: Expenses.amount,
             createdAt: Expenses.createdAt,
+            budgetId: Expenses.budgetId,
             // budgetName: Budgets.name, // For getting the budget name associated with the expenses
           })
           .from(Budgets)
@@ -102,13 +103,24 @@ const page = () => {
           .where(eq(Budgets.createdBy, user?.primaryEmailAddress.emailAddress))
           .orderBy(desc(Expenses.id));
         setExpensesList(result);
+        console.log(result);
       };
 
   return (
     <div>
-      <IncomeVisualization incomeList={incomeList} totalIncome={totalIncome} totalExpense={350000}/>
+      <IncomeVisualization
+        incomeList={incomeList}
+        totalIncome={totalIncome}
+        totalExpense={350000}
+      />
+      {/* Budget Analysis Heading */}
+      <h1 className="mt-2 text-center text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-400 mb-6">
+        Analysis of Budget
+      </h1>
+      <BudgetSpentChart budgetList={budgetList} />
+      <BudgetExpenseChart budgetList={budgetList} expenseList={expensesList} />
     </div>
-  )
+  );
 }
 
 export default page
