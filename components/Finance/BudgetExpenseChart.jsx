@@ -12,6 +12,7 @@ import {
   CategoryScale,
   LinearScale,
 } from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 import {
   Popover,
   PopoverContent,
@@ -35,7 +36,8 @@ ChartJS.register(
   Legend,
   BarElement,
   CategoryScale,
-  LinearScale
+  LinearScale,
+  ChartDataLabels
 );
 
 export default function BudgetExpenseChart({ budgetList, expenseList }) {
@@ -111,11 +113,11 @@ export default function BudgetExpenseChart({ budgetList, expenseList }) {
         position: "bottom",
         labels: {
           font: {
-            size: 14, // Consistent font size
+            size: 14,
           },
           boxWidth: 14,
           padding: 10,
-          color: "#374151",
+          color: "#374151", // Legend text remains default color
           usePointStyle: true,
         },
       },
@@ -123,6 +125,14 @@ export default function BudgetExpenseChart({ budgetList, expenseList }) {
         backgroundColor: "#1e293b",
         titleColor: "#f8fafc",
         bodyColor: "#cbd5e1",
+      },
+      datalabels: {
+        color: "#ffffff", // White labels inside charts
+        font: {
+          weight: "bold", // Bold font for labels
+          size: 14,
+        },
+        formatter: (value) => `₹${value.toLocaleString()}`, // Format as currency
       },
     },
   };
