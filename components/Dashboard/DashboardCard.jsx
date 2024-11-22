@@ -8,6 +8,7 @@ import {
   CircleDollarSign,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import AIBudgetAdvisor from "./AIBudgetAdvisor";
 
 function DashboardCard({ budgetList, incomeList, expenseList }) {
   const [totalBudget, setTotalBudget] = useState(0);
@@ -22,41 +23,24 @@ function DashboardCard({ budgetList, incomeList, expenseList }) {
   const [incomeSavedPercentage, setIncomeSavedPercentage] = useState(0);
   const [financialAdvice, setFinancialAdvice] = useState("");
 
-  // useEffect(() => {
-  //   if (budgetList.length > 0 || incomeList.length > 0) {
-  //     CalculateCardInfo();
-  //   }
-  // }, [budgetList, incomeList, expenseList]);
-
   useEffect(() => {
     if (budgetList.length > 0 || incomeList.length > 0) {
       CalculateCardInfo();
-      const fetchFinancialAdvice = async () => {
-        console.log(
-          totalBudget,
-          totalIncome,
-          totalSpend,
-          largestBudget,
-          highestExpense,
-          totalDebt,
-          debtToIncomeRatio
-        );
-        const advice = await GiveFinancialAdvice(
-          totalBudget,
-          totalIncome,
-          totalSpend,
-          largestBudget,
-          highestExpense,
-          totalDebt,
-          debtToIncomeRatio
-        );
-        setFinancialAdvice(advice);
-        console.log(advice)
-      };
-
-      fetchFinancialAdvice();
     }
-  }, [budgetList, incomeList, expenseList]);
+  }, [budgetList,incomeList, expenseList]);
+
+  // const fetchFinancialAdvice = async () => {
+  //   const advice = await GiveFinancialAdvice(
+  //     totalBudget,
+  //     totalIncome,
+  //     totalSpend,
+  //     largestBudget,
+  //     highestExpense,
+  //     totalDebt,
+  //     debtToIncomeRatio
+  //   );
+  //   setFinancialAdvice(advice);
+  // };
 
   const CalculateCardInfo = () => {
     let totalBudget_ = 0;
@@ -115,7 +99,7 @@ function DashboardCard({ budgetList, incomeList, expenseList }) {
   return (
     <div>
       {/* Financial Advisor Section */}
-      <div className="p-7 border mt-4 -mb-1 rounded-2xl flex items-center justify-between">
+      {/* <div className="p-7 border mt-4 -mb-1 rounded-2xl flex items-center justify-between">
         <div className="">
           <div className="flex mb-2 flex-row space-x-1 items-center">
             <h2 className="text-md">Finora AI</h2>
@@ -138,7 +122,18 @@ function DashboardCard({ budgetList, incomeList, expenseList }) {
             }}
           ></h2>
         </div>
-      </div>
+      </div> */}
+      {totalIncome > 0 && (
+        <AIBudgetAdvisor
+          totalBudget={totalBudget}
+          totalIncome={totalIncome}
+          totalSpend={totalSpend}
+          largestBudget={largestBudget}
+          highestExpense={highestExpense}
+          totalDebt={totalDebt}
+          debtToIncomeRatio={debtToIncomeRatio}
+        />
+      )}
 
       {/* Card Section  */}
       <div className="mt-7 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
