@@ -47,7 +47,7 @@ const DashboardLayout = ({ children }) => {
   return (
     <div className="flex h-screen">
       {/* Sidebar with increased width */}
-      <div className="fixed top-0 left-0 md:w-72 md:block hidden w-full h-screen bg-white shadow-lg z-10">
+      <div className="fixed top-0 left-0 md:w-72 md:block hidden w-full h-screen bg-transparent shadow-lg z-10">
         <DashboardSideNavbar />
       </div>
 

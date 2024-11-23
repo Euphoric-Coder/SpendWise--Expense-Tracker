@@ -85,7 +85,7 @@ const ExpenseTable = ({ expenseList = [], refreshData }) => {
                   <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogTrigger asChild>
                       <Edit
-                        className="text-blue-600 cursor-pointer mr-2"
+                        className="text-blue-600 cursor-pointer mr-2 hover:text-purple-800 hover:scale-110 active:scale-90 transition-all duration-500"
                         onClick={() => startEditing(expense)}
                       />
                     </DialogTrigger>
@@ -122,7 +122,7 @@ const ExpenseTable = ({ expenseList = [], refreshData }) => {
                   </Dialog>
                   <span className="text-gray-400">|</span>
                   <Trash
-                    className="text-red-600 cursor-pointer"
+                    className="text-red-600 cursor-pointer hover:scale-110 active:scale-90 transition-transform duration-500"
                     onClick={() => deleteExpense(expense)}
                   />
                 </TableCell>

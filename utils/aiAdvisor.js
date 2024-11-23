@@ -11,40 +11,105 @@ export const GiveFinancialAdvice = async (
   totalIncome,
   totalSpend,
   largestBudget,
-  largestExpense,
-  debtAmount,
-  debtToIncomeRatio
+  highestExpense,
+  totalDebt,
+  debtToIncomeRatio,
+  budgetList,
+  expenseList
 ) => {
   try {
+    // Budget Breakdown
+    const budgetDetails = budgetList
+      .map(
+        (budget) =>
+          `- ${budget.name}: Allocated Amount: ${budget.amount}, Total Spend: ${
+            budget.totalSpend || 0
+          }, Remaining: ${budget.amount - (budget.totalSpend || 0)}`
+      )
+      .join("\n");
+
+    // Expense Breakdown
+    const expenseDetails = expenseList.reduce((acc, expense) => {
+      if (!acc[expense.budgetName]) {
+        acc[expense.budgetName] = [];
+      }
+      acc[expense.budgetName].push(`  - ${expense.name}: ${expense.amount}`);
+      return acc;
+    }, {});
+
+    // Generate Prompt
+    const financialAdvicePrompt = `
+### Comprehensive Financial Analysis ###
+
+Please generate the following content as **HTML only** with no additional preamble or explanations. The output should be visually appealing and well-structured, adhering to the following guidelines:
+- Use semantic HTML elements like \`<h1>\`, \`<h2>\`, \`<p>\`, and \`<ul>\` for proper structure.
+- Include appropriate use of bold (\`<b>\`) and italic (\`<i>\`) text for emphasis where needed.
+- Use bullet points (\`<ul>\` and \`<li>\`) for lists to improve readability.
+- Add sections with distinct headers (\`<h2>\` or \`<h3>\`) for clarity.
+- Ensure all numeric values are properly formatted (e.g., commas for thousands: 1,000,000).
+- Incorporate spacing between sections using \`<br>\` or padding in a CSS-friendly manner.
+- The HTML should be clean, minimalist, and professional.
+- Use class="text-4xl font-bold" for h1 tags, class="text-3xl font-bold" for h2 tags, and class="text-2xl font-bold" for h3 tags.
+- Use class="list-disc" for unordered list items and use unordered list only. 
+- Don't add additional background color to the HTML.
+- First of all add a heading "Comprehensive Financial Analysis" in the middle with text-3xl and font-bold.
+[GIVE NICE FORMATTING FOR BETTER READABILITY & USE TAILWIND CSS CLASSES FOR STYLING THE HTML]
+
+**Financial Health Overview:**
+- Total Budget: ₹{totalBudget}
+- Total Income: ₹{totalIncome}
+- Total Spending: ₹{totalSpend}
+- Largest Budget: ₹{largestBudget}
+- Highest Expense: ₹{highestExpense}
+- Total Debt: ₹{totalDebt}
+- Debt-to-Income Ratio: ₹{debtToIncomeRatio}%
+
+**Budget Breakdown:**
+₹{budgetDetails}
+
+**Expense Breakdown:**
+₹{expenseDetails}
+
+[The above detials are for you to give me insights and recommendations.]
+[DO NOT WRITE THE ABOVE DETAILS FOR ME AGAIN! GIVE ME INSIGHTS ON THEM]
+
+### Insights and Recommendations ###
+1. **Budget Utilization:**
+   - Analyze underutilized budgets and reallocate funds.
+   - Ensure sufficient allocation for high-priority categories.
+
+2. **Expense Optimization:**
+   - Identify and reduce non-essential expenses.
+   - Focus on aligning spending with budget goals.
+
+3. **Debt Management:**
+   - If applicable, create a repayment plan to reduce debt burden.
+   - Maintain a low debt-to-income ratio for financial stability.
+
+4. **Savings and Investments:**
+   - Allocate ${
+     totalIncome > totalSpend ? "surplus income" : "adjusted budget savings"
+   } towards savings or investments.
+   - Focus on long-term financial goals.
+
+5. **Next Steps:**
+   - Review and refine your budget.
+   - Regularly monitor spending to stay on track.
+   - Explore opportunities to increase income.
+
+### Additional Notes ###
+This analysis is based on the provided data. Regular updates to your financial data will improve accuracy and relevance.
+`;
+
+
+
     // Define the prompt with comprehensive financial data
     const prompt = ChatPromptTemplate.fromMessages([
       [
         "system",
         "You are an expert financial advisor. Based on the provided financial data, provide comprehensive advice to help the user better manage their finances. Offer practical insights, prioritize reducing debt if applicable, and suggest areas for improvement.",
       ],
-      [
-        "human",
-        `
-Here is the user's financial data:
-- Total Budget (Expected to spend not actually spending it): ${totalBudget} INR
-- Total Income : ${totalIncome} INR
-- Total Expenses (Amount spent): ${totalSpend} INR
-- Largest Budget: ${largestBudget} INR
-- Largest Expense: ${largestExpense} INR
-- Debt Amount: ${debtAmount > 0 ? `${debtAmount} INR` : "No Debt"}
-- Debt-to-Income Ratio (If it is greater than 0 then it means that the debt is greater than the income): ${debtToIncomeRatio}
-
-Please provide a short (in 10 lines) but comprehensive financial analysis in a concise format, including:
-1. Financial health overview.
-2. Key areas of concern or opportunities for improvement.
-3. Suggested actions to optimize finances.
-4. Advice on reducing debt if applicable.
-5. Practical insights for budget management.
-6. Recommendations for saving money and prioritizing spending.
-[NOTE: ALSO ONLY RETURN THE ENTIRE CONTENT IN HTML FORMAT AND NOTHING ELSE ONLY THE CONTENT IN HTML (GIVING BOLD, ITALIC, HEADING, PARAGRAPH TAGS ETC AS REQUIRED AND BOLD THE TEXT, HEADING, ETC.)
-ALSO DON'T ADD ** ** OR __ __ IN BETWEEN THE TEXT AS IT WILL CAUSE THE HTML TO BREAK.]
-        `,
-      ],
+      ["human", financialAdvicePrompt],
     ]);
 
     // Chain the prompt with the LLM
@@ -85,4 +150,3 @@ export const AskFinora = async (question) => {
     return "Sorry, I couldn't fetch the financial advice at this moment. Please try again later.";
   }
 };
-

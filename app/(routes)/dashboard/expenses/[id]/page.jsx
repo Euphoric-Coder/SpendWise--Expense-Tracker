@@ -77,14 +77,30 @@ const ExpensesDashboard = ({ params }) => {
     route.replace("/dashboard/budgets");
   };
   return (
-    <div className="p-10 bg-gradient-to-b from-white via-blue-50 to-indigo-50 rounded-3xl shadow-2xl">
-      <h2 className="flex justify-between text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-bl from-purple-600 to-yellow-500 via-blue-500 mb-4">
+    <div className="p-10 bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 rounded-3xl shadow-2xl relative overflow-hidden">
+      {/* Background Effects */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute -top-10 -left-10 w-40 h-40 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 opacity-25 blur-3xl"></div>
+        <div className="absolute bottom-10 right-10 w-60 h-60 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-500 opacity-30 blur-[100px]"></div>
+      </div>
+
+      {/* My Expenses Header */}
+      <h2 className="flex justify-between text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-yellow-500 to-blue-500 mb-6 animate-gradient-text">
         My Expenses
         <span className="flex gap-4 items-center">
-          <EditBudget budgetInfo={budgetInfo} refreshData={() => getBudgetInfo()}/>
+          {/* Edit Budget Button */}
+          <EditBudget
+            budgetInfo={budgetInfo}
+            refreshData={() => getBudgetInfo()}
+          />
+
+          {/* Delete Budget Button */}
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive" className="flex gap-2">
+              <Button
+                variant="destructive"
+                className="flex gap-2 items-center bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 text-white font-semibold px-4 py-2 rounded-xl shadow-md hover:shadow-lg hover:from-red-600 hover:to-yellow-600 transition-transform transform hover:scale-105"
+              >
                 <Trash2 />
                 Delete
               </Button>
@@ -94,9 +110,8 @@ const ExpensesDashboard = ({ params }) => {
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
                   This action cannot be undone. This will permanently delete
-                  your current budget "{budgetInfo ? budgetInfo.name : ""}"
-                  along with all its expenses and remove your data from the
-                  servers.
+                  your current budget "<b>{budgetInfo?.name}</b>" along with all
+                  its expenses and remove your data from the servers.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -107,17 +122,22 @@ const ExpensesDashboard = ({ params }) => {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
+
+          {/* Go to Budgets Button */}
           <Link href={"/dashboard/budgets"}>
-            <Button>Goto Budgets</Button>
+            <Button className="px-4 py-2 bg-gradient-to-r from-blue-500 via-cyan-500 to-teal-500 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:from-blue-600 hover:to-teal-600 transition-transform transform hover:scale-105">
+              Go to Budgets
+            </Button>
           </Link>
         </span>
       </h2>
+
       {/* Budget Item and Skeleton Placeholder */}
-      <div className="grid grid-cols-1 md:grid-cols-2 mt-6 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 mt-8 gap-6">
         {budgetInfo ? (
           <BudgetItem budget={budgetInfo} />
         ) : (
-          <Skeleton className="h-[145px] rounded-3xl bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 shadow-lg animate-pulse" />
+          <Skeleton className="h-[145px] rounded-3xl bg-gradient-to-r from-red-400 via-orange-500 to-yellow-500 shadow-lg animate-pulse" />
         )}
         <AddExpense
           budgetId={params.id}
@@ -128,11 +148,11 @@ const ExpensesDashboard = ({ params }) => {
       </div>
 
       {/* Latest Expenses Section */}
-      <div className="mt-10">
-        <h2 className="text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-teal-500 via-blue-500 to-purple-500 mb-4">
+      <div className="mt-12">
+        <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 mb-6 animate-gradient-text">
           Latest Expenses
         </h2>
-        <div className="bg-white rounded-2xl shadow-md p-6">
+        <div className="bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 rounded-2xl shadow-md p-6">
           <ExpenseTable
             expenseList={expensesList}
             refreshData={() => getBudgetInfo()}

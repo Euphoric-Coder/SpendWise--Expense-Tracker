@@ -24,23 +24,10 @@ function DashboardCard({ budgetList, incomeList, expenseList }) {
   const [financialAdvice, setFinancialAdvice] = useState("");
 
   useEffect(() => {
-    if (budgetList.length > 0 || incomeList.length > 0) {
+    if (budgetList.length > 0 || incomeList.length > 0 || expenseList.length > 0) {
       CalculateCardInfo();
     }
   }, [budgetList,incomeList, expenseList]);
-
-  // const fetchFinancialAdvice = async () => {
-  //   const advice = await GiveFinancialAdvice(
-  //     totalBudget,
-  //     totalIncome,
-  //     totalSpend,
-  //     largestBudget,
-  //     highestExpense,
-  //     totalDebt,
-  //     debtToIncomeRatio
-  //   );
-  //   setFinancialAdvice(advice);
-  // };
 
   const CalculateCardInfo = () => {
     let totalBudget_ = 0;
@@ -99,41 +86,19 @@ function DashboardCard({ budgetList, incomeList, expenseList }) {
   return (
     <div>
       {/* Financial Advisor Section */}
-      {/* <div className="p-7 border mt-4 -mb-1 rounded-2xl flex items-center justify-between">
-        <div className="">
-          <div className="flex mb-2 flex-row space-x-1 items-center">
-            <h2 className="text-md">Finora AI</h2>
-            <Sparkles
-              className="rounded-full text-white w-10 h-10 p-2
-      bg-gradient-to-r
-      from-pink-500
-      via-red-500
-      to-yellow-500
-      background-animate"
-            />
-            <p className="text-lg text-gray-600 font-semibold animate-pulse">
-              (Still Working on this feature...)
-            </p>
-          </div>
-          <h2
-            className="text-md"
-            dangerouslySetInnerHTML={{
-              __html: financialAdvice || "Loading financial advice...",
-            }}
-          ></h2>
-        </div>
-      </div> */}
       {totalIncome > 0 && (
-        <AIBudgetAdvisor
-          totalBudget={totalBudget}
-          totalIncome={totalIncome}
-          totalSpend={totalSpend}
-          largestBudget={largestBudget}
-          highestExpense={highestExpense}
-          totalDebt={totalDebt}
-          debtToIncomeRatio={debtToIncomeRatio}
-        />
-      )}
+          <AIBudgetAdvisor
+            totalBudget={totalBudget}
+            totalIncome={totalIncome}
+            totalSpend={totalSpend}
+            largestBudget={largestBudget}
+            highestExpense={highestExpense}
+            totalDebt={totalDebt}
+            debtToIncomeRatio={debtToIncomeRatio}
+            budgetList={budgetList}
+            expenseList={expenseList}
+          />
+        )}
 
       {/* Card Section  */}
       <div className="mt-7 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -211,22 +176,29 @@ function DashboardCard({ budgetList, incomeList, expenseList }) {
 }
 
 const DetailedCard = ({ title, details, icon }) => (
-  <div className="p-6 border-2 border-indigo-100 rounded-3xl shadow-lg flex flex-col space-y-6 bg-gradient-to-b from-white via-blue-50 to-indigo-100">
+  <div className="p-8 border-2 border-indigo-200 rounded-3xl shadow-xl flex flex-col space-y-8 bg-gradient-to-b from-white via-blue-50 to-indigo-100 relative overflow-hidden">
+    {/* Background Effects */}
+    <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute -top-10 -left-10 w-40 h-40 bg-gradient-to-r from-blue-500 via-teal-400 to-purple-600 opacity-30 blur-3xl"></div>
+      <div className="absolute top-20 right-10 w-60 h-60 bg-gradient-to-br from-purple-500 via-pink-500 to-indigo-400 opacity-20 blur-[100px]"></div>
+    </div>
+
     {/* Card Header */}
-    <div className="flex items-center space-x-4">
-      <div className="bg-gradient-to-r from-blue-500 via-teal-500 to-purple-700 p-4 h-16 w-16 rounded-full text-white flex items-center justify-center shadow-lg">
+    <div className="flex items-center space-x-6 relative z-10">
+      <div className="bg-gradient-to-r from-blue-500 via-teal-500 to-purple-700 p-5 h-20 w-20 rounded-full text-white flex items-center justify-center shadow-2xl hover:scale-110 transition-transform duration-300">
         {icon}
       </div>
-      <h2 className="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500">
+      <h2 className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500 animate-gradient-text">
         {title}
       </h2>
     </div>
+
     {/* Card Content */}
-    <div className="space-y-4">
+    <div className="space-y-6 relative z-10">
       {details.map((detail, index) => (
         <div
           key={index}
-          className="flex justify-between items-center text-sm bg-gradient-to-r from-white via-blue-50 to-indigo-50 p-4 rounded-xl shadow-md hover:bg-gradient-to-r hover:from-teal-100 hover:to-blue-100 transition duration-200"
+          className="flex justify-between items-center text-sm bg-gradient-to-r from-white via-blue-50 to-indigo-50 p-4 rounded-xl shadow-lg hover:shadow-[0px_0px_30px_10px_rgba(0,200,255,0.5)] hover:bg-gradient-to-br hover:from-teal-100 hover:to-blue-200 transition-all duration-300"
         >
           <span className="text-gray-600 font-medium">{detail.label}</span>
           <span
