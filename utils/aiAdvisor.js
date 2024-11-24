@@ -56,19 +56,19 @@ Please generate the following content as **HTML only** with no additional preamb
 [GIVE NICE FORMATTING FOR BETTER READABILITY & USE TAILWIND CSS CLASSES FOR STYLING THE HTML]
 
 **Financial Health Overview:**
-- Total Budget: ₹{totalBudget}
-- Total Income: ₹{totalIncome}
-- Total Spending: ₹{totalSpend}
-- Largest Budget: ₹{largestBudget}
-- Highest Expense: ₹{highestExpense}
-- Total Debt: ₹{totalDebt}
-- Debt-to-Income Ratio: ₹{debtToIncomeRatio}%
+- Total Budget: ₹${totalBudget}
+- Total Income: ₹${totalIncome}
+- Total Spending: ₹${totalSpend}
+- Largest Budget: ₹${largestBudget}
+- Highest Expense: ₹${highestExpense}
+- Total Debt: ₹${totalDebt}
+- Debt-to-Income Ratio: ₹${debtToIncomeRatio}%
 
 **Budget Breakdown:**
-₹{budgetDetails}
+₹${budgetDetails}
 
 **Expense Breakdown:**
-₹{expenseDetails}
+₹${expenseDetails}
 
 [The above detials are for you to give me insights and recommendations.]
 [DO NOT WRITE THE ABOVE DETAILS FOR ME AGAIN! GIVE ME INSIGHTS ON THEM]
