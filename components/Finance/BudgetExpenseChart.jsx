@@ -167,7 +167,7 @@ export default function BudgetExpenseChart({ budgetList, expenseList }) {
                 {budgetList.map((budget) => (
                   <CommandItem
                     key={budget.id}
-                    value={budget.id.toString()}
+                    value={budget.name.toString()}
                     onSelect={() => {
                       setSelectedBudget(budget.id);
                       setOpen(false);
