@@ -21,6 +21,11 @@ const formatCurrency = (amount) => {
 };
 
 export const formatCurrencyDashboard = (amount) => {
+  // Handle null or undefined amounts
+  if (!amount || isNaN(amount)) {
+    return "₹0";
+  }
+
   let formattedAmount;
 
   if (amount >= 1_00_00_00_000) {

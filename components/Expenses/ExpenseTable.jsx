@@ -67,7 +67,7 @@ const ExpenseTable = ({ expenseList = [], refreshData }) => {
     <div>
       <Table>
         <TableHeader>
-          <TableRow>
+          <TableRow className='hover:bg-yellow-100'>
             <TableHead className="font-bold">Name</TableHead>
             <TableHead className="font-bold">Amount</TableHead>
             <TableHead className="font-bold">Date</TableHead>
@@ -77,7 +77,7 @@ const ExpenseTable = ({ expenseList = [], refreshData }) => {
         <TableBody>
           {expenseList?.length > 0 ? (
             expenseList.map((expense, index) => (
-              <TableRow key={index}>
+              <TableRow key={index} className='hover:bg-yellow-100'>
                 <TableCell>{expense.name}</TableCell>
                 <TableCell>{expense.amount}</TableCell>
                 <TableCell>{expense.createdAt}</TableCell>
