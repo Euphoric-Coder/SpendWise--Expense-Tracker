@@ -56,7 +56,7 @@ const CreateBudget = ({ refreshData }) => {
         </div>
       </DialogTrigger>
 
-      <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-br from-white via-blue-50 to-indigo-100 p-8 rounded-3xl shadow-[0_0_40px_rgba(0,200,255,0.3)] w-[95%] max-w-lg max-h-[90vh] overflow-y-auto">
+      <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-br from-white via-blue-50 to-indigo-100 p-8 rounded-3xl shadow-[0_0_40px_rgba(0,200,255,0.3)] w-[95%] max-w-lg max-h-[90vh]">
         {/* Background Effects */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -top-10 -left-10 w-60 h-60 bg-gradient-radial from-purple-400 via-blue-400 to-transparent opacity-25 blur-3xl animate-spin-slow"></div>
@@ -65,7 +65,7 @@ const CreateBudget = ({ refreshData }) => {
 
         {/* Dialog Header */}
         <DialogHeader>
-          <DialogTitle className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-500 via-purple-500 to-pink-500 animate-gradient-text">
+          <DialogTitle className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-500 via-purple-500 to-pink-500">
             Create New Budget
           </DialogTitle>
           <DialogDescription className="text-sm text-gray-600">
@@ -74,7 +74,7 @@ const CreateBudget = ({ refreshData }) => {
         </DialogHeader>
 
         {/* Emoji Picker Section */}
-        <div className="mt-5 flex items-center gap-4 relative">
+        <div className="">
           <Button
             variant="outline"
             size="lg"
@@ -87,7 +87,7 @@ const CreateBudget = ({ refreshData }) => {
           {/* Emoji Picker */}
           {openEmojiPicker && (
             <div
-              className="absolute z-50 top-12 left-0 bg-white shadow-lg rounded-xl p-4"
+              className="absolute z-20 space-y-4"
               style={{ minWidth: "250px" }}
             >
               <EmojiPicker
@@ -101,7 +101,7 @@ const CreateBudget = ({ refreshData }) => {
         </div>
 
         {/* Input Fields */}
-        <div className="mt-6">
+        <div className="mt-1">
           <h2 className="text-gray-700 font-medium mb-2">Budget Name</h2>
           <Input
             type="text"

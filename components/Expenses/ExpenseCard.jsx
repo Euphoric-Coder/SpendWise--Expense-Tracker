@@ -8,7 +8,7 @@ const BudgetCard = ({ budget, onOpen }) => {
   );
 
   return (
-    <div className="relative p-6 sm:p-8 border-2 rounded-3xl bg-gradient-to-b from-red-50 via-orange-100 to-yellow-100 shadow-xl overflow-hidden transform transition-transform hover:scale-105 hover:shadow-[0_10px_40px_rgba(255,150,50,0.3)]">
+    <div className="relative p-6 sm:p-8 border-2 rounded-3xl bg-gradient-to-b from-red-50 via-orange-100 to-yellow-100 shadow-xl overflow-hidden transform transition-transform hover:shadow-[0_10px_40px_rgba(255,150,50,0.3)]">
       {/* Background Effects */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-12 -left-12 w-40 h-40 bg-gradient-to-r from-red-200 via-orange-200 to-yellow-200 opacity-40 blur-3xl animate-spin-slow"></div>

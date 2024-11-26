@@ -1,4 +1,3 @@
-import GiveFinancialAdvice from "@/utils/aiAdvisor";
 import { formatCurrencyDashboard } from "@/utils/utilities";
 import {
   PiggyBank,

@@ -31,11 +31,14 @@ const ExpensesDashboard = ({ params }) => {
   const { user } = useUser();
   const [budgetInfo, setBudgetInfo] = useState();
   const [expensesList, setExpensesList] = useState([]);
+
   useEffect(() => {
     user && getBudgetInfo();
-    getListOfExpenses();
+    // getListOfExpenses();
   }, [user]);
+
   const route = useRouter();
+
   const getBudgetInfo = async () => {
     const result = await db
       .select({
@@ -48,8 +51,8 @@ const ExpensesDashboard = ({ params }) => {
       .where(eq(Budgets.createdBy, user?.primaryEmailAddress?.emailAddress))
       .where(eq(Budgets.id, params.id))
       .groupBy(Budgets.id);
-    getListOfExpenses();
     setBudgetInfo(result[0]);
+    getListOfExpenses();
   };
 
   const getListOfExpenses = async () => {
@@ -76,16 +79,17 @@ const ExpensesDashboard = ({ params }) => {
     toast(`Budget "${budgetInfo.name}" has been deleted!`);
     route.replace("/dashboard/budgets");
   };
+
   return (
-    <div className="p-10 bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 rounded-3xl shadow-2xl relative overflow-hidden">
+    <div className="p-10 bg-gradient-to-b from-yellow-50 via-orange-50 to-red-50 rounded-3xl shadow-2xl relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-10 -left-10 w-40 h-40 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 opacity-25 blur-3xl"></div>
-        <div className="absolute bottom-10 right-10 w-60 h-60 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-500 opacity-30 blur-[100px]"></div>
+        <div className="absolute -top-10 -left-10 w-40 h-40 bg-gradient-to-r from-yellow-200 via-orange-200 to-red-200 opacity-30 blur-3xl"></div>
+        <div className="absolute bottom-10 right-10 w-60 h-60 bg-gradient-to-br from-orange-300 via-red-300 to-yellow-300 opacity-30 blur-[80px]"></div>
       </div>
 
       {/* My Expenses Header */}
-      <h2 className="flex justify-between text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-yellow-500 to-blue-500 mb-6 animate-gradient-text">
+      <h2 className="flex justify-between text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 mb-6 animate-gradient-text">
         My Expenses
         <span className="flex gap-4 items-center">
           {/* Edit Budget Button */}
@@ -99,7 +103,7 @@ const ExpensesDashboard = ({ params }) => {
             <AlertDialogTrigger asChild>
               <Button
                 variant="destructive"
-                className="flex gap-2 items-center bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 text-white font-semibold px-4 py-2 rounded-xl shadow-md hover:shadow-lg hover:from-red-600 hover:to-yellow-600 transition-transform transform hover:scale-105"
+                className="flex gap-2 items-center bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 text-white font-semibold px-4 py-2 rounded-xl shadow-md hover:shadow-lg hover:from-orange-500 hover:to-yellow-500 transition-transform transform hover:scale-105"
               >
                 <Trash2 />
                 Delete
@@ -125,7 +129,7 @@ const ExpensesDashboard = ({ params }) => {
 
           {/* Go to Budgets Button */}
           <Link href={"/dashboard/budgets"}>
-            <Button className="px-4 py-2 bg-gradient-to-r from-blue-500 via-cyan-500 to-teal-500 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:from-blue-600 hover:to-teal-600 transition-transform transform hover:scale-105">
+            <Button className="px-4 py-2 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:from-orange-500 hover:to-yellow-500 transition-transform transform hover:scale-105">
               Go to Budgets
             </Button>
           </Link>
@@ -137,7 +141,7 @@ const ExpensesDashboard = ({ params }) => {
         {budgetInfo ? (
           <BudgetItem budget={budgetInfo} />
         ) : (
-          <Skeleton className="h-[145px] rounded-3xl bg-gradient-to-r from-red-400 via-orange-500 to-yellow-500 shadow-lg animate-pulse" />
+          <Skeleton className="h-[145px] rounded-3xl bg-gradient-to-r from-yellow-200 via-orange-300 to-red-300 shadow-lg animate-pulse" />
         )}
         <AddExpense
           budgetId={params.id}
@@ -149,10 +153,10 @@ const ExpensesDashboard = ({ params }) => {
 
       {/* Latest Expenses Section */}
       <div className="mt-12">
-        <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 mb-6 animate-gradient-text">
+        <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 mb-6 animate-gradient-text">
           Latest Expenses
         </h2>
-        <div className="bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 rounded-2xl shadow-md p-6">
+        <div className="bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50 rounded-2xl shadow-md p-6 border border-orange-200">
           <ExpenseTable
             expenseList={expensesList}
             refreshData={() => getBudgetInfo()}

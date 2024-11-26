@@ -65,9 +65,9 @@ const AIBudgetAdvisor = ({
             Finora AI
           </h2>
           <Sparkles className="rounded-full text-gray-200 w-14 h-14 p-3 bg-gradient-to-r from-teal-300 via-blue-400 to-purple-500 shadow-lg hover:shadow-teal-400/50 hover:scale-110 transition-all duration-300" />
-          <p className="text-lg italic font-medium text-gray-500 animate-pulse">
+          {/* <p className="text-lg italic font-medium text-gray-500 animate-pulse">
             (Always evolving for your future...)
-          </p>
+          </p> */}
         </div>
 
         <div className="p-6 rounded-3xl border bg-white bg-opacity-70 border-blue-200 shadow-inner backdrop-blur-lg hover:backdrop-blur-xl transition-all duration-300">
