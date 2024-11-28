@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 
 const formatCurrency = (amount) => {
   let formattedAmount;
@@ -48,6 +49,34 @@ export const formatCurrencyDashboard = (amount) => {
   return `₹${formattedAmount}`;
 };
 
+export const getISTDate = () => {
+  // Create a new Date object
+  const now = new Date();
 
+  // Convert to Indian Standard Time (UTC+5:30)
+  const istOffset = 5.5 * 60 * 60 * 1000; // IST is 5 hours 30 minutes ahead of UTC
+  const istDate = new Date(now.getTime() + istOffset);
+
+  return istDate.toISOString().split("T")[0]; // Return date in YYYY-MM-DD format
+};
+
+export function isSameDate(date, today) {
+  const parsedDate = new Date(date);
+  const parsedToday = new Date(today);
+
+  return parsedDate.getTime() === parsedToday.getTime();
+}
+
+export function formatDate(inputDate) {
+  // Parse the input to a Date object if it's a string
+  const date = new Date(inputDate);
+
+  // Automatically detect timezone offset and adjust the date
+  const offsetInMinutes = date.getTimezoneOffset();
+  const adjustedDate = new Date(date.getTime() - offsetInMinutes * 60 * 1000);
+
+  // Format the adjusted date to 'YYYY-MM-DD'
+  return format(adjustedDate, "yyyy-MM-dd");
+}
 
 export { formatCurrency };

@@ -12,6 +12,7 @@ import DeleteIncome from "./DeleteIncome";
 
 function IncomeList() {
   const [incomelist, setIncomelist] = useState([]);
+  const [upcomingincome, setUpcomingincome] = useState([]);
   const { user } = useUser();
 
   useEffect(() => {
@@ -37,13 +38,20 @@ function IncomeList() {
     <div className="mt-7">
       <div className="flex justify-between mb-7">
         <h2 className="font-bold text-3xl">My Income Streams</h2>
-        <DeleteIncome incomeData={incomelist} refreshData={() => getIncomelist()}/>
+        <DeleteIncome
+          incomeData={incomelist}
+          refreshData={() => getIncomelist()}
+        />
       </div>
       <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-5">
         <CreateIncomes refreshData={() => getIncomelist()} />
         {incomelist?.length > 0
           ? incomelist.map((budget, index) => (
-              <IncomeItem budget={budget} key={index} />
+              <IncomeItem
+                income={budget}
+                refreshData={() => getIncomelist()}
+                key={index}
+              />
             ))
           : [1, 2, 3, 4, 5].map((item, index) => (
               <div key={index}>

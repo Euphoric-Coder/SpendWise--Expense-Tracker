@@ -32,6 +32,7 @@ export const Incomes = pgTable("incomes", {
   icon: varchar("icon"),
   incomeType: varchar("incomeType"),
   frequency: varchar("frequency"), // 'daily', 'weekly', 'monthly', 'yearly'
+  status: varchar("status"), // 'upcoming', 'current'
   startDate: date("startDate"),
   endDate: date("endDate"), // Nullable for indefinite recurring transactions
   lastProcessed: date("lastProcessed"), // Tracks the last processed date
