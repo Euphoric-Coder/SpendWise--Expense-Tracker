@@ -46,9 +46,9 @@ function IncomeList() {
       <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-5">
         <CreateIncomes refreshData={() => getIncomelist()} />
         {incomelist?.length > 0
-          ? incomelist.map((budget, index) => (
+          ? incomelist.map((income, index) => (
               <IncomeItem
-                income={budget}
+                income={income}
                 refreshData={() => getIncomelist()}
                 key={index}
               />

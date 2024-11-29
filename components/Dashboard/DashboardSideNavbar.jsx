@@ -24,18 +24,6 @@ const DashboardSideNavbar = () => {
       path: "/dashboard/income",
     },
     {
-      id: 3,
-      name: "Extra Income",
-      icon: ReceiptText,
-      path: "/dashboard/extra-income",
-    },
-    {
-      id: 6,
-      name: "Finance Stats",
-      icon: ChartArea,
-      path: "/dashboard/finance-stats",
-    },
-    {
       id: 4,
       name: "Budgets",
       icon: PiggyBank,
@@ -46,6 +34,18 @@ const DashboardSideNavbar = () => {
       name: "Expenses",
       icon: ReceiptText,
       path: "/dashboard/expenses",
+    },
+    {
+      id: 3,
+      name: "Transactions",
+      icon: ReceiptText,
+      path: "/dashboard/transactions",
+    },
+    {
+      id: 6,
+      name: "Finance Stats",
+      icon: ChartArea,
+      path: "/dashboard/finance-stats",
     },
     {
       id: 7,

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import React, { useState } from "react";
 import { Trash, Edit } from "lucide-react";
@@ -22,7 +22,9 @@ import { db } from "@/utils/dbConfig";
 import { Expenses } from "@/utils/schema";
 import { eq } from "drizzle-orm";
 import { toast } from "sonner";
-
+/**
+ * @todo : Add type of expense & implement the feature
+ */
 const ExpenseTable = ({ expenseList = [], refreshData }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingExpense, setEditingExpense] = useState(null);
@@ -67,17 +69,18 @@ const ExpenseTable = ({ expenseList = [], refreshData }) => {
     <div>
       <Table>
         <TableHeader>
-          <TableRow className='hover:bg-yellow-100'>
+          <TableRow className="hover:bg-yellow-100">
             <TableHead className="font-bold">Name</TableHead>
             <TableHead className="font-bold">Amount</TableHead>
             <TableHead className="font-bold">Date</TableHead>
-            <TableHead className="font-bold">Action</TableHead>
+            {/* <TableHead className="font-bold">Type of Expense</TableHead> */}
+            <TableHead className="font-bold">Action (Edit/ Delete)</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {expenseList?.length > 0 ? (
             expenseList.map((expense, index) => (
-              <TableRow key={index} className='hover:bg-yellow-100'>
+              <TableRow key={index} className="hover:bg-yellow-100">
                 <TableCell>{expense.name}</TableCell>
                 <TableCell>{expense.amount}</TableCell>
                 <TableCell>{expense.createdAt}</TableCell>
