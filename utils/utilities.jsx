@@ -79,4 +79,22 @@ export function formatDate(inputDate) {
   return format(adjustedDate, "yyyy-MM-dd");
 }
 
+export function dateDifference(date) {
+  // Get today's date
+  const today = new Date();
+
+  // Parse the provided date string into a Date object
+  const parsedDate = new Date(date);
+
+  // Calculate the difference in milliseconds
+  const differenceInMilliseconds = Math.abs(today - parsedDate);
+
+  // Convert milliseconds to days
+  const differenceInDays = Math.ceil(
+    differenceInMilliseconds / (1000 * 60 * 60 * 24)
+  );
+
+  return differenceInDays;
+}
+
 export { formatCurrency };
