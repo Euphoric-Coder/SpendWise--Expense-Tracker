@@ -132,6 +132,16 @@ function IncomeItem({ income, isIncome, refreshData }) {
             <h2 className="font-extrabold text-lg sm:text-xl text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-green-600 to-cyan-600">
               {income.name}
             </h2>
+            {income.incomeType === "non-recurring" && (
+              <h2 className="text-sm mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-green-600 to-cyan-600">
+                Valid Till: {income.endDate}
+              </h2>
+            )}
+            {income.incomeType === "recurring" && (
+              <h2 className="text-sm mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-green-600 to-cyan-600">
+                Last Updated: {income.lastProcessed}
+              </h2>
+            )}
             {/* Recurring Label */}
             {income.incomeType === "recurring" && (
               <span className="inline-block mt-2 px-3 py-1 rounded-full bg-gradient-to-r from-green-500 via-teal-500 to-cyan-500 text-white font-medium text-xs sm:text-sm shadow-sm text-center">
@@ -151,6 +161,23 @@ function IncomeItem({ income, isIncome, refreshData }) {
         >
           {formatCurrency(income.amount)}
         </h2>
+      </div>
+      <div className="mt-6">
+        <div className="flex items-center justify-between mb-3">
+          {income.incomeType === "non-recurring" && (
+            <h2 className="text-sm mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-green-600 to-cyan-600">
+              Valid Till: {income.endDate}
+            </h2>
+          )}
+          {income.incomeType === "recurring" && (
+            <h2 className="text-sm mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-green-600 to-cyan-600">
+              Last Updated: {income.lastProcessed}
+            </h2>
+          )}
+          <h2 className="text-xs text-gray-500">
+            {formatCurrency(income.amount - income.totalSpend)} Remaining
+          </h2>
+        </div>
       </div>
       <div className="flex items-center gap-1 justify-end">
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

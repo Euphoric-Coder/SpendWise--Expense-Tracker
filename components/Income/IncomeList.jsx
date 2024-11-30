@@ -12,7 +12,8 @@ import DeleteIncome from "./DeleteIncome";
 
 function IncomeList() {
   const [incomelist, setIncomelist] = useState([]);
-  const [upcomingincome, setUpcomingincome] = useState([]);
+  const [upcomingItems, setUpcomingItems] = useState([])
+  const [currentItems, setCurrentItems] = useState([])
   const { user } = useUser();
 
   useEffect(() => {
@@ -31,7 +32,14 @@ function IncomeList() {
       .where(eq(Incomes.createdBy, user?.primaryEmailAddress?.emailAddress))
       .groupBy(Incomes.id)
       .orderBy(desc(Incomes.id));
+
+    // Separate items into "upcoming" and "current" arrays
+    const upcomingItems = result.filter((item) => item.status === "upcoming");
+    const currentItems = result.filter((item) => item.status === "current");
+
     setIncomelist(result);
+    setUpcomingItems(upcomingItems);
+    setCurrentItems(currentItems);
   };
 
   return (
@@ -43,28 +51,57 @@ function IncomeList() {
           refreshData={() => getIncomelist()}
         />
       </div>
-      <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-5">
+      <div className="mb-7 grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-5">
         <CreateIncomes refreshData={() => getIncomelist()} />
-        {incomelist?.length > 0
-          ? incomelist.map((income, index) => (
+      </div>
+      <h2 className="text-3xl font-bold mb-6">Ongoing Incomes</h2>
+      <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6 mb-10">
+        {currentItems?.length > 0
+          ? currentItems.map((income, index) => (
               <IncomeItem
                 income={income}
                 refreshData={() => getIncomelist()}
-                key={index}
+                key={`ongoing-${index}`}
               />
             ))
           : [1, 2, 3, 4, 5].map((item, index) => (
               <div key={index}>
-                <Skeleton className="h-[145px] rounded-3xl bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 shadow-lg" />
-                <div className="mt-2 space-y-2">
-                  <Skeleton className="h-4 bg-slate-300" />
-                  <Skeleton className="h-4 w-[75%] bg-slate-300" />
-                </div>
+                <IncomeSkeleton />
               </div>
             ))}
       </div>
+
+      <h2 className="text-3xl font-bold mb-6">Upcoming Recurring Incomes</h2>
+      <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6 mb-5">
+        {upcomingItems?.length > 0
+          ? upcomingItems.map((income, index) => (
+              <IncomeItem
+                income={income}
+                refreshData={() => getIncomelist()}
+                key={`upcoming-${index}`}
+              />
+            ))
+          : [1, 2, 3, 4, 5].map((item, index) => (
+              <div key={index}>
+                <IncomeSkeleton />
+              </div>
+            ))}
+      </div>
+
     </div>
   );
 }
+
+const IncomeSkeleton = () => {
+  return (
+    <div className>
+          <Skeleton className="h-[145px] rounded-3xl bg-gradient-to-r from-teal-500 via-cyan-400 to-green-400 shadow-lg" />
+          <div className="mt-2 space-y-2">
+            <Skeleton className="h-4 bg-slate-300" />
+            <Skeleton className="h-4 w-[75%] bg-slate-300" />
+          </div>
+        </div>
+  );
+};
 
 export default IncomeList;
