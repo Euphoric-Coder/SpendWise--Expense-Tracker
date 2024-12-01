@@ -60,6 +60,17 @@ export const getISTDate = () => {
   return istDate.toISOString().split("T")[0]; // Return date in YYYY-MM-DD format
 };
 
+export const getISTCustomDate = (date) => {
+  // Create a new Date object
+  const now = new Date(date);
+
+  // Convert to Indian Standard Time (UTC+5:30)
+  const istOffset = 5.5 * 60 * 60 * 1000; // IST is 5 hours 30 minutes ahead of UTC
+  const istDate = new Date(now.getTime() + istOffset);
+
+  return istDate.toISOString().split("T")[0]; // Return date in YYYY-MM-DD format
+};
+
 export function isSameDate(date, today) {
   const parsedDate = new Date(date);
   const parsedToday = new Date(today);
@@ -81,7 +92,7 @@ export function formatDate(inputDate) {
 
 export function dateDifference(date) {
   // Get today's date
-  const today = new Date();
+  const today = new Date(getISTDate());
 
   // Parse the provided date string into a Date object
   const parsedDate = new Date(date);

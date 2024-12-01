@@ -4,6 +4,7 @@ import {
   dateDifference,
   formatCurrency,
   formatDate,
+  getISTCustomDate,
   getISTDate,
   isSameDate,
 } from "@/utils/utilities";
@@ -51,15 +52,52 @@ import { parseISO, format } from "date-fns";
 
 function IncomeItem({ income, isIncome, refreshData }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingExpense, setEditingExpense] = useState(null);
   const [editedName, setEditedName] = useState("");
   const [editedAmount, setEditedAmount] = useState("");
   const [isRecurring, setIsRecurring] = useState(false);
   const [editedStartDate, setEditedStartDate] = useState(null);
   const [editedEndDate, setEditedEndDate] = useState(null);
 
+  console.log("Date Difference: ",dateDifference(income.endDate));
+  console.log("Today: ",getISTDate());
+  console.log(getISTCustomDate(income.createdAt))
+
+  const progress = dateDifference(income.endDate)/dateDifference(getISTCustomDate(income.createdAt)) * 100;
+
+  function calculateProgress(startDate, endDate) {
+    const parsedStartDate = new Date(startDate);
+    const parsedEndDate = new Date(endDate);
+    const today = new Date();
+
+    // Ensure the dates are valid
+    if (parsedEndDate < parsedStartDate) {
+      return 100; // Fully expired
+    }
+
+    // Calculate total days between start and end dates
+    const totalDays = Math.ceil(
+      (parsedEndDate - parsedStartDate) / (1000 * 60 * 60 * 24)
+    );
+
+    // Calculate remaining days from today to end date
+    const remainingDays = Math.ceil(
+      (parsedEndDate - today) / (1000 * 60 * 60 * 24)
+    );
+
+    // Ensure remaining days are within bounds
+    if (remainingDays <= 0) {
+      return 100; // Fully expired
+    } else if (today < parsedStartDate) {
+      return 0; // Not started yet
+    }
+
+    // Calculate the progress percentage
+    const progressPercentage = ((totalDays - remainingDays) / totalDays) * 100;
+
+    return progressPercentage.toFixed(2); // Return percentage with 2 decimal places
+  }
+
   const startEditing = (income) => {
-    setEditingExpense(income);
     setEditedName(income.name);
     setEditedAmount(income.amount);
     setIsRecurring(income.incomeType === "recurring");
@@ -153,23 +191,52 @@ function IncomeItem({ income, isIncome, refreshData }) {
           {formatCurrency(income.amount)}
         </h2>
       </div>
-      <div className="mt-6">
-        <div className="">
+      <div className="mt-1 mb-2">
+        <div>
           {income.incomeType === "non-recurring" && (
-            <div className="flex items-center justify-between">
-              <h2 className="text-sm mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-green-600 to-cyan-600">
-                Valid Till: {format(income.endDate, 'PPP')}
-              </h2>
-              <h2 className="text-xs text-gray-500">
-                Expires in {dateDifference(income.endDate)} Days
-              </h2>
+            <div>
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-green-600 to-cyan-600">
+                  Valid Till: {format(income.endDate, "PPP")}
+                </h2>
+                <h2 className="text-xs text-gray-500">
+                  Expires in {dateDifference(income.endDate)} Days
+                </h2>
+              </div>
+              {/* Progress Bar */}
+              <div className="relative mt-3 w-full h-3 sm:h-4 bg-gray-300 rounded-full shadow-inner">
+                <div
+                  className="h-3 sm:h-4 rounded-full bg-gradient-to-r from-red-300 via-orange-300 to-yellow-300 shadow-md"
+                  style={{
+                    width: `${
+                      (dateDifference(income.endDate) / getISTDate()) * 100
+                    }%`,
+                  }}
+                ></div>
+                  {calculateProgress(getISTCustomDate(income.createdAt), income.endDate)}
+              </div>
+
+              {/* Percentage Below Progress Bar */}
+              <p
+                className={`mt-2 text-center text-sm sm:text-base font-semibold ${
+                  progress > 75
+                    ? "text-red-500"
+                    : progress > 50
+                    ? "text-orange-500"
+                    : "text-green-500"
+                }`}
+              >
+                {(dateDifference(income.endDate) / getISTDate()) * 100}% of
+                budget used
+              </p>
             </div>
           )}
-          {income.incomeType === "recurring" && (
-            <h2 className="text-sm mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-green-600 to-cyan-600">
-              Last Updated: {income.lastProcessed}
-            </h2>
-          )}
+          {income.incomeType === "recurring" &&
+            income.status !== "upcoming" && (
+              <h2 className="text-sm mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-green-600 to-cyan-600">
+                Last Updated: {income.lastProcessed}
+              </h2>
+            )}
         </div>
       </div>
       <div className="flex items-center gap-1 justify-end">
