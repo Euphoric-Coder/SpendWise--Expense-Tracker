@@ -62,7 +62,12 @@ function IncomeItem({ income, isIncome, refreshData }) {
   console.log("Today: ",getISTDate());
   console.log(getISTCustomDate(income.createdAt))
 
-  const progress = dateDifference(income.endDate)/dateDifference(getISTCustomDate(income.createdAt)) * 100;
+  const progress = calculateProgress(
+    getISTCustomDate(income.createdAt),
+    income.endDate
+  );
+
+  const expiry = dateDifference(income.endDate);
 
   function calculateProgress(startDate, endDate) {
     const parsedStartDate = new Date(startDate);
@@ -159,7 +164,7 @@ function IncomeItem({ income, isIncome, refreshData }) {
           : "cursor-default"
       }`}
     >
-      <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
+      <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
         {/* Icon and Name Section */}
         <div className="flex gap-3 sm:gap-4 items-center">
           {/* Icon */}
@@ -206,28 +211,24 @@ function IncomeItem({ income, isIncome, refreshData }) {
               {/* Progress Bar */}
               <div className="relative mt-3 w-full h-3 sm:h-4 bg-gray-300 rounded-full shadow-inner">
                 <div
-                  className="h-3 sm:h-4 rounded-full bg-gradient-to-r from-red-300 via-orange-300 to-yellow-300 shadow-md"
+                  className="h-3 sm:h-4 rounded-full bg-gradient-to-r from-green-300 via-green-400 to-green-500 shadow-md"
                   style={{
-                    width: `${
-                      (dateDifference(income.endDate) / getISTDate()) * 100
-                    }%`,
+                    width: `${progress}%`,
                   }}
                 ></div>
-                  {calculateProgress(getISTCustomDate(income.createdAt), income.endDate)}
               </div>
 
               {/* Percentage Below Progress Bar */}
               <p
-                className={`mt-2 text-center text-sm sm:text-base font-semibold ${
-                  progress > 75
-                    ? "text-red-500"
-                    : progress > 50
-                    ? "text-orange-500"
-                    : "text-green-500"
+                className={`mt-2 text-center text-sm sm:text-lg font-semibold ${
+                  progress <= 25
+                    ? "text-green-500" // Most time remaining
+                    : progress <= 75
+                    ? "text-orange-500" // Moderate time remaining
+                    : "text-red-500" // Time is almost up
                 }`}
               >
-                {(dateDifference(income.endDate) / getISTDate()) * 100}% of
-                budget used
+                {100 - progress}% of days left to expiry ({expiry} days)
               </p>
             </div>
           )}
