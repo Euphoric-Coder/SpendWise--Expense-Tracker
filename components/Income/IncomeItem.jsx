@@ -1,6 +1,8 @@
 "use client";
 
 import {
+  calculateNonRecurringProgress,
+  calculateRecurringProgress,
   dateDifference,
   formatCurrency,
   formatDate,
@@ -58,49 +60,20 @@ function IncomeItem({ income, isIncome, refreshData }) {
   const [editedStartDate, setEditedStartDate] = useState(null);
   const [editedEndDate, setEditedEndDate] = useState(null);
 
-  console.log("Date Difference: ",dateDifference(income.endDate));
-  console.log("Today: ",getISTDate());
-  console.log(getISTCustomDate(income.createdAt))
-
-  const progress = calculateProgress(
+  const nonrecurringProgress = calculateNonRecurringProgress(
     getISTCustomDate(income.createdAt),
     income.endDate
   );
 
+  const recurringProgress = calculateRecurringProgress(
+    getISTCustomDate(income.createdAt),
+    income.frequency
+  );
+
+  // console.log(recurringProgress)
+
   const expiry = dateDifference(income.endDate);
 
-  function calculateProgress(startDate, endDate) {
-    const parsedStartDate = new Date(startDate);
-    const parsedEndDate = new Date(endDate);
-    const today = new Date();
-
-    // Ensure the dates are valid
-    if (parsedEndDate < parsedStartDate) {
-      return 100; // Fully expired
-    }
-
-    // Calculate total days between start and end dates
-    const totalDays = Math.ceil(
-      (parsedEndDate - parsedStartDate) / (1000 * 60 * 60 * 24)
-    );
-
-    // Calculate remaining days from today to end date
-    const remainingDays = Math.ceil(
-      (parsedEndDate - today) / (1000 * 60 * 60 * 24)
-    );
-
-    // Ensure remaining days are within bounds
-    if (remainingDays <= 0) {
-      return 100; // Fully expired
-    } else if (today < parsedStartDate) {
-      return 0; // Not started yet
-    }
-
-    // Calculate the progress percentage
-    const progressPercentage = ((totalDays - remainingDays) / totalDays) * 100;
-
-    return progressPercentage.toFixed(2); // Return percentage with 2 decimal places
-  }
 
   const startEditing = (income) => {
     setEditedName(income.name);
@@ -158,7 +131,7 @@ function IncomeItem({ income, isIncome, refreshData }) {
 
   return (
     <div
-      className={`relative p-4 sm:p-5 border-2 rounded-3xl bg-gradient-to-b from-white via-green-50 to-teal-50 shadow-lg transition-transform transform ${
+      className={`relative p-4 mb-4 sm:p-5 border-2 rounded-3xl bg-gradient-to-b from-white via-green-50 to-teal-50 shadow-lg transition-transform transform ${
         isIncome
           ? "hover:scale-105 hover:shadow-xl cursor-pointer"
           : "cursor-default"
@@ -208,36 +181,74 @@ function IncomeItem({ income, isIncome, refreshData }) {
                   Expires in {dateDifference(income.endDate)} Days
                 </h2>
               </div>
-              {/* Progress Bar */}
+              {/* nonrecurringProgress Bar */}
               <div className="relative mt-3 w-full h-3 sm:h-4 bg-gray-300 rounded-full shadow-inner">
                 <div
                   className="h-3 sm:h-4 rounded-full bg-gradient-to-r from-green-300 via-green-400 to-green-500 shadow-md"
                   style={{
-                    width: `${progress}%`,
+                    width: `${nonrecurringProgress}%`,
                   }}
                 ></div>
               </div>
 
-              {/* Percentage Below Progress Bar */}
+              {/* Percentage Below nonrecurringProgress Bar */}
               <p
                 className={`mt-2 text-center text-sm sm:text-lg font-semibold ${
-                  progress <= 25
+                  nonrecurringProgress <= 25
                     ? "text-green-500" // Most time remaining
-                    : progress <= 75
+                    : nonrecurringProgress <= 75
                     ? "text-orange-500" // Moderate time remaining
                     : "text-red-500" // Time is almost up
                 }`}
               >
-                {100 - progress}% of days left to expiry ({expiry} days)
+                {100 - nonrecurringProgress}% of days left to expiry ({expiry}{" "}
+                days)
               </p>
             </div>
           )}
-          {income.incomeType === "recurring" &&
-            income.status !== "upcoming" && (
+          {income.incomeType === "recurring" && (
+            <div>
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-green-600 to-cyan-600">
+                  Frequency: {income.frequency}
+                </h2>
+                <h2 className="text-sm mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-green-600 to-cyan-600">
+                  Next Recurring Date:{" "}
+                  {format(recurringProgress.nextRecurringDate, "PPP")}
+                </h2>
+              </div>
+              {/* recurringProgress Bar */}
+              <div className="relative mt-3 w-full h-3 sm:h-4 bg-gray-300 rounded-full shadow-inner">
+                <div
+                  className="h-3 sm:h-4 rounded-full bg-gradient-to-r from-green-300 via-green-400 to-green-500 shadow-md"
+                  style={{
+                    width: `${recurringProgress.progress}%`,
+                  }}
+                ></div>
+              </div>
+              {/* Percentage Below nonrecurringProgress Bar */}
+              <p
+                className={`mt-2 text-center text-sm sm:text-lg font-semibold ${
+                  recurringProgress.progress <= 25
+                    ? "text-green-500" // Most time remaining
+                    : recurringProgress.progress <= 75
+                    ? "text-orange-500" // Moderate time remaining
+                    : "text-red-500" // Time is almost up
+                }`}
+              >
+                {100 - recurringProgress.progress}% of days left to next
+                recurring ({recurringProgress.daysUntilNext} days)
+              </p>
+            <div className="flex justify-between items-center gap-3">
               <h2 className="text-sm mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-green-600 to-cyan-600">
-                Last Updated: {income.lastProcessed}
+                Last Processed: {income.lastProcessed ? format(income.lastProcessed, "PPP") : "NA"}
               </h2>
-            )}
+              <h2 className="text-sm mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-green-600 to-cyan-600">
+                Recurring Edited: {income.lastUpdated ? format(income.lastUpdated, "PPP") : "No!"}
+              </h2>
+            </div>
+            </div>
+          )}
         </div>
       </div>
       <div className="flex items-center gap-1 justify-end">
@@ -245,7 +256,7 @@ function IncomeItem({ income, isIncome, refreshData }) {
           <DialogTrigger>
             <TooltipProvider>
               <Tooltip>
-                <TooltipTrigger>
+                <TooltipTrigger asChild>
                   <Edit
                     className="text-teal-600 cursor-pointer hover:text-green-500 hover:scale-110 active:scale-95 transition-transform duration-300"
                     onClick={() => startEditing(income)}

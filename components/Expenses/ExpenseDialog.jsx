@@ -11,7 +11,7 @@ import {
 import { formatCurrencyDashboard } from "@/utils/utilities";
 import { Button } from "../ui/button";
 
-const BudgetDialog = ({ budget, expenses, onClose }) => {
+const ExpenseDialog = ({ budget, expenses, onClose }) => {
   return (
     <Dialog open={!!budget} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl bg-gradient-to-b from-red-50 via-orange-100 to-yellow-100 text-gray-800 shadow-2xl rounded-3xl border border-orange-300 overflow-hidden">
@@ -87,4 +87,4 @@ const BudgetDialog = ({ budget, expenses, onClose }) => {
   );
 };
 
-export default BudgetDialog;
+export default ExpenseDialog;

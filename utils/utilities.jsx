@@ -108,4 +108,130 @@ export function dateDifference(date) {
   return differenceInDays;
 }
 
+export function calculateNonRecurringProgress(startDate, endDate) {
+  const parsedStartDate = new Date(startDate);
+  const parsedEndDate = new Date(endDate);
+  const today = new Date();
+
+  // Ensure the dates are valid
+  if (parsedEndDate < parsedStartDate) {
+    return 100; // Fully expired
+  }
+
+  // Calculate total days between start and end dates
+  const totalDays = Math.ceil(
+    (parsedEndDate - parsedStartDate) / (1000 * 60 * 60 * 24)
+  );
+
+  // Calculate remaining days from today to end date
+  const remainingDays = Math.ceil(
+    (parsedEndDate - today) / (1000 * 60 * 60 * 24)
+  );
+
+  // Ensure remaining days are within bounds
+  if (remainingDays <= 0) {
+    return 100; // Fully expired
+  } else if (today < parsedStartDate) {
+    return 0; // Not started yet
+  }
+
+  // Calculate the nonrecurringProgress percentage
+  const progressPercentage = ((totalDays - remainingDays) / totalDays) * 100;
+
+  return progressPercentage.toFixed(2); // Return percentage with 2 decimal places
+}
+
+export function calculateRecurringProgress(startDate, frequency) {
+  const today = new Date();
+  const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
+  const parsedStartDate = new Date(new Date(startDate).getTime() + istOffset);
+
+  // Convert today's date to IST
+  const todayInIST = new Date(today.getTime() + istOffset);
+
+  // Ensure the start date is valid
+  if (todayInIST < parsedStartDate) {
+    return {
+      progress: 0,
+      nextRecurringDate: parsedStartDate.toISOString().split("T")[0],
+      daysUntilNext: Math.ceil(
+        (parsedStartDate - todayInIST) / (1000 * 60 * 60 * 24)
+      ),
+    };
+  }
+
+  let nextRecurringDate = new Date(parsedStartDate);
+
+  // Calculate the next recurring date based on the frequency
+  switch (frequency.toLowerCase()) {
+    case "daily":
+      while (nextRecurringDate <= todayInIST) {
+        nextRecurringDate.setDate(nextRecurringDate.getDate() + 1);
+      }
+      break;
+    case "weekly":
+      while (nextRecurringDate <= todayInIST) {
+        nextRecurringDate.setDate(nextRecurringDate.getDate() + 7);
+      }
+      break;
+    case "monthly":
+      while (nextRecurringDate <= todayInIST) {
+        nextRecurringDate.setMonth(nextRecurringDate.getMonth() + 1);
+      }
+      break;
+    case "yearly":
+      while (nextRecurringDate <= todayInIST) {
+        nextRecurringDate.setFullYear(nextRecurringDate.getFullYear() + 1);
+      }
+      break;
+    default:
+      console.log(
+        "Invalid frequency. Use daily, weekly, monthly, or yearly."
+      );
+  }
+
+  // Calculate days remaining until the next recurring date
+  const daysUntilNext = Math.ceil(
+    (nextRecurringDate - todayInIST) / (1000 * 60 * 60 * 24)
+  );
+
+  // Determine the duration of the current period in milliseconds
+  let periodDuration;
+  switch (frequency.toLowerCase()) {
+    case "daily":
+      periodDuration = 24 * 60 * 60 * 1000; // 1 day
+      break;
+    case "weekly":
+      periodDuration = 7 * 24 * 60 * 60 * 1000; // 1 week
+      break;
+    case "monthly":
+      const currentMonth = todayInIST.getMonth();
+      const nextMonth = currentMonth + 1;
+      const startOfNextMonth = new Date(todayInIST.getFullYear(), nextMonth, 1);
+      periodDuration =
+        startOfNextMonth - new Date(todayInIST.getFullYear(), currentMonth, 1);
+      break;
+    case "yearly":
+      periodDuration = 365 * 24 * 60 * 60 * 1000; // Approximate 1 year
+      break;
+  }
+
+  // Calculate elapsed time since the start of the current recurring period
+  const elapsedTime = todayInIST - parsedStartDate;
+  const currentPeriodIndex = Math.floor(elapsedTime / periodDuration);
+  const periodStartDate = new Date(
+    parsedStartDate.getTime() + currentPeriodIndex * periodDuration
+  );
+  const timeSincePeriodStart = todayInIST - periodStartDate;
+
+  // Calculate progress within the current period
+  const progress = (timeSincePeriodStart / periodDuration) * 100;
+
+  return {
+    progress: progress.toFixed(2), // Progress percentage
+    nextRecurringDate: nextRecurringDate.toISOString().split("T")[0], // Date of next recurring
+    daysUntilNext, // Days remaining until next recurring
+  };
+}
+
 export { formatCurrency };

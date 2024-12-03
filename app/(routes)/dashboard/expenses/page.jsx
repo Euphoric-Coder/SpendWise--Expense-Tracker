@@ -6,9 +6,9 @@ import { db } from "@/utils/dbConfig";
 import { Budgets, Expenses } from "@/utils/schema";
 import { desc, eq, getTableColumns, sql } from "drizzle-orm";
 import { formatCurrencyDashboard } from "@/utils/utilities";
-import BudgetCard from "@/components/Expenses/ExpenseCard";
-import BudgetDialog from "@/components/Expenses/ExpenseDialog";
+import ExpenseDialog from "@/components/Expenses/ExpenseDialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import ExpenseCard from "@/components/Expenses/ExpenseCard";
 
 const ExpenseDashboard = () => {
   const [budgetList, setBudgetList] = useState([]);
@@ -91,7 +91,7 @@ const ExpenseDashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         <div className="relative bg-gradient-to-br from-yellow-200 via-orange-300 to-red-300 shadow-xl rounded-3xl p-8 text-center text-gray-900 hover:scale-105 transition-transform">
           <div className="relative z-10">
-            <h2 className="text-2xl font-bold">Total Budgets</h2>
+            <h2 className="mb-2 text-2xl font-bold text-gray-100">Total Budgets</h2>
             <p className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500">
               {formatCurrencyDashboard(totalBudgets)}
             </p>
@@ -100,7 +100,7 @@ const ExpenseDashboard = () => {
 
         <div className="relative bg-gradient-to-br from-red-200 via-pink-300 to-orange-300 shadow-xl rounded-3xl p-8 text-center text-gray-900 hover:scale-105 transition-transform">
           <div className="relative z-10">
-            <h2 className="text-2xl font-bold">Total Expenses</h2>
+            <h2 className="mb-2 text-2xl font-bold text-gray-100">Total Expenses</h2>
             <p className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500">
               {formatCurrencyDashboard(totalExpenses)}
             </p>
@@ -109,7 +109,9 @@ const ExpenseDashboard = () => {
 
         <div className="relative bg-gradient-to-br from-orange-200 via-yellow-300 to-green-300 shadow-xl rounded-3xl p-8 text-center text-gray-900 hover:scale-105 transition-transform">
           <div className="relative z-10">
-            <h2 className="text-2xl font-bold">Remaining Balance</h2>
+            <h2 className="mb-2 text-2xl font-bold text-gray-100">
+              Remaining Balance
+            </h2>
             <p className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-yellow-500 to-green-500">
               {formatCurrencyDashboard(remaining)}
             </p>
@@ -118,7 +120,7 @@ const ExpenseDashboard = () => {
       </div>
 
       {/* Budget Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
         {budgetList.length === 0
           ? [1, 2, 3, 4, 5, 6].map((item, index) => (
               <div key={index}>
@@ -131,7 +133,7 @@ const ExpenseDashboard = () => {
             ))
           : budgetList.map((budget) => (
               <div className="p-2">
-                <BudgetCard
+                <ExpenseCard
                   key={budget.id}
                   budget={budget}
                   expenses={expensesByBudget[budget.id] || []}
@@ -143,7 +145,7 @@ const ExpenseDashboard = () => {
 
       {/* Dialog */}
       {selectedBudget && (
-        <BudgetDialog
+        <ExpenseDialog
           budget={selectedBudget}
           expenses={expensesByBudget[selectedBudget.id] || []}
           onClose={() => setSelectedBudget(null)} // Close dialog

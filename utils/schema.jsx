@@ -36,6 +36,7 @@ export const Incomes = pgTable("incomes", {
   startDate: date("startDate"),
   endDate: date("endDate"), // Nullable for indefinite recurring transactions
   lastProcessed: date("lastProcessed"), // Tracks the last processed date
+  lastUpdated: date("lastUpdated"),
   createdBy: varchar("createdBy").notNull(),
   createdAt: timestamp("createdAt").defaultNow(),
 });

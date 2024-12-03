@@ -1,7 +1,7 @@
 import { formatCurrencyDashboard } from "@/utils/utilities";
 import React from "react";
 
-const BudgetCard = ({ budget, onOpen }) => {
+const ExpenseCard = ({ budget, onOpen }) => {
   const progress = Math.min(
     (budget.totalSpend / budget.amount) * 100,
     100 // Cap progress at 100%
@@ -97,4 +97,4 @@ const BudgetCard = ({ budget, onOpen }) => {
   );
 };
 
-export default BudgetCard;
+export default ExpenseCard;
