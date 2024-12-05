@@ -23,6 +23,7 @@ import { eq } from "drizzle-orm";
 import { toast } from "sonner";
 import { db } from "@/utils/dbConfig";
 import { Incomes } from "@/utils/schema";
+import { Trash } from "lucide-react";
 
 const DeleteIncome = ({ incomeData, refreshData }) => {
   const [selectedIncomes, setSelectedIncomes] = useState([]);
@@ -72,7 +73,7 @@ const DeleteIncome = ({ incomeData, refreshData }) => {
     <>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
-          <Button variant="destructive">Delete Incomes</Button>
+          <Button variant="destructive" className="rounded-full"><Trash /> Delete Incomes</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>

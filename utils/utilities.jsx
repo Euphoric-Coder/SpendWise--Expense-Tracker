@@ -226,7 +226,7 @@ export function calculateRecurringProgress(startDate, frequency) {
 
   // Calculate progress within the current period
   const progress = (timeSincePeriodStart / periodDuration) * 100;
-
+  
   return {
     progress: progress.toFixed(2), // Progress percentage
     nextRecurringDate: nextRecurringDate.toISOString().split("T")[0], // Date of next recurring

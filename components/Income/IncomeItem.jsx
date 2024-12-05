@@ -51,11 +51,15 @@ import { db } from "@/utils/dbConfig";
 import { eq } from "drizzle-orm";
 import { toast } from "sonner";
 import { parseISO, format } from "date-fns";
+import EmojiPicker from "emoji-picker-react";
 
-function IncomeItem({ income, isIncome, refreshData }) {
+function IncomeItem({ income, refreshData }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [openEmojiPicker, setopenEmojiPicker] = useState(false);
+  const [frequency, setFrequency] = useState("monthly");
   const [editedName, setEditedName] = useState("");
   const [editedAmount, setEditedAmount] = useState("");
+  const [editedIcon, setEditedIcon] = useState();
   const [isRecurring, setIsRecurring] = useState(false);
   const [editedStartDate, setEditedStartDate] = useState(null);
   const [editedEndDate, setEditedEndDate] = useState(null);
@@ -74,17 +78,18 @@ function IncomeItem({ income, isIncome, refreshData }) {
 
   const expiry = dateDifference(income.endDate);
 
-
   const startEditing = (income) => {
     setEditedName(income.name);
     setEditedAmount(income.amount);
     setIsRecurring(income.incomeType === "recurring");
     setEditedStartDate(income.startDate ? parseISO(income.startDate) : null);
     setEditedEndDate(income.endDate ? parseISO(income.endDate) : null);
+    setEditedIcon(income.icon);
     setIsDialogOpen(true); // Opens up the dialog when editing starts
   };
 
   const saveEditedIncome = async () => {
+    console.log(frequency);
     const defaultEndDate = new Date(
       new Date().setMonth(new Date().getMonth() + 1)
     )
@@ -95,7 +100,9 @@ function IncomeItem({ income, isIncome, refreshData }) {
     const updatedValues = {
       name: editedName,
       amount: editedAmount,
+      icon: editedIcon,
       incomeType: isRecurring ? "recurring" : "non-recurring",
+      // frequency: isRecurring ? frequency : null,
       startDate: isRecurring ? editedStartDate : null,
       endDate: isRecurring ? null : editedEndDate || defaultEndDate,
       status: isRecurring
@@ -103,6 +110,7 @@ function IncomeItem({ income, isIncome, refreshData }) {
           ? "current"
           : "upcoming"
         : "current",
+      lastUpdated: getISTDate(),
     };
 
     const result = await db
@@ -114,6 +122,8 @@ function IncomeItem({ income, isIncome, refreshData }) {
     if (result) {
       toast(`Income "${editedName}" has been updated!`);
       setIsDialogOpen(false); // Close the dialog
+      setFrequency("monthly")
+
       refreshData(); // Refresh data
     }
   };
@@ -131,11 +141,7 @@ function IncomeItem({ income, isIncome, refreshData }) {
 
   return (
     <div
-      className={`relative p-4 mb-4 sm:p-5 border-2 rounded-3xl bg-gradient-to-b from-white via-green-50 to-teal-50 shadow-lg transition-transform transform ${
-        isIncome
-          ? "hover:scale-105 hover:shadow-xl cursor-pointer"
-          : "cursor-default"
-      }`}
+      className={`relative p-4 mb-4 sm:p-5 border-2 rounded-3xl bg-gradient-to-b from-white via-green-50 to-teal-50 shadow-lg transition-transform transform`}
     >
       <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
         {/* Icon and Name Section */}
@@ -145,7 +151,7 @@ function IncomeItem({ income, isIncome, refreshData }) {
             {income?.icon}
           </h2>
           {/* Income Name */}
-          <div className="">
+          <div>
             <h2 className="font-extrabold text-lg sm:text-xl text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-green-600 to-cyan-600">
               {income.name}
             </h2>
@@ -160,11 +166,7 @@ function IncomeItem({ income, isIncome, refreshData }) {
 
         {/* Income Amount */}
         <h2
-          className={`font-bold text-md sm:text-lg text-transparent bg-clip-text bg-gradient-to-r ${
-            income.incomeType === "recurring"
-              ? "from-cyan-600 via-teal-500 to-green-500"
-              : "from-green-600 via-teal-500 to-cyan-500"
-          }`}
+          className={`font-bold text-md sm:text-lg text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-teal-500 to-cyan-500`}
         >
           {formatCurrency(income.amount)}
         </h2>
@@ -236,17 +238,23 @@ function IncomeItem({ income, isIncome, refreshData }) {
                     : "text-red-500" // Time is almost up
                 }`}
               >
-                {100 - recurringProgress.progress}% of days left to next
-                recurring ({recurringProgress.daysUntilNext} days)
+                {(100 - recurringProgress.progress).toFixed(2)}% of days left to
+                next recurring ({recurringProgress.daysUntilNext} days)
               </p>
-            <div className="flex justify-between items-center gap-3">
-              <h2 className="text-sm mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-green-600 to-cyan-600">
-                Last Processed: {income.lastProcessed ? format(income.lastProcessed, "PPP") : "NA"}
-              </h2>
-              <h2 className="text-sm mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-green-600 to-cyan-600">
-                Recurring Edited: {income.lastUpdated ? format(income.lastUpdated, "PPP") : "No!"}
-              </h2>
-            </div>
+              <div className="flex justify-between items-center gap-3">
+                <h2 className="text-sm mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-green-600 to-cyan-600">
+                  Last Processed:{" "}
+                  {income.lastProcessed
+                    ? format(income.lastProcessed, "PPP")
+                    : "NA"}
+                </h2>
+                <h2 className="text-sm mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-green-600 to-cyan-600">
+                  Edited:{" "}
+                  {income.lastUpdated
+                    ? format(income.lastUpdated, "PPP")
+                    : "No!"}
+                </h2>
+              </div>
             </div>
           )}
         </div>
@@ -279,6 +287,25 @@ function IncomeItem({ income, isIncome, refreshData }) {
             </DialogHeader>
 
             <div className="flex flex-col gap-6 mt-6">
+              {/* Emoji Picker */}
+              <div className="flex space-y-11">
+                <Button
+                  variant="outline"
+                  className="text-lg px-4 py-2 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 text-white font-semibold rounded-full hover:scale-105 transition-transform"
+                  onClick={() => setopenEmojiPicker(!openEmojiPicker)}
+                >
+                  {editedIcon}
+                </Button>
+                <div className="absolute z-20">
+                  <EmojiPicker
+                    open={openEmojiPicker}
+                    onEmojiClick={(e) => {
+                      setEditedIcon(e.emoji);
+                      setopenEmojiPicker(false);
+                    }}
+                  />
+                </div>
+              </div>
               {/* Income Name */}
               <div>
                 <h2 className="text-gray-700 font-medium mb-2">Income Name</h2>
@@ -320,7 +347,18 @@ function IncomeItem({ income, isIncome, refreshData }) {
 
               {/* Conditional Fields Based on Recurrence */}
               {isRecurring ? (
-                <div>
+                <div className="mt-4">
+                  <h2 className="text-gray-700 font-medium mb-2">Frequency</h2>
+                  <select
+                    value={frequency}
+                    onChange={(e) => setFrequency(e.target.value)}
+                    className="block w-full p-2 mb-2 border border-gray-300 rounded-md"
+                  >
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="yearly">Yearly</option>
+                  </select>
                   <h2 className="text-gray-700 font-medium mb-2">Start Date</h2>
                   <Popover>
                     <PopoverTrigger asChild>

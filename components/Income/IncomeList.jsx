@@ -9,6 +9,8 @@ import CreateIncomes from "./CreateIncome";
 import IncomeItem from "./IncomeItem";
 import { Skeleton } from "../ui/skeleton";
 import DeleteIncome from "./DeleteIncome";
+import { Button } from "../ui/button";
+import Link from "next/link";
 
 function IncomeList() {
   const [incomelist, setIncomelist] = useState([]);
@@ -45,16 +47,27 @@ function IncomeList() {
   return (
     <div className="mt-7">
       <div className="flex justify-between mb-7">
-        <h2 className="font-bold text-3xl">My Income Streams</h2>
-        <DeleteIncome
-          incomeData={incomelist}
-          refreshData={() => getIncomelist()}
-        />
+        <h2 className="font-extrabold text-3xl md:text-4xl text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-emerald-400 to-lime-500">
+          My Income Sources
+        </h2>
+        <div className="flex gap-4 items-center">
+          <Link href="/dashboard/budgets">
+            <Button className="rounded-full text-md bg-gradient-to-r from-green-400 via-emerald-400 to-lime-400 text-white px-6 py-3 font-semibold shadow-md hover:shadow-lg hover:scale-105 transition-transform">
+              Go to Budget Tab
+            </Button>
+          </Link>
+          <DeleteIncome
+            incomeData={incomelist}
+            refreshData={() => getIncomelist()}
+          />
+        </div>
       </div>
       <div className="mb-7 grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-5">
         <CreateIncomes refreshData={() => getIncomelist()} />
       </div>
-      <h2 className="text-3xl font-bold mb-6">Ongoing Incomes</h2>
+      <h2 className="font-extrabold text-3xl md:text-4xl mb-6 text-transparent bg-clip-text bg-gradient-to-tl from-green-400 via-emerald-400 to-cyan-500">
+        Ongoing Incomes
+      </h2>
       <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6 mb-10">
         {currentItems?.length > 0
           ? currentItems.map((income, index) => (
@@ -70,8 +83,9 @@ function IncomeList() {
               </div>
             ))}
       </div>
-
-      <h2 className="text-3xl font-bold mb-6">Upcoming Recurring Incomes</h2>
+      <h2 className="font-extrabold text-3xl md:text-4xl mb-6 text-transparent bg-clip-text bg-gradient-to-tl from-green-400 via-emerald-400 to-cyan-500">
+        Upcoming Recurring Incomes
+      </h2>
       <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6 mb-5">
         {upcomingItems?.length > 0
           ? upcomingItems.map((income, index) => (
@@ -87,7 +101,6 @@ function IncomeList() {
               </div>
             ))}
       </div>
-
     </div>
   );
 }
