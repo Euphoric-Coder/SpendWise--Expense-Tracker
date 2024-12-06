@@ -52,6 +52,14 @@ import { eq } from "drizzle-orm";
 import { toast } from "sonner";
 import { parseISO, format } from "date-fns";
 import EmojiPicker from "emoji-picker-react";
+import { FaRediere } from "react-icons";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 function IncomeItem({ income, refreshData }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -102,7 +110,7 @@ function IncomeItem({ income, refreshData }) {
       amount: editedAmount,
       icon: editedIcon,
       incomeType: isRecurring ? "recurring" : "non-recurring",
-      // frequency: isRecurring ? frequency : null,
+      frequency: isRecurring ? frequency : null,
       startDate: isRecurring ? editedStartDate : null,
       endDate: isRecurring ? null : editedEndDate || defaultEndDate,
       status: isRecurring
@@ -122,7 +130,7 @@ function IncomeItem({ income, refreshData }) {
     if (result) {
       toast(`Income "${editedName}" has been updated!`);
       setIsDialogOpen(false); // Close the dialog
-      setFrequency("monthly")
+      // setFrequency("monthly")
 
       refreshData(); // Refresh data
     }
@@ -291,7 +299,7 @@ function IncomeItem({ income, refreshData }) {
               <div className="flex space-y-11">
                 <Button
                   variant="outline"
-                  className="text-lg px-4 py-2 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 text-white font-semibold rounded-full hover:scale-105 transition-transform"
+                  className="text-lg px-4 py-2 bg-gradient-to-r from-cyan-400 via-green-400 to-cyan-400 text-white font-semibold rounded-full hover:scale-105 transition-transform"
                   onClick={() => setopenEmojiPicker(!openEmojiPicker)}
                 >
                   {editedIcon}
@@ -349,7 +357,34 @@ function IncomeItem({ income, refreshData }) {
               {isRecurring ? (
                 <div className="mt-4">
                   <h2 className="text-gray-700 font-medium mb-2">Frequency</h2>
-                  <select
+                  <Select
+                    defaultValue={income.frequency}
+                    onValueChange={(e) => setFrequency(e)}
+                    // className="block w-full p-2 mb-2 border border-gray-300 rounded-full"
+                  >
+                    <SelectTrigger className="w-full text-lg mb-2">
+                      <SelectValue
+                        // placeholder={frequency}
+                        className="text-lg"
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="daily" className="text-lg">
+                        Daily
+                      </SelectItem>
+                      <SelectItem value="weekly" className="text-lg">
+                        Weekly
+                      </SelectItem>
+                      <SelectItem value="monthly" className="text-lg">
+                        Monthly
+                      </SelectItem>
+                      <SelectItem value="yearly" className="text-lg">
+                        Yearly
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  {/* <select
                     value={frequency}
                     onChange={(e) => setFrequency(e.target.value)}
                     className="block w-full p-2 mb-2 border border-gray-300 rounded-md"
@@ -358,7 +393,7 @@ function IncomeItem({ income, refreshData }) {
                     <option value="weekly">Weekly</option>
                     <option value="monthly">Monthly</option>
                     <option value="yearly">Yearly</option>
-                  </select>
+                  </select> */}
                   <h2 className="text-gray-700 font-medium mb-2">Start Date</h2>
                   <Popover>
                     <PopoverTrigger asChild>
