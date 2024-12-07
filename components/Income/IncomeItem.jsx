@@ -216,7 +216,7 @@ function IncomeItem({ income, refreshData }) {
               </p>
             </div>
           )}
-          {income.incomeType === "recurring" && (
+          {income.incomeType === "recurring" && income.status !== "upcoming" && (
             <div>
               <div className="flex items-center justify-between">
                 <h2 className="text-sm mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-green-600 to-cyan-600">
@@ -239,10 +239,10 @@ function IncomeItem({ income, refreshData }) {
               {/* Percentage Below nonrecurringProgress Bar */}
               <p
                 className={`mt-2 text-center text-sm sm:text-lg font-semibold ${
-                  recurringProgress.progress <= 25
+                  recurringProgress.progress <= 65
                     ? "text-green-500" // Most time remaining
-                    : recurringProgress.progress <= 75
-                    ? "text-orange-500" // Moderate time remaining
+                    : recurringProgress.progress <= 85
+                    ? "text-yellow-500" // Moderate time remaining
                     : "text-red-500" // Time is almost up
                 }`}
               >
