@@ -2,21 +2,26 @@ import React, { useState, useCallback } from "react";
 import { FiUploadCloud } from "react-icons/fi";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
+import { processCsv } from "@/utils/csvParser";
 
 const CsvUpload = ({ onFileSelect }) => {
   const [csvFile, setCsvFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
 
   const handleDrop = useCallback(
-    (event) => {
+    async (event) => {
       event.preventDefault();
       setIsDragging(false);
 
       const file = event.dataTransfer.files[0];
       if (file && file.type === "text/csv") {
-        processCsv(file);
-        setCsvFile(file);
-        console.log(csvFile);
+        try {
+          const expenses = await processCsv(file);
+          setCsvFile(file);
+          onFileSelect(expenses);
+        } catch (error) {
+          alert(error);
+        }
       } else {
         alert("Please upload a CSV file.");
       }
@@ -33,28 +38,19 @@ const CsvUpload = ({ onFileSelect }) => {
     setIsDragging(false);
   };
 
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files?.[0];
     if (file && file.type === "text/csv") {
-      processCsv(file);
-      setCsvFile(file);
+      try {
+        const expenses = await processCsv(file);
+        setCsvFile(file);
+        onFileSelect(expenses);
+      } catch (error) {
+        alert(error);
+      }
     } else {
       alert("Please upload a CSV file.");
     }
-  };
-
-  const processCsv = (file) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const text = e.target?.result;
-      const rows = text.split("\n").filter((row) => row.trim());
-      const expenses = rows.slice(1).map((row) => {
-        const [date, name, amount] = row.split(",").map((item) => item.trim());
-        return { date, name, amount };
-      });
-      onFileSelect(expenses);
-    };
-    reader.readAsText(file);
   };
 
   return (

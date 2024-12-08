@@ -36,6 +36,7 @@ const ExpensesDashboard = ({ params }) => {
 
   const handleFileSelect = (data) => {
     setExpenses(data);
+    console.log(data);
   };
 
   useEffect(() => {

@@ -1,32 +1,34 @@
-export const parseCsv = (file) => {
+
+export const processCsv = (file) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
-    reader.onload = (event) => {
-      const text = event.target.result;
+    reader.onload = (e) => {
       try {
-        const rows = text.split("\n").map((row) => row.trim());
-        if (rows.length < 2) {
-          throw new Error("The CSV file is empty or does not have valid data.");
-        }
+        const text = e.target?.result;
+        if (!text) throw new Error("Empty file or invalid content.");
 
-        const headers = rows[0].split(",").map((header) => header.trim());
-        const data = rows.slice(1).map((row) => {
-          const values = row.split(",").map((value) => value.trim());
-          return headers.reduce((acc, header, index) => {
-            acc[header] = values[index];
-            return acc;
-          }, {});
+        const rows = text.split("\n").filter((row) => row.trim());
+        if (rows.length < 2)
+          throw new Error(
+            "CSV file must have a header and at least one data row."
+          );
+
+        const expenses = rows.slice(1).map((row) => {
+          const [date, name, amount] = row
+            .split(",")
+            .map((item) => item.trim());
+          return { date, name, amount };
         });
 
-        resolve(data);
+        resolve(expenses);
       } catch (error) {
-        reject(`Error parsing CSV: ${error.message}`);
+        reject(error.message || "Error processing the CSV file.");
       }
     };
 
     reader.onerror = () => {
-      reject("Failed to read the file. Please try again.");
+      reject("Failed to read the CSV file. Please try again.");
     };
 
     reader.readAsText(file);
