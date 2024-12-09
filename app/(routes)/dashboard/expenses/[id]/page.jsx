@@ -34,10 +34,6 @@ const ExpensesDashboard = ({ params }) => {
   const [expensesList, setExpensesList] = useState([]);
   const [expenses, setExpenses] = useState([]);
 
-  const handleFileSelect = (data) => {
-    setExpenses(data);
-    console.log(data);
-  };
 
   useEffect(() => {
     user && getBudgetInfo();
@@ -156,7 +152,6 @@ const ExpensesDashboard = ({ params }) => {
           user={user}
           refreshData={() => getBudgetInfo()}
         />
-        <CsvUpload onFileSelect={handleFileSelect}/>
         
       </div>
 

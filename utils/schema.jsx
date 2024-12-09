@@ -1,4 +1,5 @@
 import {
+  boolean,
   date,
   integer,
   numeric,
@@ -76,6 +77,20 @@ export const Incomes = pgTable("incomes", {
 //   createdBy: varchar("createdBy").notNull(),
 //   createdAt: timestamp("createdAt").defaultNow(),
 // });
+
+export const Settings = pgTable(
+  "settings",
+  {
+    id: serial("id").primaryKey(),
+    createdBy: varchar("createdBy").notNull(),
+    showcsvimport: boolean("showcsvimport").notNull().default(true), // True or False
+  },
+  (settings) => ({
+    uniqueCreatedBy: uniqueIndex("unique_settings_created_by").on(
+      settings.createdBy
+    ),
+  })
+);
 
 export const Feedback = pgTable(
   "feedback",

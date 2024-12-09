@@ -11,6 +11,7 @@ import { eq, getTableColumns, sql } from "drizzle-orm";
 import { useUser } from "@clerk/nextjs";
 import { AlertCircle, Eraser, LucideSquareArrowOutUpRight } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import CSVImportButton from "./CSVImportButton";
 
 const AddExpense = ({ budgetId, refreshData, budgetAmount }) => {
   const { user } = useUser();
@@ -100,12 +101,16 @@ const AddExpense = ({ budgetId, refreshData, budgetAmount }) => {
         <h2 className="font-bold text-3xl text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-red-600 to-yellow-500 animate-gradient-text">
           Add Expense
         </h2>
-        <Button
-          onClick={() => clearData()}
-          className="px-4 py-2 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl hover:from-red-600 hover:to-yellow-600 transition-transform transform hover:scale-105"
-        >
-          Clear Data
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={() => clearData()}
+            className="px-4 py-2 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl hover:from-red-600 hover:to-yellow-600 transition-transform transform hover:scale-105"
+          >
+            Clear Data
+          </Button>
+          <CSVImportButton />
+
+        </div>
       </div>
 
       {/* Over Budget Alert */}
