@@ -14,6 +14,7 @@ import {
   AiOutlineRocket,
 } from "react-icons/ai";
 import { UserMenu } from "../UserButton";
+import { ModeToggle } from "../ThemeButton";
 
 const Header = () => {
   const { user, isSignedIn } = useUser();
@@ -116,6 +117,7 @@ const Header = () => {
         <div className="hidden md:flex gap-4 items-center">
           {isSignedIn ? (
             <>
+              <ModeToggle />
               <Link href={"/dashboard"}>
                 <Button
                   variant="outline"

@@ -4,6 +4,7 @@ import { Outfit } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/sonner";
 import Header from "@/components/Homepage/Header";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -19,8 +20,15 @@ export default function RootLayout({ children }) {
     <ClerkProvider>
       <html lang="en">
         <body className={`${outfit.className}`}>
-          {children}
-          <Toaster />
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <Toaster />
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
