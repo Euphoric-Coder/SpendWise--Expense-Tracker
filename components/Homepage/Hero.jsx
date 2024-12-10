@@ -70,7 +70,7 @@ const Hero = () => {
         {/* Call to Action Button */}
         <div className="mt-6">
           <Link href={"/dashboard"}>
-            <Button className="px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 text-base sm:text-lg md:text-xl font-bold text-white rounded-full shadow-xl bg-gradient-to-r from-pink-500 via-yellow-500 to-green-500 dark:from-purple-500 dark:via-pink-500 dark:to-blue-500 hover:from-green-500 hover:via-teal-500 hover:to-blue-500 dark:hover:from-indigo-500 dark:hover:via-purple-500 dark:hover:to-cyan-400 transition-transform transform hover:scale-105 active:scale-95 duration-300">
+            <Button className="px-6 py-3 sm:px-8 mb-6 sm:py-4 md:px-10 md:py-5 text-base sm:text-md md:text-sm xl:text-xl font-bold text-white rounded-full shadow-xl bg-gradient-to-r from-pink-500 via-yellow-500 to-green-500 dark:from-purple-500 dark:via-pink-500 dark:to-blue-500 hover:from-green-500 hover:via-teal-500 hover:to-blue-500 dark:hover:from-indigo-500 dark:hover:via-purple-500 dark:hover:to-cyan-400 transition-transform transform hover:scale-105 active:scale-95 duration-300">
               Start Tracking Your Expenses
             </Button>
           </Link>

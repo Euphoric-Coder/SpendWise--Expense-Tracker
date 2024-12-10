@@ -21,6 +21,7 @@ const Header = () => {
   const { user, isSignedIn } = useUser();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,6 +34,10 @@ const Header = () => {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const togleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen)
   };
 
   // Define nav links array
@@ -82,19 +87,20 @@ const Header = () => {
           </span>
         </Link>
 
-        {/* Hamburger Menu */}
-        <div className="md:hidden flex items-center">
+        {/* Hamburger Menu for Mobile */}
+        <div className="md:hidden flex items-center gap-1">
+          <ModeToggle />
           <button
-            onClick={toggleMenu}
+            onClick={togleMobileMenu}
             className="text-gray-500 hover:text-teal-500 transition-all duration-300 text-2xl dark:text-gray-300 dark:hover:text-purple-500"
           >
-            {isMenuOpen ? <AiOutlineClose /> : <AiOutlineMenu />}
+            {isMobileMenuOpen ? <AiOutlineClose /> : <AiOutlineMenu />}
           </button>
         </div>
 
         {/* Navbar Links (Desktop) */}
         <nav
-          className={`hidden md:flex gap-6 ${
+          className={`hidden xl:flex gap-6 ${
             isScrolled
               ? "text-gray-700 dark:text-gray-300"
               : "text-gray-500 dark:text-gray-400"
@@ -144,12 +150,21 @@ const Header = () => {
               </Link>
             </>
           )}
+          {/* Hamburger Menu for Tablets */}
+          <div className="xl:hidden flex items-center">
+            <button
+              onClick={toggleMenu}
+              className="text-gray-500 hover:text-teal-500 transition-all duration-300 text-2xl dark:text-gray-300 dark:hover:text-purple-500"
+            >
+              {isMenuOpen ? <AiOutlineClose /> : <AiOutlineMenu />}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Tablet Menu */}
       {isMenuOpen && (
-        <nav className="absolute top-20 left-0 w-full bg-gradient-to-r from-teal-300 via-blue-300 to-indigo-400 dark:from-gray-800 dark:via-gray-900 dark:to-purple-900 shadow-lg py-5 text-center md:hidden">
+        <nav className="absolute top-20 left-0 w-full bg-gradient-to-r from-teal-300 via-blue-300 to-indigo-400 dark:from-gray-800 dark:via-gray-900 dark:to-purple-900 shadow-lg py-5 text-center xl:hidden">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -160,6 +175,39 @@ const Header = () => {
               {link.label}
             </Link>
           ))}
+        </nav>
+      )}
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <nav className="absolute top-20 left-0 w-full bg-gradient-to-r from-teal-300 via-blue-300 to-indigo-400 dark:from-gray-800 dark:via-gray-900 dark:to-purple-900 shadow-lg py-6 text-center xl:hidden">
+          {/* UserMenu at the Top */}
+          <div className="flex justify-end px-4">
+            <UserMenu />
+          </div>
+
+          {/* Navigation Links */}
+          <div className="mt-4 space-y-3">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={togleMobileMenu}
+                className="block text-gray-700 hover:text-teal-500 dark:text-gray-300 dark:hover:text-purple-400 text-lg font-semibold py-2"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+
+          {/* Dashboard Button */}
+          <div className="mt-6 px-6">
+            <Link href={"/dashboard"} onClick={togleMobileMenu}>
+              <button className="w-full px-4 py-3 text-lg font-bold text-white rounded-full shadow-lg bg-gradient-to-r from-pink-500 via-yellow-500 to-green-500 dark:from-purple-500 dark:via-blue-500 dark:to-indigo-500 hover:scale-105 transform transition duration-300">
+                Go to Dashboard
+              </button>
+            </Link>
+          </div>
         </nav>
       )}
     </header>
