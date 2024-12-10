@@ -38,7 +38,7 @@ const ExpenseTable = ({ expenseList = [], refreshData }) => {
       .returning();
 
     if (result) {
-      toast(`Expense "${expense.name}" has been deleted!`);
+      toast.success(`Expense "${expense.name}" has been deleted!`);
       refreshData();
     }
   };
@@ -58,7 +58,7 @@ const ExpenseTable = ({ expenseList = [], refreshData }) => {
       .returning();
 
     if (result) {
-      toast(`Expense "${editedName}" has been updated!`);
+      toast.success(`Expense "${editedName}" has been updated!`);
       setIsDialogOpen(false); // Close the dialog after saving
       setEditingExpense(null); // Reset editing state
       refreshData();
