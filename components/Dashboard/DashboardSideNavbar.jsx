@@ -67,10 +67,21 @@ const DashboardSideNavbar = () => {
         height={100}
         className="mb-8"
       /> */}
-      <div className="flex flex-row items-center gap-2">
-        <Image src={"/favicon.png"} alt="logo" width={60} height={25} />
-        <span className="text-blue-800 font-bold text-2xl">SpendWise</span>
-      </div>
+      <Link
+        href="/"
+        className="hover:scale-105 transition-all duration-300 ease-in-out flex items-center gap-3"
+      >
+        <Image
+          src={"/favicon.png"}
+          alt="Logo of SpendWise"
+          width={50}
+          height={50}
+          className="drop-shadow-lg"
+        />
+        <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-yellow-500 to-red-500 font-extrabold text-3xl hover:animate-pulse">
+          SpendWise
+        </span>
+      </Link>
 
       {/* Menu List */}
       <div className="w-full flex flex-col space-y-3">
@@ -78,7 +89,7 @@ const DashboardSideNavbar = () => {
           <Link key={menu.id} href={menu.path}>
             <div
               key={menu.id}
-              className={`flex items-center gap-4 px-6 py-3 rounded-lg cursor-pointer transition-all duration-200 hover:bg-gradient-to-r from-teal-100 to-indigo-100 hover:shadow-md transform hover:scale-105 ${
+              className={`flex items-center gap-4 px-6 py-3 rounded-2xl cursor-pointer transition-all duration-500 hover:bg-gradient-to-r from-teal-100 to-indigo-100 hover:shadow-md transform hover:scale-105 ${
                 path == menu.path &&
                 "bg-gradient-to-r from-teal-100 to-indigo-100"
               }`}
