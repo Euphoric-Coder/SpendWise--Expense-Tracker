@@ -1,16 +1,20 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
-import { Bell } from "lucide-react";
-import { Button } from "../ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
-} from "../ui/tooltip";
+  TooltipProvider,
+} from "@/components/ui/tooltip";
+import { Bell } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const NotificationTab = () => {
   const [notifications, setNotifications] = useState([
@@ -32,7 +36,7 @@ const NotificationTab = () => {
     {
       id: 4,
       message:
-        "Reminder: Your Expense 'Buying Groceries' from budget 'Groceries' is due tomorrow. This is a long notification to demonstrate how we handle longer messages in a futuristic and usable UI design.",
+        "Reminder: Your Expense 'Buying Groceries' from budget 'Groceries' is due tomorrow. This long message showcases how futuristic notifications look elegant with vibrant colors and readability.",
       read: false,
     },
   ]);
@@ -68,40 +72,40 @@ const NotificationTab = () => {
 
   return (
     <Popover>
-      <PopoverTrigger className="relative flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 shadow-lg hover:scale-110 transition-transform">
-        <Bell className="text-white w-6 h-6 drop-shadow-neon" />
+      <PopoverTrigger className="relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 shadow-deep-glow hover:scale-110 transition-transform">
+        <Bell className="text-white w-8 h-8 drop-shadow-glow animate-neon-pulse" />
         {unreadCount > 0 && (
-          <div className="absolute right-1 top-1 h-4 w-4 rounded-full bg-pink-500 border-2 border-white animate-pulse"></div>
+          <div className="absolute right-2 top-2 h-5 w-5 rounded-full bg-yellow-500 border-2 border-white animate-pulse"></div>
         )}
       </PopoverTrigger>
       <PopoverContent
         align="end"
-        className="w-96 p-6 rounded-xl bg-opacity-90 backdrop-blur-xl bg-gradient-to-b from-gray-900 to-gray-800 shadow-neon border border-gray-700"
+        className="w-[28rem] p-6 rounded-2xl bg-opacity-90 backdrop-blur-md bg-gradient-to-b from-gray-900 via-gray-800 to-black shadow-bright-glow border border-gray-700"
       >
-        <h3 className="text-xl font-bold text-white border-b border-gray-700 pb-4">
+        <h3 className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-yellow-500 tracking-wider border-b border-gray-700 pb-4">
           Notifications
         </h3>
-        <div className="mt-4 max-h-80 overflow-y-auto space-y-4">
+        <div className="mt-4 max-h-96 overflow-y-auto space-y-6 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
           {notifications.length > 0 ? (
             notifications.map((notification) => (
               <div
                 key={notification.id}
-                className={`p-4 rounded-lg shadow-inner hover:shadow-lg transition-all ${
+                className={`p-5 rounded-lg transform-gpu hover:scale-105 shadow-card-glow transition-all ${
                   notification.read
-                    ? "bg-gray-700/50 text-gray-400"
-                    : "bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white"
+                    ? "bg-gray-800/70 text-gray-400"
+                    : "bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white"
                 }`}
               >
                 <p
-                  className={`text-sm ${
-                    notification.message.length > 100
+                  className={`text-base ${
+                    notification.message.length > 80
                       ? "line-clamp-2"
                       : "line-clamp-none"
                   }`}
                 >
                   {notification.message}
                 </p>
-                <div className="flex justify-between mt-2">
+                <div className="flex justify-between items-center mt-4">
                   {!notification.read && (
                     <Button
                       variant="ghost"
@@ -112,20 +116,20 @@ const NotificationTab = () => {
                       Mark as Read
                     </Button>
                   )}
-                  {notification.message.length > 100 && (
+                  {notification.message.length > 80 && (
                     <Dialog>
                       <DialogTrigger asChild>
                         <Button
                           variant="ghost"
                           size="xs"
-                          className="text-pink-300 hover:text-white hover:underline"
+                          className="text-yellow-300 hover:text-white hover:underline"
                           onClick={() => setCurrentNotification(notification)}
                         >
                           Show More
                         </Button>
                       </DialogTrigger>
-                      <DialogContent className="rounded-lg p-6 bg-gray-900 text-white shadow-lg">
-                        <h4 className="text-lg font-bold mb-2">
+                      <DialogContent className="rounded-xl p-8 bg-black text-white shadow-lg">
+                        <h4 className="text-lg font-extrabold mb-4">
                           Notification Details
                         </h4>
                         <p className="text-sm">
@@ -138,17 +142,17 @@ const NotificationTab = () => {
               </div>
             ))
           ) : (
-            <p className="text-sm text-gray-400 text-center">
+            <p className="text-base text-gray-400 text-center">
               No new notifications
             </p>
           )}
         </div>
-        <div className="flex justify-between mt-6">
+        <div className="flex justify-between mt-8">
           {notifications.length > 0 && (
             <Button
               variant="outline"
-              size="sm"
-              className="text-blue-300 hover:text-white hover:bg-blue-600"
+              size="md"
+              className="px-6 text-pink-500 hover:text-white hover:bg-pink-600"
               onClick={clearNotifications}
             >
               Clear All
@@ -159,8 +163,8 @@ const NotificationTab = () => {
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="sm"
-                  className="text-gray-400 hover:text-gray-200"
+                  size="md"
+                  className="px-6 text-yellow-400 hover:text-yellow-200"
                   onClick={() => alert("Redirecting to notifications page...")}
                 >
                   See All
