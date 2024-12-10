@@ -11,7 +11,7 @@ const AppTitle = () => {
             alt="SpendWise Icon"
             width={500}
             height={400}
-            className="w-10 sm:w-12 md:w-14 lg:w-16"
+            className="p-2 w-14 sm:w-16 md:w-20 lg:w-24"
           />
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-teal-400 hover:from-teal-500 hover:via-indigo-500 hover:to-pink-500">
             SpendWise: Expense Tracker

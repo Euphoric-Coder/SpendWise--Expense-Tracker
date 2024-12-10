@@ -5,8 +5,9 @@ import React, { useState, useEffect } from "react";
 import { Button } from "../ui/button";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
-import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import {
+  AiOutlineMenu,
+  AiOutlineClose,
   AiOutlineHome,
   AiOutlineAppstore,
   AiOutlineThunderbolt,
@@ -34,12 +35,33 @@ const Header = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  // Define nav links array
+  const navLinks = [
+    { href: "#hero", label: "Home", icon: <AiOutlineHome /> },
+    {
+      href: "#ai-features",
+      label: "AI Features",
+      icon: <AiOutlineThunderbolt />,
+    },
+    {
+      href: "#key-features",
+      label: "Key Features",
+      icon: <AiOutlineAppstore />,
+    },
+    {
+      href: "#how-it-works",
+      label: "How It Works",
+      icon: <AiOutlineExperiment />,
+    },
+    { href: "#cta", label: "Get Started", icon: <AiOutlineRocket /> },
+  ];
+
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 h-20 flex items-center transition-all duration-300 border-b-2 ${
+      className={`fixed top-0 left-0 w-full z-50 h-20 flex items-center transition-all duration-300 border-b border-indigo-300 dark:border-cyan-800 ${
         isScrolled
-          ? "bg-gradient-to-r from-blue-900/80 via-gray-900/60 to-black/80 backdrop-blur-md shadow-lg"
-          : "bg-transparent"
+          ? "bg-gradient-to-r from-teal-100 via-blue-100 to-indigo-300 dark:from-gray-800 dark:via-gray-900 dark:to-purple-900 shadow-lg"
+          : "bg-gradient-to-r from-cyan-50 via-purple-50 to-indigo-50 dark:bg-gradient-to-r dark:from-gray-700 dark:via-gray-800 dark:to-gray-900"
       }`}
     >
       <div className="px-5 flex justify-between items-center max-w-7xl mx-auto w-full">
@@ -55,7 +77,7 @@ const Header = () => {
             height={50}
             className="drop-shadow-lg"
           />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-yellow-500 to-red-500 font-extrabold text-4xl hover:animate-pulse">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-yellow-500 to-red-500 font-extrabold text-4xl hover:animate-pulse dark:from-purple-400 dark:via-pink-500 dark:to-blue-500">
             SpendWise
           </span>
         </Link>
@@ -64,7 +86,7 @@ const Header = () => {
         <div className="md:hidden flex items-center">
           <button
             onClick={toggleMenu}
-            className="text-gray-300 hover:text-teal-400 transition-all duration-300 text-2xl"
+            className="text-gray-500 hover:text-teal-500 transition-all duration-300 text-2xl dark:text-gray-300 dark:hover:text-purple-500"
           >
             {isMenuOpen ? <AiOutlineClose /> : <AiOutlineMenu />}
           </button>
@@ -73,44 +95,21 @@ const Header = () => {
         {/* Navbar Links (Desktop) */}
         <nav
           className={`hidden md:flex gap-6 ${
-            isScrolled ? "text-gray-300" : "text-gray-500"
+            isScrolled
+              ? "text-gray-700 dark:text-gray-300"
+              : "text-gray-500 dark:text-gray-400"
           }`}
         >
-          <a
-            href="#hero"
-            className="flex items-center gap-2 hover:text-teal-400 transition-all duration-300 font-semibold"
-          >
-            <AiOutlineHome className="text-lg" />
-            Home
-          </a>
-          <a
-            href="#ai-features"
-            className="flex items-center gap-2 hover:text-teal-400 transition-all duration-300 font-semibold"
-          >
-            <AiOutlineThunderbolt className="text-lg" />
-            AI Features
-          </a>
-          <a
-            href="#key-features"
-            className="flex items-center gap-2 hover:text-teal-400 transition-all duration-300 font-semibold"
-          >
-            <AiOutlineAppstore className="text-lg" />
-            Key Features
-          </a>
-          <a
-            href="#how-it-works"
-            className="flex items-center gap-2 hover:text-teal-400 transition-all duration-300 font-semibold"
-          >
-            <AiOutlineExperiment className="text-lg" />
-            How It Works
-          </a>
-          <a
-            href="#cta"
-            className="flex items-center gap-2 hover:text-teal-400 transition-all duration-300 font-semibold"
-          >
-            <AiOutlineRocket className="text-lg" />
-            Get Started
-          </a>
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="flex items-center gap-2 hover:text-teal-500 dark:hover:text-purple-400 transition-all duration-500 font-semibold hover:font-extrabold hover:scale-110 hover:animate-pulse"
+            >
+              {link.icon}
+              {link.label}
+            </a>
+          ))}
         </nav>
 
         {/* Action Buttons */}
@@ -121,7 +120,7 @@ const Header = () => {
               <Link href={"/dashboard"}>
                 <Button
                   variant="outline"
-                  className="rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white hover:scale-105 hover:shadow-lg transition-all duration-300"
+                  className="rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white hover:scale-105 hover:shadow-lg transition-all duration-300 dark:from-blue-500 dark:via-purple-500 dark:to-pink-500"
                 >
                   Dashboard
                 </Button>
@@ -133,13 +132,13 @@ const Header = () => {
               <Link href={"/sign-in"}>
                 <Button
                   variant="outline"
-                  className="rounded-full border-gray-300 hover:border-teal-400 text-gray-300 hover:text-teal-400 transition-all duration-300"
+                  className="rounded-full border-gray-300 hover:border-teal-500 text-gray-700 hover:text-teal-500 transition-all duration-300 dark:border-gray-500 dark:hover:border-purple-400 dark:text-gray-300 dark:hover:text-purple-400"
                 >
                   Sign In
                 </Button>
               </Link>
               <Link href={"/sign-up"}>
-                <Button className="rounded-full bg-gradient-to-r from-teal-400 via-yellow-500 to-red-500 text-white hover:scale-105 transition-all duration-300 hover:shadow-2xl">
+                <Button className="rounded-full bg-gradient-to-r from-teal-400 via-yellow-500 to-red-500 text-white hover:scale-105 transition-all duration-300 hover:shadow-2xl dark:from-purple-500 dark:via-pink-500 dark:to-blue-500">
                   Get Started
                 </Button>
               </Link>
@@ -150,42 +149,17 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <nav className="absolute top-20 left-0 w-full bg-gradient-to-r from-blue-900 via-gray-900 to-black shadow-lg py-5 text-center md:hidden">
-          <Link
-            href="#hero"
-            onClick={toggleMenu}
-            className="block text-gray-300 hover:text-teal-400 hover:text-xl text-lg font-semibold py-2"
-          >
-            Home
-          </Link>
-          <Link
-            href="#ai-features"
-            onClick={toggleMenu}
-            className="block text-gray-300 hover:text-teal-400 hover:text-xl text-lg font-semibold py-2"
-          >
-            AI Features
-          </Link>
-          <Link
-            href="#key-features"
-            onClick={toggleMenu}
-            className="block text-gray-300 hover:text-teal-400 hover:text-xl text-lg font-semibold py-2"
-          >
-            Key Features
-          </Link>
-          <Link
-            href="#how-it-works"
-            onClick={toggleMenu}
-            className="block text-gray-300 hover:text-teal-400 hover:text-xl text-lg font-semibold py-2"
-          >
-            How It Works
-          </Link>
-          <Link
-            href="#cta"
-            onClick={toggleMenu}
-            className="block text-gray-300 hover:text-teal-400 text-lg font-semibold py-2"
-          >
-            Get Started
-          </Link>
+        <nav className="absolute top-20 left-0 w-full bg-gradient-to-r from-teal-300 via-blue-300 to-indigo-400 dark:from-gray-800 dark:via-gray-900 dark:to-purple-900 shadow-lg py-5 text-center md:hidden">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={toggleMenu}
+              className="block text-gray-700 hover:text-teal-500 dark:text-gray-300 dark:hover:text-purple-400 hover:text-xl text-lg font-semibold py-2"
+            >
+              {link.label}
+            </Link>
+          ))}
         </nav>
       )}
     </header>
