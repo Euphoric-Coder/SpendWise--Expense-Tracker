@@ -9,6 +9,7 @@ import { db } from "@/utils/dbConfig"; // Assume dbConfig is set up for your dat
 import { Settings } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
+import { Upload } from "lucide-react";
 
 const CSVImportButton = () => {
   const [showTutorialDialog, setShowTutorialDialog] = useState(false);
@@ -27,26 +28,47 @@ const CSVImportButton = () => {
     {
       title: "Step 1: CSV File Format",
       content: (
-        <div className="p-6">
-          <p className="text-gray-800 text-lg">
-            Ensure your CSV file has the following columns in the exact order:
+        <div className="text-center">
+          <p className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500">
+            Your CSV file should include the following columns:
           </p>
-          <ul className="list-disc mt-4 space-y-3 text-gray-700">
-            <li>
-              <span className="font-semibold text-orange-600">Date</span> - The
-              date of the expense.
+          <ul className="mt-6 space-y-4 text-left">
+            <li className="flex items-start">
+              <span className="w-3 h-3 bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 rounded-full mt-1 mr-3"></span>
+              <span className="text-lg text-gray-800">
+                <strong className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500">
+                  Date
+                </strong>
+                : The date of the expense in the format:
+                <div className="text-center">
+                  <code className="font-mono bg-gray-800 text-yellow-300 p-1 rounded-md">
+                    YYYY-MM-DD
+                  </code>
+                </div>
+              </span>
             </li>
-            <li>
-              <span className="font-semibold text-orange-600">Name</span> - A
-              short description of the expense.
+            <li className="flex items-start">
+              <span className="w-3 h-3 bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 rounded-full mt-1 mr-3"></span>
+              <span className="text-lg text-gray-800">
+                <strong className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500">
+                  Name
+                </strong>
+                : A brief description of the expense.
+              </span>
             </li>
-            <li>
-              <span className="font-semibold text-orange-600">Amount</span> -
-              The monetary value of the expense.
+            <li className="flex items-start">
+              <span className="w-3 h-3 bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 rounded-full mt-1 mr-3"></span>
+              <span className="text-lg text-gray-800">
+                <strong className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500">
+                  Amount
+                </strong>
+                : The monetary value of the expense in numeric format.
+              </span>
             </li>
           </ul>
-          <p className="mt-6 text-gray-600">
-            Each row should represent a single expense record.
+          <p className="mt-6 text-gray-500">
+            Each row represents a single expense record. Ensure there are no
+            extra columns or formatting issues.
           </p>
         </div>
       ),
@@ -56,24 +78,33 @@ const CSVImportButton = () => {
       title: "Step 2: Date Format",
       content: (
         <div className="text-center">
-          <p className="text-gray-800 text-lg">
-            The <span className="font-semibold text-red-600">Date</span> column
-            must follow the format:
+          <p className="text-lg text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500">
+            The <span className="font-semibold text-yellow-400">Date</span>{" "}
+            column must follow this format:
           </p>
-          <p className="mt-4 text-orange-500 font-mono text-2xl">YYYY-MM-DD</p>
-          <p className="mt-6 text-gray-700">
-            Examples:
-            <ul className="list-disc list-inside mt-3 space-y-3">
-              <li>
-                <code className="text-red-500 font-mono">2024-01-01</code> for
-                January 1, 2024.
-              </li>
-              <li>
-                <code className="text-red-500 font-mono">2024-02-15</code> for
-                February 15, 2024.
-              </li>
-            </ul>
+          <p className="mt-4 text-2xl font-extrabold font-mono text-transparent bg-clip-text bg-gradient-to-tr from-green-400 via-blue-400 to-teal-400">
+            YYYY-MM-DD
           </p>
+          <ul className="mt-6 space-y-4 text-left">
+            <li className="flex items-start">
+              <span className="w-3 h-3 bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 rounded-full mt-1 mr-3"></span>
+              <span className="text-lg text-gray-800">
+                <code className="font-mono bg-gray-800 text-yellow-300 px-1 py-0.5 rounded">
+                  2024-01-01
+                </code>{" "}
+                for January 1, 2024.
+              </span>
+            </li>
+            <li className="flex items-start">
+              <span className="w-3 h-3 bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 rounded-full mt-1 mr-3"></span>
+              <span className="text-lg text-gray-800">
+                <code className="font-mono bg-gray-800 text-yellow-300 px-1 py-0.5 rounded">
+                  2024-02-15
+                </code>{" "}
+                for February 15, 2024.
+              </span>
+            </li>
+          </ul>
         </div>
       ),
       image: "/images/date-format.png", // Replace with your actual image path
@@ -82,18 +113,21 @@ const CSVImportButton = () => {
       title: "Step 3: Example File",
       content: (
         <div className="text-center">
-          <p className="text-gray-800 text-lg">
-            Here’s an example of how your CSV file should look:
+          <p className="text-lg text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500">
+            Here&apos;s an example of how your CSV file should look:
           </p>
-          <pre className="mt-6 bg-gradient-to-br from-yellow-50 via-orange-100 to-red-100 p-6 rounded-lg text-sm text-left shadow-lg text-gray-800">
+          <pre className="mt-6 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 p-6 rounded-lg text-sm text-left shadow-lg text-gray-300">
             {`date,name,amount
 2024-01-01,Groceries,150
 2024-01-02,Transport,50
 2024-01-03,Utilities,100`}
           </pre>
-          <p className="mt-6 text-gray-600">
-            Make sure the file is saved with the extension
-            <strong className="text-orange-600"> .csv</strong>.
+          <p className="mt-6 text-gray-500 text-lg">
+            Ensure your file is saved with the{" "}
+            <strong className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500">
+              .csv
+            </strong>{" "}
+            extension.
           </p>
         </div>
       ),
@@ -103,20 +137,22 @@ const CSVImportButton = () => {
       title: "Step 4: Ready to Upload",
       content: (
         <div className="text-center">
-          <p className="text-gray-800 text-lg">
+          <p className="text-lg text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500">
             Once your file is ready, click{" "}
-            <span className="font-semibold text-red-500">Next</span> to proceed
-            to the upload screen.
+            <span className="text-yellow-400 font-semibold">Continue</span> to
+            proceed to the upload screen.
           </p>
-          <p className="mt-6 text-gray-600">
-            Ensure your file is in the correct format before uploading. Invalid
-            files may not be processed.
+          <p className="mt-6 text-gray-400">
+            Make sure the file format matches the requirements. Invalid files
+            may not be processed.
           </p>
         </div>
       ),
       image: "/images/ready-to-upload.png", // Replace with your actual image path
     },
   ];
+
+
 
 
   useEffect(() => {
@@ -207,7 +243,7 @@ const CSVImportButton = () => {
         className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-lg shadow-lg hover:from-orange-600 hover:to-yellow-600 transition-transform transform hover:scale-105"
         onClick={handleImportClick}
       >
-        Import CSV
+        <Upload className="mr-1 w-9 h-9"/> Import CSV
       </Button>
 
       {/* Tutorial Dialog */}
@@ -270,7 +306,7 @@ const CSVImportButton = () => {
             </Button>
           </div>
           {/* Checkbox */}
-          <div className="mt-4">
+          <div className="mt-4 flex items-center">
             <Checkbox
               id="show-tutorial"
               checked={!showCSVImport} // Checkbox indicates "Don't show tutorial"
