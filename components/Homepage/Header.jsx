@@ -120,9 +120,9 @@ const Header = () => {
 
         {/* Action Buttons */}
         <div className="hidden md:flex gap-4 items-center">
+          <ModeToggle />
           {isSignedIn ? (
             <>
-              <ModeToggle />
               <Link href={"/dashboard"}>
                 <Button
                   variant="outline"
