@@ -18,6 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 const CsvDataTable = ({ csvData = [], setCsvData }) => {
@@ -38,7 +39,7 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
   const startEditing = (row, index) => {
     setEditingRowIndex(index);
     setEditedRow({ ...row });
-    setIsDialogOpen(true); // Open the dialog when editing starts
+    setIsDialogOpen(true);
   };
 
   const saveEditedRow = () => {
@@ -47,19 +48,42 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
     );
     setCsvData(updatedData);
     toast(`Row ${editingRowIndex + 1} has been updated!`);
-    setIsDialogOpen(false); // Close the dialog after saving
-    setEditingRowIndex(null); // Reset editing state
+    setIsDialogOpen(false);
+    setEditingRowIndex(null);
+  };
+
+  const addToExpense = (index) => {
+    console.log(csvData[index]);
+    const updatedData = csvData.filter((_, i) => i !== index);
+    setCsvData(updatedData);
+    toast.success(`Row ${index + 1} added to expense successfully!`);
+  };
+
+  const addAllToExpense = () => {
+    console.log(csvData);
+    setCsvData([]); // Clear all data from the table
+    toast.success("All rows added to expense successfully!");
   };
 
   return (
     <div className="mt-6">
+      <div className="flex justify-end mb-4">
+        {csvData.length > 0 && (
+          <Button
+            onClick={addAllToExpense}
+            className="bg-gradient-to-r from-green-500 to-blue-500 text-white font-semibold px-4 py-2 rounded-lg shadow hover:from-green-600 hover:to-blue-600 transition-transform transform hover:scale-105"
+          >
+            Add All to Expense
+          </Button>
+        )}
+      </div>
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-yellow-100">
             <TableHead className="font-bold">Name</TableHead>
             <TableHead className="font-bold">Amount</TableHead>
             <TableHead className="font-bold">Date</TableHead>
-            <TableHead className="font-bold">Action (Edit/Delete)</TableHead>
+            <TableHead className="font-bold">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -129,6 +153,13 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
                     className="text-red-600 cursor-pointer hover:scale-110 active:scale-90 transition-transform duration-500"
                     onClick={() => deleteRow(index)}
                   />
+                  <span className="text-gray-400">|</span>
+                  <Button
+                    onClick={() => addToExpense(index)}
+                    className="bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold px-3 py-1 rounded-md shadow hover:from-orange-600 hover:to-red-600 transition-transform transform hover:scale-105"
+                  >
+                    Add to Expense
+                  </Button>
                 </TableCell>
               </TableRow>
             ))

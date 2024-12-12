@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import CsvUpload from "./CSVUpload";
-import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox"; // Shadcn UI Checkbox
 import { db } from "@/utils/dbConfig"; // Assume dbConfig is set up for your database
@@ -329,7 +329,11 @@ const CSVImportButton = () => {
       {/* Upload Dialog */}
       <Dialog
         open={showUploadDialog}
-        onOpenChange={() => setShowUploadDialog(false)}
+        onOpenChange={() => {
+          setShowUploadDialog(false)
+          setCsvData([])
+        }
+        }
       >
         <DialogContent
           className="rounded-3xl bg-gradient-to-b from-yellow-50 via-orange-100 to-red-100 p-6 shadow-2xl overflow-hidden"
@@ -339,7 +343,7 @@ const CSVImportButton = () => {
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: "90%",
-            maxWidth: "500px",
+            maxWidth: "700px",
           }}
         >
           <h2 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-red-600 to-yellow-500 animate-gradient-text mb-4">
