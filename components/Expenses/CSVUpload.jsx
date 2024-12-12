@@ -3,16 +3,21 @@ import { FiUploadCloud } from "react-icons/fi";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { processCsv } from "@/utils/csvParser";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 const CsvUpload = ({ onFileSelect }) => {
   const [csvFile, setCsvFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [isValidFile, setIsValidFile] = useState(false);
+  const [csvData, setCsvData] = useState([]);
+
   const fileInputRef = useRef(null); // Reference for the file input element
 
   // Reset the state and file input
   const resetState = () => {
     setCsvFile(null);
+    setIsValidFile(false);
     if (fileInputRef.current) {
       fileInputRef.current.value = ""; // Reset file input
     }
@@ -29,6 +34,7 @@ const CsvUpload = ({ onFileSelect }) => {
         try {
           const expenses = await processCsv(file);
           setCsvFile(file);
+          setIsValidFile(true);
           onFileSelect(expenses);
           toast.success("CSV file processed successfully!");
         } catch (error) {
@@ -58,6 +64,7 @@ const CsvUpload = ({ onFileSelect }) => {
       try {
         const expenses = await processCsv(file);
         setCsvFile(file);
+        setIsValidFile(true);
         onFileSelect(expenses);
         toast.success("CSV file processed successfully!");
       } catch (error) {
@@ -68,6 +75,30 @@ const CsvUpload = ({ onFileSelect }) => {
       toast.error("Please upload a valid CSV file.");
     }
   };
+
+  if (isValidFile) {
+    // Reduced View with File Info and Reupload Button
+    return (
+      <div className="p-4 border border-gray-300 rounded-lg bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 shadow-md">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-gray-800 font-medium">
+              <strong>Uploaded File:</strong> {csvFile.name}
+            </p>
+            <p className="text-sm text-gray-500">
+              File size: {(csvFile.size / 1024).toFixed(2)} KB
+            </p>
+          </div>
+          <Button
+            onClick={resetState}
+            className="px-4 py-2 bg-gradient-to-r from-red-500 to-yellow-500 text-white font-semibold rounded-md shadow hover:from-red-600 hover:to-yellow-600 transition-all"
+          >
+            Reupload
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-6">

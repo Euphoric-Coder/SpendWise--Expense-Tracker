@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import CsvUpload from "./CSVImportCard";
+import CsvUpload from "./CSVUpload";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox"; // Shadcn UI Checkbox
@@ -10,12 +10,14 @@ import { Settings } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
 import { Upload } from "lucide-react";
+import CsvDataTable from "./CsvDataTable";
 
 const CSVImportButton = () => {
   const [showTutorialDialog, setShowTutorialDialog] = useState(false);
   const [showUploadDialog, setShowUploadDialog] = useState(false);
   const [currentTutorialPage, setCurrentTutorialPage] = useState(0);
   const [showCSVImport, setShowCSVImport] = useState(true); // Default to true
+  const [csvData, setCsvData] = useState([]);
   const { user } = useUser();
 
   const progressColors = [
@@ -152,9 +154,6 @@ const CSVImportButton = () => {
     },
   ];
 
-
-
-
   useEffect(() => {
     const fetchOrCreateSettings = async () => {
       if (!user?.primaryEmailAddress?.emailAddress) return;
@@ -186,7 +185,7 @@ const CSVImportButton = () => {
     } else {
       setShowTutorialDialog(false);
       setShowUploadDialog(true);
-      setCurrentTutorialPage(0)
+      setCurrentTutorialPage(0);
     }
   };
 
@@ -237,13 +236,18 @@ const CSVImportButton = () => {
     setShowTutorialDialog(isOpen);
   };
 
+  const handleFileSelect = (data) => {
+    setCsvData(data); // Populate table with CSV data
+  };
+
+
   return (
     <div>
       <Button
         className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-lg shadow-lg hover:from-orange-600 hover:to-yellow-600 transition-transform transform hover:scale-105"
         onClick={handleImportClick}
       >
-        <Upload className="mr-1 w-9 h-9"/> Import CSV
+        <Upload className="mr-1 w-9 h-9" /> Import CSV
       </Button>
 
       {/* Tutorial Dialog */}
@@ -341,11 +345,10 @@ const CSVImportButton = () => {
           <h2 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-red-600 to-yellow-500 animate-gradient-text mb-4">
             Upload Your Expense CSV
           </h2>
-          <CsvUpload
-            onFileSelect={(expenses) =>
-              console.log("Uploaded Expenses:", expenses)
-            }
-          />
+          <CsvUpload onFileSelect={handleFileSelect} />
+          {csvData.length > 0 && (
+            <CsvDataTable csvData={csvData} setCsvData={setCsvData} />
+          )}
           <Button
             className="mt-4 px-4 py-2 font-semibold text-white bg-gradient-to-r from-red-400 to-orange-500 rounded-lg shadow hover:from-red-500 hover:to-orange-600"
             onClick={() => setShowUploadDialog(false)}

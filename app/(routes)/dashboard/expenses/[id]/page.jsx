@@ -26,14 +26,13 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import EditBudget from "@/components/Budgets/EditBudget";
-import CsvUpload from "@/components/Expenses/CSVImportCard";
+import CsvUpload from "@/components/Expenses/CSVUpload";
 
 const ExpensesDashboard = ({ params }) => {
   const { user } = useUser();
   const [budgetInfo, setBudgetInfo] = useState();
   const [expensesList, setExpensesList] = useState([]);
   const [expenses, setExpenses] = useState([]);
-
 
   useEffect(() => {
     user && getBudgetInfo();
@@ -152,7 +151,6 @@ const ExpensesDashboard = ({ params }) => {
           user={user}
           refreshData={() => getBudgetInfo()}
         />
-        
       </div>
 
       {/* Latest Expenses Section */}
