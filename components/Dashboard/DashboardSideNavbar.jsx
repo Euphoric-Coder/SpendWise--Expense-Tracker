@@ -1,7 +1,15 @@
 "use client";
 
-import { UserButton, useClerk } from "@clerk/nextjs";
-import { ChartArea, DollarSign, LayoutGrid, PiggyBank, ReceiptText, ShieldCheck, Wallet } from "lucide-react";
+import { useClerk } from "@clerk/nextjs";
+import {
+  ChartArea,
+  DollarSign,
+  LayoutGrid,
+  PiggyBank,
+  ReceiptText,
+  ShieldCheck,
+  Wallet,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -11,32 +19,12 @@ const DashboardSideNavbar = () => {
   const { openUserProfile } = useClerk();
 
   const menuList = [
-    {
-      id: 1,
-      name: "Dashboard",
-      icon: LayoutGrid,
-      path: "/dashboard",
-    },
-    {
-      id: 2,
-      name: "Income",
-      icon: DollarSign,
-      path: "/dashboard/income",
-    },
-    {
-      id: 4,
-      name: "Budgets",
-      icon: PiggyBank,
-      path: "/dashboard/budgets",
-    },
+    { id: 1, name: "Dashboard", icon: LayoutGrid, path: "/dashboard" },
+    { id: 2, name: "Income", icon: DollarSign, path: "/dashboard/income" },
+    { id: 3, name: "Budgets", icon: PiggyBank, path: "/dashboard/budgets" },
+    { id: 4, name: "Expenses", icon: ReceiptText, path: "/dashboard/expenses" },
     {
       id: 5,
-      name: "Expenses",
-      icon: ReceiptText,
-      path: "/dashboard/expenses",
-    },
-    {
-      id: 3,
       name: "Transactions",
       icon: Wallet,
       path: "/dashboard/transactions",
@@ -47,55 +35,45 @@ const DashboardSideNavbar = () => {
       icon: ChartArea,
       path: "/dashboard/finance-stats",
     },
-    {
-      id: 7,
-      name: "Feedback",
-      icon: ShieldCheck,
-      path: "/dashboard/feedback",
-    },
+    { id: 7, name: "Feedback", icon: ShieldCheck, path: "/dashboard/feedback" },
   ];
 
   const path = usePathname();
 
   return (
-    <div className="h-screen p-6 border shadow-2xl bg-gradient-to-b from-white via-blue-50 to-indigo-50 rounded-3xl flex flex-col items-center space-y-8 font-mono text-gray-800">
-      {/* Logo */}
-      {/* <Image
-        src={"/logo.svg"}
-        alt="Logo of SpendWise"
-        width={160}
-        height={100}
-        className="mb-8"
-      /> */}
+    <div className="h-screen w-80 p-6 shadow-xl bg-gradient-to-br from-white/80 via-blue-50/60 to-purple-100/40 border border-gray-200 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 dark:border-gray-600 rounded-3xl backdrop-blur-3xl flex flex-col items-center space-y-10 font-sans text-gray-700 dark:text-gray-300">
+      {/* Logo Section */}
       <Link
         href="/"
-        className="hover:scale-105 transition-all duration-300 ease-in-out flex items-center gap-3"
+        className="hover:scale-110 transition-transform duration-300 ease-in-out flex items-center gap-4"
       >
         <Image
-          src={"/favicon.png"}
-          alt="Logo of SpendWise"
-          width={50}
-          height={50}
-          className="drop-shadow-lg"
+          src="/favicon.png"
+          alt="SpendWise Logo"
+          width={60}
+          height={60}
+          className="drop-shadow-xl dark:drop-shadow-neon"
         />
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-yellow-500 to-red-500 font-extrabold text-3xl hover:animate-pulse">
+        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 font-extrabold text-4xl hover:animate-glow">
           SpendWise
         </span>
       </Link>
 
       {/* Menu List */}
-      <div className="w-full flex flex-col space-y-3">
+      <div className="w-full flex flex-col space-y-6">
         {menuList.map((menu) => (
           <Link key={menu.id} href={menu.path}>
             <div
-              key={menu.id}
-              className={`flex items-center gap-4 px-6 py-3 rounded-2xl cursor-pointer transition-all duration-500 hover:bg-gradient-to-r from-teal-100 to-indigo-100 hover:shadow-md transform hover:scale-105 ${
-                path == menu.path &&
-                "bg-gradient-to-r from-teal-100 to-indigo-100"
+              className={`flex items-center gap-5 px-6 py-4 rounded-3xl cursor-pointer transition-transform duration-500 hover:bg-gradient-to-br from-blue-200/60 via-purple-200/50 to-pink-200/40 dark:hover:bg-gradient-to-br dark:from-blue-700 dark:via-purple-700 dark:to-pink-700 hover:shadow-lg dark:hover:shadow-[0px_10px_40px_rgba(100,150,255,0.3)] transform hover:scale-105 ${
+                path === menu.path &&
+                "bg-gradient-to-br from-blue-300/70 via-purple-300/60 to-pink-300/50 dark:bg-gradient-to-br dark:from-blue-800 dark:via-purple-800 dark:to-pink-800 shadow-lg dark:shadow-[0px_5px_20px_rgba(100,100,255,0.4)]"
               }`}
             >
-              <menu.icon className="text-indigo-500" />
-              <span className="text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-teal-500 via-purple-500 to-pink-500">
+              <menu.icon
+                className="text-indigo-600 dark:text-blue-300"
+                size={24}
+              />
+              <span className="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-500 dark:to-pink-500">
                 {menu.name}
               </span>
             </div>
@@ -103,27 +81,27 @@ const DashboardSideNavbar = () => {
         ))}
       </div>
 
-      {/* Refined Profile Section */}
-      <div className="mt-auto w-full flex justify-center fixed bottom-12">
-        <div className="relative mx-4 px-6 py-4 bg-gradient-to-r from-white to-indigo-50 rounded-2xl shadow-xl hover:shadow-2xl transition-transform duration-300 flex items-center gap-4 border border-transparent bg-clip-padding backdrop-filter backdrop-blur-lg">
+      {/* Profile Section */}
+      <div className="w-full mt-auto">
+        <div className="relative mx-auto w-[95%] px-6 py-5 bg-gradient-to-br from-white/70 via-blue-100/50 to-purple-200/40 dark:bg-gradient-to-br dark:from-gray-800 dark:via-gray-700 dark:to-gray-600 border border-gray-300 dark:border-gray-500 rounded-3xl shadow-xl hover:shadow-2xl dark:shadow-[0px_15px_50px_rgba(100,150,255,0.2)] dark:hover:shadow-[0px_20px_60px_rgba(150,200,255,0.4)] transition-transform duration-300 flex items-center gap-5 backdrop-blur-3xl">
           {/* User Avatar */}
           <UserButtonMenu />
 
           {/* Profile Info */}
           <div className="flex flex-col">
-            <span className="text-md font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 whitespace-nowrap">
+            <span className="text-md font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400">
               Your Profile
             </span>
             <button
               onClick={() => openUserProfile()}
-              className="text-sm text-gray-600 cursor-pointer hover:underline focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors duration-200 whitespace-nowrap"
+              className="text-sm text-gray-600 dark:text-gray-400 cursor-pointer hover:underline focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 transition-colors duration-200"
             >
               Manage your account
             </button>
           </div>
 
-          {/* Subtle Outer Glow */}
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-400 to-pink-500 opacity-20 blur-lg pointer-events-none"></div>
+          {/* Subtle Glow */}
+          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-400 to-purple-500 opacity-25 blur-lg pointer-events-none"></div>
         </div>
       </div>
     </div>

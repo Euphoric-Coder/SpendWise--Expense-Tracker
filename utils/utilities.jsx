@@ -163,7 +163,7 @@ export function calculateRecurringProgress(startDate, frequency) {
   let nextRecurringDate = new Date(parsedStartDate);
 
   // Calculate the next recurring date based on the frequency
-  switch (frequency.toLowerCase()) {
+  switch (frequency?.toLowerCase()) {
     case "daily":
       while (nextRecurringDate <= todayInIST) {
         nextRecurringDate.setDate(nextRecurringDate.getDate() + 1);
@@ -197,7 +197,7 @@ export function calculateRecurringProgress(startDate, frequency) {
 
   // Determine the duration of the current period in milliseconds
   let periodDuration;
-  switch (frequency.toLowerCase()) {
+  switch (frequency?.toLowerCase()) {
     case "daily":
       periodDuration = 24 * 60 * 60 * 1000; // 1 day
       break;
