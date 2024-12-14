@@ -6,7 +6,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserButtonMenu } from "../UserButton";
-import { ModeToggle } from "../ThemeButton";
 
 const DashboardSideNavbar = () => {
   const { openUserProfile } = useClerk();
@@ -127,7 +126,6 @@ const DashboardSideNavbar = () => {
           <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-400 to-pink-500 opacity-20 blur-lg pointer-events-none"></div>
         </div>
       </div>
-      <ModeToggle />
     </div>
   );
 };

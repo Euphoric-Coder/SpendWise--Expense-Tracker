@@ -46,26 +46,27 @@ function IncomeList() {
 
   return (
     <div className="mt-7">
-      <div className="flex justify-between mb-7">
-        <h2 className="font-extrabold text-3xl md:text-4xl text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-emerald-400 to-lime-500">
-          My Income Sources
+      <div className="my-5 flex justify-between items-center">
+        <h2 className="p-2 font-extrabold text-3xl md:text-4xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-blue-600 to-sky-500 dark:from-blue-400 dark:via-cyan-400 dark:to-teal-400">
+          My Income Category Sources
         </h2>
-        <div className="flex gap-4 items-center">
-          <Link href="/dashboard/budgets">
-            <Button className="rounded-full text-md bg-gradient-to-r from-green-400 via-emerald-400 to-lime-400 text-white px-6 py-3 font-semibold shadow-md hover:shadow-lg hover:scale-105 transition-transform">
-              Go to Budget Tab
-            </Button>
-          </Link>
+        <Link
+          href="/dashboard/budgets"
+          className="flex gap-3 justify-center md:justify-between"
+        >
+          <Button className="rounded-full text-md bg-gradient-to-r from-cyan-400 via-blue-400 to-sky-400 dark:from-blue-600 dark:via-cyan-500 dark:to-teal-500 text-white px-6 py-3 font-semibold shadow-md hover:shadow-lg hover:scale-105 transition-transform">
+            Go to Budget Tab
+          </Button>
           <DeleteIncome
             incomeData={incomelist}
             refreshData={() => getIncomelist()}
           />
-        </div>
+        </Link>
       </div>
       <div className="mb-7 grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-5">
         <CreateIncomes refreshData={() => getIncomelist()} />
       </div>
-      <h2 className="font-extrabold text-3xl md:text-4xl mb-6 text-transparent bg-clip-text bg-gradient-to-tl from-green-400 via-emerald-400 to-cyan-500">
+      <h2 className="mb-5 p-2 font-extrabold text-3xl md:text-4xl text-transparent bg-clip-text bg-gradient-to-tr from-cyan-600 via-blue-600 to-sky-500 dark:from-blue-400 dark:via-cyan-400 dark:to-teal-400">
         Ongoing Incomes
       </h2>
       <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6 mb-10">
@@ -83,7 +84,7 @@ function IncomeList() {
               </div>
             ))}
       </div>
-      <h2 className="font-extrabold text-3xl md:text-4xl mb-6 text-transparent bg-clip-text bg-gradient-to-tl from-green-400 via-emerald-400 to-cyan-500">
+      <h2 className="mb-5 p-2 font-extrabold text-3xl md:text-4xl text-transparent bg-clip-text bg-gradient-to-tr from-cyan-600 via-blue-600 to-sky-500 dark:from-blue-400 dark:via-cyan-400 dark:to-teal-400">
         Upcoming Recurring Incomes
       </h2>
       <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6 mb-5">
