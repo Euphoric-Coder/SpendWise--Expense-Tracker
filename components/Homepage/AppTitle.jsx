@@ -3,7 +3,10 @@ import React from "react";
 
 const AppTitle = () => {
   return (
-    <header className="text-center space-y-4 py-6 relative w-full flex flex-col items-center justify-center">
+    <header
+      id="hero"
+      className="text-center space-y-4 py-6 relative w-full flex flex-col items-center justify-center"
+    >
       {/* Center-Aligned Title Section at the Top */}
       <div className="flex items-center justify-center gap-3 transition-transform transform duration-500 ease-in-out hover:scale-105 cursor-default">
         <Image

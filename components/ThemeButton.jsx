@@ -1,9 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
+import { Moon, Sun } from "lucide-react";
 
 export function ModeToggle() {
   const { resolvedTheme, setTheme } = useTheme(); // Use resolvedTheme for correct theme detection
@@ -28,9 +28,9 @@ export function ModeToggle() {
     <Button variant="outline" size="icon" onClick={toggleTheme} className="">
       {/* Toggle between Sun and Moon icons based on resolvedTheme */}
       {resolvedTheme === "light" ? (
-        <MoonIcon className="h-[1.7rem] w-[1.7rem] transition-transform" />
+        <Moon className="h-[1.7rem] w-[1.7rem] transition-transform" />
       ) : (
-        <SunIcon className="h-[1.7rem] w-[1.7rem] transition-transform" />
+        <Sun className="h-[1.7rem] w-[1.7rem] transition-transform" />
       )}
       <span className="sr-only">Toggle theme</span>
     </Button>

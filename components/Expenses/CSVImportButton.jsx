@@ -1,20 +1,23 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import CsvUpload from "./CSVImportCard";
-import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+import CsvUpload from "./CSVUpload";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox"; // Shadcn UI Checkbox
 import { db } from "@/utils/dbConfig"; // Assume dbConfig is set up for your database
 import { Settings } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import { eq } from "drizzle-orm";
+import { Upload } from "lucide-react";
+import CsvDataTable from "./CsvDataTable";
 
 const CSVImportButton = () => {
   const [showTutorialDialog, setShowTutorialDialog] = useState(false);
   const [showUploadDialog, setShowUploadDialog] = useState(false);
   const [currentTutorialPage, setCurrentTutorialPage] = useState(0);
   const [showCSVImport, setShowCSVImport] = useState(true); // Default to true
+  const [csvData, setCsvData] = useState([]);
   const { user } = useUser();
 
   const progressColors = [
@@ -27,26 +30,47 @@ const CSVImportButton = () => {
     {
       title: "Step 1: CSV File Format",
       content: (
-        <div className="p-6">
-          <p className="text-gray-800 text-lg">
-            Ensure your CSV file has the following columns in the exact order:
+        <div className="text-center">
+          <p className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500">
+            Your CSV file should include the following columns:
           </p>
-          <ul className="list-disc mt-4 space-y-3 text-gray-700">
-            <li>
-              <span className="font-semibold text-orange-600">Date</span> - The
-              date of the expense.
+          <ul className="mt-6 space-y-4 text-left">
+            <li className="flex items-start">
+              <span className="w-3 h-3 bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 rounded-full mt-1 mr-3"></span>
+              <span className="text-lg text-gray-800">
+                <strong className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500">
+                  Date
+                </strong>
+                : The date of the expense in the format:
+                <div className="text-center">
+                  <code className="font-mono bg-gray-800 text-yellow-300 p-1 rounded-md">
+                    YYYY-MM-DD
+                  </code>
+                </div>
+              </span>
             </li>
-            <li>
-              <span className="font-semibold text-orange-600">Name</span> - A
-              short description of the expense.
+            <li className="flex items-start">
+              <span className="w-3 h-3 bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 rounded-full mt-1 mr-3"></span>
+              <span className="text-lg text-gray-800">
+                <strong className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500">
+                  Name
+                </strong>
+                : A brief description of the expense.
+              </span>
             </li>
-            <li>
-              <span className="font-semibold text-orange-600">Amount</span> -
-              The monetary value of the expense.
+            <li className="flex items-start">
+              <span className="w-3 h-3 bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 rounded-full mt-1 mr-3"></span>
+              <span className="text-lg text-gray-800">
+                <strong className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500">
+                  Amount
+                </strong>
+                : The monetary value of the expense in numeric format.
+              </span>
             </li>
           </ul>
-          <p className="mt-6 text-gray-600">
-            Each row should represent a single expense record.
+          <p className="mt-6 text-gray-500">
+            Each row represents a single expense record. Ensure there are no
+            extra columns or formatting issues.
           </p>
         </div>
       ),
@@ -56,24 +80,33 @@ const CSVImportButton = () => {
       title: "Step 2: Date Format",
       content: (
         <div className="text-center">
-          <p className="text-gray-800 text-lg">
-            The <span className="font-semibold text-red-600">Date</span> column
-            must follow the format:
+          <p className="text-lg text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500">
+            The <span className="font-semibold text-yellow-400">Date</span>{" "}
+            column must follow this format:
           </p>
-          <p className="mt-4 text-orange-500 font-mono text-2xl">YYYY-MM-DD</p>
-          <p className="mt-6 text-gray-700">
-            Examples:
-            <ul className="list-disc list-inside mt-3 space-y-3">
-              <li>
-                <code className="text-red-500 font-mono">2024-01-01</code> for
-                January 1, 2024.
-              </li>
-              <li>
-                <code className="text-red-500 font-mono">2024-02-15</code> for
-                February 15, 2024.
-              </li>
-            </ul>
+          <p className="mt-4 text-2xl font-extrabold font-mono text-transparent bg-clip-text bg-gradient-to-tr from-green-400 via-blue-400 to-teal-400">
+            YYYY-MM-DD
           </p>
+          <ul className="mt-6 space-y-4 text-left">
+            <li className="flex items-start">
+              <span className="w-3 h-3 bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 rounded-full mt-1 mr-3"></span>
+              <span className="text-lg text-gray-800">
+                <code className="font-mono bg-gray-800 text-yellow-300 px-1 py-0.5 rounded">
+                  2024-01-01
+                </code>{" "}
+                for January 1, 2024.
+              </span>
+            </li>
+            <li className="flex items-start">
+              <span className="w-3 h-3 bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 rounded-full mt-1 mr-3"></span>
+              <span className="text-lg text-gray-800">
+                <code className="font-mono bg-gray-800 text-yellow-300 px-1 py-0.5 rounded">
+                  2024-02-15
+                </code>{" "}
+                for February 15, 2024.
+              </span>
+            </li>
+          </ul>
         </div>
       ),
       image: "/images/date-format.png", // Replace with your actual image path
@@ -82,18 +115,21 @@ const CSVImportButton = () => {
       title: "Step 3: Example File",
       content: (
         <div className="text-center">
-          <p className="text-gray-800 text-lg">
-            Here’s an example of how your CSV file should look:
+          <p className="text-lg text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500">
+            Here&apos;s an example of how your CSV file should look:
           </p>
-          <pre className="mt-6 bg-gradient-to-br from-yellow-50 via-orange-100 to-red-100 p-6 rounded-lg text-sm text-left shadow-lg text-gray-800">
+          <pre className="mt-6 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 p-6 rounded-lg text-sm text-left shadow-lg text-gray-300">
             {`date,name,amount
 2024-01-01,Groceries,150
 2024-01-02,Transport,50
 2024-01-03,Utilities,100`}
           </pre>
-          <p className="mt-6 text-gray-600">
-            Make sure the file is saved with the extension
-            <strong className="text-orange-600"> .csv</strong>.
+          <p className="mt-6 text-gray-500 text-lg">
+            Ensure your file is saved with the{" "}
+            <strong className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500">
+              .csv
+            </strong>{" "}
+            extension.
           </p>
         </div>
       ),
@@ -103,21 +139,20 @@ const CSVImportButton = () => {
       title: "Step 4: Ready to Upload",
       content: (
         <div className="text-center">
-          <p className="text-gray-800 text-lg">
+          <p className="text-lg text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500">
             Once your file is ready, click{" "}
-            <span className="font-semibold text-red-500">Next</span> to proceed
-            to the upload screen.
+            <span className="text-yellow-400 font-semibold">Continue</span> to
+            proceed to the upload screen.
           </p>
-          <p className="mt-6 text-gray-600">
-            Ensure your file is in the correct format before uploading. Invalid
-            files may not be processed.
+          <p className="mt-6 text-gray-400">
+            Make sure the file format matches the requirements. Invalid files
+            may not be processed.
           </p>
         </div>
       ),
       image: "/images/ready-to-upload.png", // Replace with your actual image path
     },
   ];
-
 
   useEffect(() => {
     const fetchOrCreateSettings = async () => {
@@ -150,7 +185,7 @@ const CSVImportButton = () => {
     } else {
       setShowTutorialDialog(false);
       setShowUploadDialog(true);
-      setCurrentTutorialPage(0)
+      setCurrentTutorialPage(0);
     }
   };
 
@@ -201,13 +236,18 @@ const CSVImportButton = () => {
     setShowTutorialDialog(isOpen);
   };
 
+  const handleFileSelect = (data) => {
+    setCsvData(data); // Populate table with CSV data
+  };
+
+
   return (
     <div>
       <Button
-        className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-lg shadow-lg hover:from-orange-600 hover:to-yellow-600 transition-transform transform hover:scale-105"
+        className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 dark:from-blue-600 dark:via-indigo-600 dark:to-purple-600 rounded-lg shadow-lg hover:from-blue-600 hover:to-purple-600 transition-transform transform hover:scale-105"
         onClick={handleImportClick}
       >
-        Import CSV
+        <Upload className="mr-1 w-9 h-9" /> Import CSV
       </Button>
 
       {/* Tutorial Dialog */}
@@ -216,7 +256,7 @@ const CSVImportButton = () => {
         onOpenChange={handleTutorialDialogClose}
       >
         <DialogContent
-          className="fixed rounded-3xl bg-gradient-to-b from-yellow-50 via-orange-100 to-red-100 p-6 shadow-2xl overflow-hidden"
+          className="fixed rounded-3xl bg-gradient-to-b from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 p-6 shadow-2xl overflow-hidden"
           style={{
             position: "fixed",
             top: "50%",
@@ -227,13 +267,13 @@ const CSVImportButton = () => {
           }}
         >
           {/* Tutorial Header */}
-          <h2 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-red-600 to-yellow-500 animate-gradient-text mb-4">
+          <h2 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-500 dark:from-blue-500 dark:via-indigo-500 dark:to-purple-400 animate-gradient-text mb-4">
             {tutorialPages[currentTutorialPage].title}
           </h2>
-          {/* Tutorial Content */}
-          <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden mb-4">
+          {/* Progress Bar */}
+          <div className="w-full h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mb-4">
             <div
-              className={`h-full ${progressColors[currentTutorialPage]}`}
+              className={`h-full bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400`}
               style={{
                 width: `${
                   ((currentTutorialPage + 1) / tutorialPages.length) * 100
@@ -248,20 +288,20 @@ const CSVImportButton = () => {
               className="w-full h-auto rounded-2xl mb-4 shadow-lg hover:scale-105 transition-transform duration-500"
             />
           )}
-          <p className="text-gray-700">
+          <p className="text-gray-700 dark:text-gray-400">
             {tutorialPages[currentTutorialPage].content}
           </p>
           {/* Navigation Buttons */}
           <div className="flex justify-between items-center mt-6">
             <Button
               disabled={currentTutorialPage === 0}
-              className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-red-400 to-orange-500 rounded-lg shadow hover:from-red-500 hover:to-orange-600"
+              className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-indigo-400 to-blue-500 dark:from-blue-500 dark:to-indigo-500 rounded-lg shadow hover:from-indigo-500 hover:to-blue-600"
               onClick={() => setCurrentTutorialPage((prev) => prev - 1)}
             >
               Back
             </Button>
             <Button
-              className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg shadow hover:from-yellow-500 hover:to-orange-600"
+              className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-purple-400 to-indigo-500 dark:from-purple-500 dark:to-indigo-600 rounded-lg shadow hover:from-purple-500 hover:to-indigo-600"
               onClick={handleNextPage}
             >
               {currentTutorialPage < tutorialPages.length - 1
@@ -270,7 +310,7 @@ const CSVImportButton = () => {
             </Button>
           </div>
           {/* Checkbox */}
-          <div className="mt-4">
+          <div className="mt-4 flex items-center">
             <Checkbox
               id="show-tutorial"
               checked={!showCSVImport} // Checkbox indicates "Don't show tutorial"
@@ -278,7 +318,7 @@ const CSVImportButton = () => {
             />
             <label
               htmlFor="show-tutorial"
-              className="ml-2 text-sm text-gray-600"
+              className="ml-2 text-sm text-gray-600 dark:text-gray-400"
             >
               Don't show this tutorial again
             </label>
@@ -289,29 +329,31 @@ const CSVImportButton = () => {
       {/* Upload Dialog */}
       <Dialog
         open={showUploadDialog}
-        onOpenChange={() => setShowUploadDialog(false)}
+        onOpenChange={() => {
+          setShowUploadDialog(false);
+          setCsvData([]);
+        }}
       >
         <DialogContent
-          className="rounded-3xl bg-gradient-to-b from-yellow-50 via-orange-100 to-red-100 p-6 shadow-2xl overflow-hidden"
+          className="rounded-3xl bg-gradient-to-b from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 p-6 shadow-2xl overflow-hidden"
           style={{
             position: "fixed",
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: "90%",
-            maxWidth: "500px",
+            maxWidth: "700px",
           }}
         >
-          <h2 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-red-600 to-yellow-500 animate-gradient-text mb-4">
+          <h2 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-500 dark:from-blue-500 dark:via-indigo-500 dark:to-purple-400 animate-gradient-text mb-4">
             Upload Your Expense CSV
           </h2>
-          <CsvUpload
-            onFileSelect={(expenses) =>
-              console.log("Uploaded Expenses:", expenses)
-            }
-          />
+          <CsvUpload onFileSelect={handleFileSelect} />
+          {csvData.length > 0 && (
+            <CsvDataTable csvData={csvData} setCsvData={setCsvData} />
+          )}
           <Button
-            className="mt-4 px-4 py-2 font-semibold text-white bg-gradient-to-r from-red-400 to-orange-500 rounded-lg shadow hover:from-red-500 hover:to-orange-600"
+            className="mt-4 px-4 py-2 font-semibold text-white bg-gradient-to-r from-purple-400 to-indigo-500 dark:from-purple-500 dark:to-indigo-600 rounded-lg shadow hover:from-purple-500 hover:to-indigo-600"
             onClick={() => setShowUploadDialog(false)}
           >
             Close
