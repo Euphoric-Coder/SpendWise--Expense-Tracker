@@ -244,7 +244,7 @@ const CSVImportButton = () => {
   return (
     <div>
       <Button
-        className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 rounded-lg shadow-lg hover:from-orange-600 hover:to-yellow-600 transition-transform transform hover:scale-105"
+        className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 dark:from-blue-600 dark:via-indigo-600 dark:to-purple-600 rounded-lg shadow-lg hover:from-blue-600 hover:to-purple-600 transition-transform transform hover:scale-105"
         onClick={handleImportClick}
       >
         <Upload className="mr-1 w-9 h-9" /> Import CSV
@@ -256,7 +256,7 @@ const CSVImportButton = () => {
         onOpenChange={handleTutorialDialogClose}
       >
         <DialogContent
-          className="fixed rounded-3xl bg-gradient-to-b from-yellow-50 via-orange-100 to-red-100 p-6 shadow-2xl overflow-hidden"
+          className="fixed rounded-3xl bg-gradient-to-b from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 p-6 shadow-2xl overflow-hidden"
           style={{
             position: "fixed",
             top: "50%",
@@ -267,13 +267,13 @@ const CSVImportButton = () => {
           }}
         >
           {/* Tutorial Header */}
-          <h2 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-red-600 to-yellow-500 animate-gradient-text mb-4">
+          <h2 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-500 dark:from-blue-500 dark:via-indigo-500 dark:to-purple-400 animate-gradient-text mb-4">
             {tutorialPages[currentTutorialPage].title}
           </h2>
-          {/* Tutorial Content */}
-          <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden mb-4">
+          {/* Progress Bar */}
+          <div className="w-full h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mb-4">
             <div
-              className={`h-full ${progressColors[currentTutorialPage]}`}
+              className={`h-full bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400`}
               style={{
                 width: `${
                   ((currentTutorialPage + 1) / tutorialPages.length) * 100
@@ -288,20 +288,20 @@ const CSVImportButton = () => {
               className="w-full h-auto rounded-2xl mb-4 shadow-lg hover:scale-105 transition-transform duration-500"
             />
           )}
-          <p className="text-gray-700">
+          <p className="text-gray-700 dark:text-gray-400">
             {tutorialPages[currentTutorialPage].content}
           </p>
           {/* Navigation Buttons */}
           <div className="flex justify-between items-center mt-6">
             <Button
               disabled={currentTutorialPage === 0}
-              className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-red-400 to-orange-500 rounded-lg shadow hover:from-red-500 hover:to-orange-600"
+              className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-indigo-400 to-blue-500 dark:from-blue-500 dark:to-indigo-500 rounded-lg shadow hover:from-indigo-500 hover:to-blue-600"
               onClick={() => setCurrentTutorialPage((prev) => prev - 1)}
             >
               Back
             </Button>
             <Button
-              className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg shadow hover:from-yellow-500 hover:to-orange-600"
+              className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-purple-400 to-indigo-500 dark:from-purple-500 dark:to-indigo-600 rounded-lg shadow hover:from-purple-500 hover:to-indigo-600"
               onClick={handleNextPage}
             >
               {currentTutorialPage < tutorialPages.length - 1
@@ -318,7 +318,7 @@ const CSVImportButton = () => {
             />
             <label
               htmlFor="show-tutorial"
-              className="ml-2 text-sm text-gray-600"
+              className="ml-2 text-sm text-gray-600 dark:text-gray-400"
             >
               Don't show this tutorial again
             </label>
@@ -330,13 +330,12 @@ const CSVImportButton = () => {
       <Dialog
         open={showUploadDialog}
         onOpenChange={() => {
-          setShowUploadDialog(false)
-          setCsvData([])
-        }
-        }
+          setShowUploadDialog(false);
+          setCsvData([]);
+        }}
       >
         <DialogContent
-          className="rounded-3xl bg-gradient-to-b from-yellow-50 via-orange-100 to-red-100 p-6 shadow-2xl overflow-hidden"
+          className="rounded-3xl bg-gradient-to-b from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 p-6 shadow-2xl overflow-hidden"
           style={{
             position: "fixed",
             top: "50%",
@@ -346,7 +345,7 @@ const CSVImportButton = () => {
             maxWidth: "700px",
           }}
         >
-          <h2 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-red-600 to-yellow-500 animate-gradient-text mb-4">
+          <h2 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-500 dark:from-blue-500 dark:via-indigo-500 dark:to-purple-400 animate-gradient-text mb-4">
             Upload Your Expense CSV
           </h2>
           <CsvUpload onFileSelect={handleFileSelect} />
@@ -354,7 +353,7 @@ const CSVImportButton = () => {
             <CsvDataTable csvData={csvData} setCsvData={setCsvData} />
           )}
           <Button
-            className="mt-4 px-4 py-2 font-semibold text-white bg-gradient-to-r from-red-400 to-orange-500 rounded-lg shadow hover:from-red-500 hover:to-orange-600"
+            className="mt-4 px-4 py-2 font-semibold text-white bg-gradient-to-r from-purple-400 to-indigo-500 dark:from-purple-500 dark:to-indigo-600 rounded-lg shadow hover:from-purple-500 hover:to-indigo-600"
             onClick={() => setShowUploadDialog(false)}
           >
             Close

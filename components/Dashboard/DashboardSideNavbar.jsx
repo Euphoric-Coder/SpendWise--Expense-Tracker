@@ -89,7 +89,7 @@ const DashboardSideNavbar = () => {
 
           {/* Profile Info */}
           <div className="flex flex-col">
-            <span className="text-md font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400">
+            <span className="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400">
               Your Profile
             </span>
             <button
@@ -101,7 +101,7 @@ const DashboardSideNavbar = () => {
           </div>
 
           {/* Subtle Glow */}
-          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-400 to-purple-500 opacity-25 blur-lg pointer-events-none"></div>
+          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-400 to-purple-500 dark:from-blue-700 dark:to-purple-700 opacity-25 blur-lg pointer-events-none"></div>
         </div>
       </div>
     </div>

@@ -13,8 +13,8 @@ const page = () => {
       </div>
 
       {/* Header Section */}
-      <div className="flex justify-between items-center">
-        <h2 className="font-extrabold text-3xl md:text-4xl text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-teal-400 to-purple-500">
+      <div className="flex flex-col md:flex-row gap-2 justify-between items-center">
+        <h2 className="p-2 font-extrabold text-xl md:text-4xl lg:text-3xl xl:text-5xl text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-teal-400 to-purple-500">
           My Budget Category List
         </h2>
         <Link href="/dashboard/expenses">
