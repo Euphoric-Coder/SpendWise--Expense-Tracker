@@ -47,11 +47,13 @@ function CreateIncomes({ refreshData }) {
           createdBy: user?.primaryEmailAddress?.emailAddress,
           icon: emojiIcon,
           incomeType: isRecurring ? "recurring" : "non-recurring",
-          status: isRecurring ? (isSameDate(startDate, getISTDate()) ? "current" : "upcoming") : "current",
+          status: isRecurring
+            ? isSameDate(startDate, getISTDate())
+              ? "current"
+              : "upcoming"
+            : "current",
           frequency: isRecurring ? frequency : null,
-          startDate: isRecurring
-            ? startDate
-            : getISTDate(), // Default to today for non-recurring
+          startDate: isRecurring ? startDate : getISTDate(), // Default to today for non-recurring
           endDate: !isRecurring
             ? endDate ||
               new Date(new Date().setMonth(new Date().getMonth() + 1))
@@ -151,6 +153,62 @@ function CreateIncomes({ refreshData }) {
             onChange={(e) => setAmount(e.target.value)}
           />
         </div>
+
+        {/* Recurring Income Section */}
+        <div className="mt-6 flex items-center space-x-2">
+          <Checkbox
+            id="recurring"
+            checked={isRecurring}
+            onCheckedChange={(value) => setIsRecurring(value)}
+          />
+          <label
+            htmlFor="recurring"
+            className="text-gray-700 dark:text-gray-300 font-medium text-sm"
+          >
+            Recurring Income
+          </label>
+        </div>
+        {isRecurring && (
+          <div className="mt-4">
+            <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+              Frequency
+            </h2>
+            <select
+              value={frequency}
+              onChange={(e) => setFrequency(e.target.value)}
+              className="block w-full p-2 border border-gray-300 rounded-md"
+            >
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly</option>
+            </select>
+            <div className="mt-4">
+              <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                Start Date
+              </h2>
+              <Input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="w-full p-4 border rounded-lg shadow-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200"
+              />
+            </div>
+          </div>
+        )}
+        {!isRecurring && (
+          <div className="mt-4">
+            <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+              End Date
+            </h2>
+            <Input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="w-full p-4 border rounded-lg shadow-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200"
+            />
+          </div>
+        )}
 
         {/* Footer Section */}
         <DialogFooter className="mt-6">

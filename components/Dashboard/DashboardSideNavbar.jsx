@@ -14,6 +14,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserButtonMenu } from "../UserButton";
+import { ModeToggle } from "../ThemeButton";
 
 const DashboardSideNavbar = () => {
   const { openUserProfile } = useClerk();
@@ -104,6 +105,7 @@ const DashboardSideNavbar = () => {
           <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-400 to-purple-500 dark:from-blue-700 dark:to-purple-700 opacity-25 blur-lg pointer-events-none"></div>
         </div>
       </div>
+      <ModeToggle />
     </div>
   );
 };

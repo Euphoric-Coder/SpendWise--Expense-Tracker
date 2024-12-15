@@ -45,7 +45,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import React, { useState } from "react";
-import { Edit, Trash } from "lucide-react";
+import { CalendarIcon, Edit, Trash } from "lucide-react";
 import { Incomes } from "@/utils/schema";
 import { db } from "@/utils/dbConfig";
 import { eq } from "drizzle-orm";
@@ -60,6 +60,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 function IncomeItem({ income, refreshData }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -187,12 +188,12 @@ function IncomeItem({ income, refreshData }) {
                 <h2 className="text-sm mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 dark:from-blue-400 dark:via-cyan-400 dark:to-indigo-400">
                   Valid Till: {format(income.endDate, "PPP")}
                 </h2>
-                <h2 className="text-xs text-gray-500 dark:text-gray-400">
+                <h2 className="text-sm mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 dark:from-blue-400 dark:via-cyan-400 dark:to-indigo-400">
                   Expires in {dateDifference(income.endDate)} Days
                 </h2>
               </div>
               {/* nonrecurringProgress Bar */}
-              <div className="relative mt-3 w-full h-3 sm:h-4 bg-gray-300 dark:bg-gray-600 rounded-full shadow-inner">
+              <div className="relative mt-3 w-full h-3 sm:h-4 bg-gray-300 dark:bg-gray-700 rounded-full shadow-inner">
                 <div
                   className="h-3 sm:h-4 rounded-full bg-gradient-to-r from-cyan-300 via-blue-400 to-indigo-500 dark:from-blue-500 dark:via-cyan-500 dark:to-indigo-500 shadow-md"
                   style={{
@@ -205,10 +206,10 @@ function IncomeItem({ income, refreshData }) {
               <p
                 className={`mt-2 text-center text-sm sm:text-lg font-semibold ${
                   nonrecurringProgress <= 25
-                    ? "text-cyan-500 dark:text-cyan-400" // Most time remaining
+                    ? "text-green-500" // Most time remaining
                     : nonrecurringProgress <= 75
-                    ? "text-blue-500 dark:text-blue-400" // Moderate time remaining
-                    : "text-indigo-500 dark:text-indigo-400" // Time is almost up
+                    ? "text-orange-500" // Moderate time remaining
+                    : "text-red-500" // Time is almost up
                 }`}
               >
                 {100 - nonrecurringProgress}% of days left to expiry ({expiry}{" "}
@@ -229,7 +230,7 @@ function IncomeItem({ income, refreshData }) {
                   </h2>
                 </div>
                 {/* recurringProgress Bar */}
-                <div className="relative mt-3 w-full h-3 sm:h-4 bg-gray-300 dark:bg-gray-600 rounded-full shadow-inner">
+                <div className="relative mt-3 w-full h-3 sm:h-4 bg-gray-300 dark:bg-gray-700 rounded-full shadow-inner">
                   <div
                     className="h-3 sm:h-4 rounded-full bg-gradient-to-r from-cyan-300 via-blue-400 to-indigo-500 dark:from-blue-500 dark:via-cyan-500 dark:to-indigo-500 shadow-md"
                     style={{
@@ -237,21 +238,302 @@ function IncomeItem({ income, refreshData }) {
                     }}
                   ></div>
                 </div>
+                {/* Percentage Below nonrecurringProgress Bar */}
                 <p
                   className={`mt-2 text-center text-sm sm:text-lg font-semibold ${
                     recurringProgress.progress <= 65
-                      ? "text-cyan-500 dark:text-cyan-400" // Most time remaining
+                      ? "text-green-500" // Most time remaining
                       : recurringProgress.progress <= 85
-                      ? "text-blue-500 dark:text-blue-400" // Moderate time remaining
-                      : "text-indigo-500 dark:text-indigo-400" // Time is almost up
+                      ? "text-yellow-500" // Moderate time remaining
+                      : "text-red-500" // Time is almost up
                   }`}
                 >
                   {(100 - recurringProgress.progress).toFixed(2)}% of days left
                   to next recurring ({recurringProgress.daysUntilNext} days)
                 </p>
+                <div className="flex justify-between items-center gap-3">
+                  <h2 className="text-sm mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600">
+                    Last Processed:{" "}
+                    {income.lastProcessed
+                      ? format(income.lastProcessed, "PPP")
+                      : "NA"}
+                  </h2>
+                  <h2 className="text-sm mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600">
+                    Edited:{" "}
+                    {income.lastUpdated
+                      ? format(income.lastUpdated, "PPP")
+                      : "No!"}
+                  </h2>
+                </div>
               </div>
             )}
         </div>
+      </div>
+      <div className="flex items-center gap-1 justify-end">
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Edit
+                    className="text-blue-400 cursor-pointer hover:text-indigo-500 hover:scale-110 active:scale-95 transition-transform duration-300"
+                    onClick={() => startEditing(income)}
+                  />
+                </TooltipTrigger>
+                <TooltipContent className="rounded-full">
+                  <p className="font-semibold">Edit Income</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </DialogTrigger>
+          <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-br from-white via-cyan-50 to-blue-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 p-8 rounded-3xl shadow-[0_0_40px_rgba(0,150,255,0.3)] w-[95%] max-w-lg max-h-[90vh] overflow-y-auto">
+            {/* Background Effects */}
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute -top-10 -left-10 w-60 h-60 bg-gradient-radial from-blue-400 via-cyan-400 to-transparent dark:from-blue-800 dark:via-cyan-800 dark:to-gray-800 opacity-25 blur-3xl animate-spin-slow"></div>
+              <div className="absolute bottom-20 right-10 w-80 h-80 bg-gradient-radial from-cyan-300 via-blue-300 to-transparent dark:from-cyan-800 dark:via-blue-800 dark:to-gray-800 opacity-30 blur-[120px]"></div>
+            </div>
+            <DialogHeader>
+              <DialogTitle className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 dark:from-blue-400 dark:via-cyan-400 dark:to-indigo-400">
+                Edit Income
+              </DialogTitle>
+              <DialogDescription className="text-sm text-gray-600 dark:text-gray-400">
+                Update the details for this income.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="flex flex-col gap-6 mt-6">
+              {/* Emoji Picker */}
+              <div className="flex space-y-11">
+                <Button
+                  variant="outline"
+                  className="text-2xl sm:text-3xl p-3 sm:p-4 px-4 sm:px-5 bg-gradient-to-r from-cyan-200 via-blue-200 to-indigo-200 dark:from-blue-500 dark:via-cyan-500 dark:to-indigo-500 rounded-full text-cyan-600 dark:text-cyan-300 shadow-inner"
+                  onClick={() => setopenEmojiPicker(!openEmojiPicker)}
+                >
+                  {editedIcon}
+                </Button>
+                <div className="absolute z-20">
+                  <EmojiPicker
+                    open={openEmojiPicker}
+                    onEmojiClick={(e) => {
+                      setEditedIcon(e.emoji);
+                      setopenEmojiPicker(false);
+                    }}
+                  />
+                </div>
+              </div>
+              {/* Income Name */}
+              <div>
+                <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                  Income Name
+                </h2>
+                <input
+                  type="text"
+                  value={editedName}
+                  onChange={(e) => setEditedName(e.target.value)}
+                  placeholder="Name"
+                  className="w-full p-4 border rounded-lg shadow-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200"
+                />
+              </div>
+
+              {/* Amount */}
+              <div>
+                <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                  Amount
+                </h2>
+                <input
+                  type="number"
+                  value={editedAmount}
+                  onChange={(e) => setEditedAmount(e.target.value)}
+                  placeholder="Amount"
+                  className="w-full p-4 border rounded-lg shadow-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200"
+                />
+              </div>
+
+              {/* Recurring Checkbox */}
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="recurring"
+                  checked={isRecurring}
+                  onCheckedChange={(checked) => setIsRecurring(checked)}
+                />
+                <label
+                  htmlFor="recurring"
+                  className="text-gray-700 dark:text-gray-300 font-medium text-sm"
+                >
+                  Recurring Income
+                </label>
+              </div>
+
+              {/* Conditional Fields Based on Recurrence */}
+              {isRecurring ? (
+                <div className="mt-4">
+                  <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                    Frequency
+                  </h2>
+                  <Select
+                    defaultValue={income.frequency}
+                    onValueChange={(e) => setFrequency(e)}
+                    // className="block w-full p-2 mb-2 border border-gray-300 rounded-full"
+                  >
+                    <SelectTrigger className="w-full p-4 border rounded-lg shadow-md font-bold text-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200">
+                      <SelectValue
+                      // placeholder={frequency}
+                      // className="text-lg font-bold"
+                      />
+                    </SelectTrigger>
+                    <SelectContent className="w-full p-4 border rounded-lg shadow-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200">
+                      <SelectItem
+                        value="daily"
+                        className="text-lg rounded-xl bg-gradient-to-r hover:from-cyan-100 hover:to-blue-100 dark:hover:from-gray-700 dark:hover:to-gray-600
+"
+                      >
+                        Daily
+                      </SelectItem>
+                      <SelectItem
+                        value="weekly"
+                        className="text-lg rounded-xl bg-gradient-to-r hover:from-cyan-100 hover:to-blue-100 dark:hover:from-gray-700 dark:hover:to-gray-600
+"
+                      >
+                        Weekly
+                      </SelectItem>
+                      <SelectItem
+                        value="monthly"
+                        className="text-lg rounded-xl bg-gradient-to-r hover:from-cyan-100 hover:to-blue-100 dark:hover:from-gray-700 dark:hover:to-gray-600
+"
+                      >
+                        Monthly
+                      </SelectItem>
+                      <SelectItem
+                        value="yearly"
+                        className="text-lg rounded-xl bg-gradient-to-r hover:from-cyan-100 hover:to-blue-100 dark:hover:from-gray-700 dark:hover:to-gray-600
+"
+                      >
+                        Yearly
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  {/* <select
+                    value={frequency}
+                    onChange={(e) => setFrequency(e.target.value)}
+                    className="block w-full p-2 mb-2 border border-gray-300 rounded-md"
+                  >
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="yearly">Yearly</option>
+                  </select> */}
+                  <h2 className="mt-4 text-gray-700 dark:text-gray-300 font-medium mb-2">
+                    Start Date
+                  </h2>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start text-left font-normal"
+                      >
+                        {editedStartDate ? (
+                          format(editedStartDate, "PPP")
+                        ) : (
+                          <span>Pick a start date</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        selected={editedStartDate}
+                        onSelect={setEditedStartDate}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              ) : (
+                <div>
+                  <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                    End Date
+                  </h2>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start text-left font-normal"
+                      >
+                        {editedEndDate ? (
+                          format(editedEndDate, "PPP")
+                        ) : (
+                          <span>Pick an end date</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        selected={editedEndDate}
+                        onSelect={setEditedEndDate}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              )}
+
+              {/* Save Button */}
+              <button
+                onClick={saveEditedIncome}
+                className="w-full py-4 rounded-2xl bg-gradient-to-r from-teal-500 via-green-500 to-cyan-500 text-white font-bold shadow-lg hover:shadow-[0_0_30px_rgba(0,200,150,0.5)] hover:scale-105 active:scale-95 transition-transform duration-300"
+              >
+                Save Changes
+              </button>
+            </div>
+          </DialogContent>
+        </Dialog>
+        <TooltipProvider>
+          <Tooltip>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <TooltipTrigger asChild>
+                  <Trash className="cursor-pointer text-red-500 hover:text-red-600 hover:scale-110 active:scale-95 transition-transform duration-500" />
+                </TooltipTrigger>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-br from-white via-green-50 to-teal-100 p-8 rounded-3xl shadow-[0_0_40px_rgba(0,200,150,0.3)] w-[95%] max-w-lg">
+                {/* Background Effects */}
+                <div className="absolute inset-0 pointer-events-none">
+                  <div className="absolute -top-10 -left-10 w-60 h-60 bg-gradient-radial from-teal-400 via-green-400 to-transparent opacity-25 blur-3xl"></div>
+                  <div className="absolute bottom-20 right-10 w-80 h-80 bg-gradient-radial from-green-300 via-cyan-300 to-transparent opacity-30 blur-[120px]"></div>
+                </div>
+
+                {/* Dialog Header */}
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-500 via-green-500 to-cyan-500">
+                    Are you absolutely sure to delete?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription className="text-sm text-gray-600 mt-2">
+                    This action cannot be undone. This will permanently delete
+                    your income "{income.name}" and all of its associated data.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+
+                {/* Dialog Footer */}
+                <AlertDialogFooter className="flex gap-4 mt-6">
+                  <AlertDialogCancel className="w-full py-3 rounded-2xl border border-teal-300 bg-gradient-to-r from-white to-teal-50 text-teal-600 font-semibold shadow-sm hover:shadow-md hover:bg-teal-100 transition-transform transform hover:scale-105 active:scale-95">
+                    Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => deleteIncome()}
+                    className="w-full py-3 rounded-2xl bg-gradient-to-r from-red-500 via-red-600 to-red-700 text-white font-bold shadow-lg hover:shadow-[0_0_20px_rgba(255,100,100,0.5)] hover:scale-105 active:scale-95 transition-transform transform"
+                  >
+                    Continue
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+            <TooltipContent className="rounded-full">
+              <p className="font-semibold">Delete Income</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     </div>
   );
