@@ -126,7 +126,18 @@ This analysis is based on the provided data. Regular updates to your financial d
   }
 };
 
-export const AskFinora = async (question) => {
+export const AskFinora = async (
+  question,
+  totalBudget,
+  totalIncome,
+  totalSpend,
+  largestBudget,
+  highestExpense,
+  totalDebt,
+  debtToIncomeRatio,
+  budgetList,
+  expenseList
+) => {
   try {
     // Define the prompt with comprehensive financial data
     const prompt = ChatPromptTemplate.fromMessages([
