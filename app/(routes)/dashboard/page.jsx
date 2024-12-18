@@ -1,6 +1,5 @@
 "use client";
 
-import AIBudgetAdvisor from "@/components/Dashboard/AIBudgetAdvisor";
 import DashboardCard from "@/components/Dashboard/DashboardCard";
 import { db } from "@/utils/dbConfig";
 import { Budgets, Expenses, Incomes } from "@/utils/schema";

@@ -173,7 +173,7 @@ function DashboardCard({ budgetList, incomeList, expenseList }) {
 }
 
 const DetailedCard = ({ title, details, icon }) => (
-  <div className="p-8 border-2 border-blue-300 rounded-3xl shadow-xl flex flex-col space-y-8 bg-gradient-to-b from-white via-blue-100 to-teal-100 relative overflow-hidden dark:bg-gradient-to-b dark:from-gray-900 dark:via-gray-800 dark:to-blue-900">
+  <div className="p-8 border-2 border-blue-300  rounded-3xl shadow-xl flex flex-col space-y-8 bg-gradient-to-b from-white via-blue-100 to-teal-100 relative overflow-hidden dark:bg-gradient-to-b dark:from-gray-900 dark:via-gray-800 dark:to-blue-900">
     {/* Background Effects */}
     <div className="absolute inset-0 pointer-events-none">
       <div className="absolute -top-10 -left-10 w-40 h-40 bg-gradient-to-r from-blue-400 via-teal-400 to-indigo-500 opacity-20 blur-3xl dark:from-blue-800 dark:via-gray-700 dark:to-gray-800"></div>
@@ -181,7 +181,7 @@ const DetailedCard = ({ title, details, icon }) => (
     </div>
 
     {/* Card Header */}
-    <div className="flex items-center space-x-6 relative z-10">
+    <div className="flex items-center space-x-6 relative">
       <div className="bg-gradient-to-r from-blue-500 via-teal-500 to-purple-700 p-5 h-20 w-20 rounded-full text-white flex items-center justify-center shadow-2xl hover:scale-110 transition-transform duration-300 dark:from-blue-700 dark:via-teal-600 dark:to-gray-700">
         {icon}
       </div>
@@ -191,7 +191,7 @@ const DetailedCard = ({ title, details, icon }) => (
     </div>
 
     {/* Card Content */}
-    <div className="space-y-6 relative z-10">
+    <div className="space-y-6 relative">
       {details.map((detail, index) => (
         <div
           key={index}
