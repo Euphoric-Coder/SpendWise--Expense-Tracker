@@ -9,7 +9,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import Chatbot from "./Chatbot";
+import Chatbot from "./ChatBot";
 
 const AIBudgetAdvisor = ({
   totalBudget,

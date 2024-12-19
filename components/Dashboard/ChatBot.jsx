@@ -93,7 +93,7 @@ const Chatbot = ({
               <h2 className="text-lg font-bold">Finora Assistant</h2>
               <Button
                 onClick={clearChat}
-                className="rounded-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 shadow-lg hover:shadow-cyan-400/50 hover:scale-110 transition-transform duration-300 dark:from-blue-500 dark:to-teal-400 text-white"
+                className="rounded-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 shadow-lg hover:shadow-purple-400/50 hover:scale-110 transition-transform duration-300 dark:from-blue-500 dark:to-teal-400 text-white"
               >
                 <Trash2 size={24} className="ml-2 text-white" /> Clear
               </Button>
