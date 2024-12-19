@@ -136,16 +136,39 @@ export const AskFinora = async (
   totalDebt,
   debtToIncomeRatio,
   budgetList,
-  expenseList
+  expenseList,
+  chatHistory
 ) => {
   try {
-    // Define the prompt with comprehensive financial data
+    // Format chat history into a readable string
+    const formattedChatHistory = chatHistory
+      .map(
+        (entry) =>
+          `${entry.user === "You" ? "User" : "Finora"}: ${entry.message}`
+      )
+      .join("\n");
+
+    // Define the prompt with financial data and chat history
     const prompt = ChatPromptTemplate.fromMessages([
       [
         "system",
-        "You are a financial advisor. Based on the provided question, provide a short answer in a concise format.",
+        `You are a professional financial advisor. Your role is to provide clear, concise, and accurate financial advice based on the user's question, the provided data, and the chat history. Avoid repeating the question and focus on actionable insights. Here is the context:
+
+        - Total Budget: ${totalBudget}
+        - Total Income: ${totalIncome}
+        - Total Spend: ${totalSpend}
+        - Largest Budget: ${largestBudget}
+        - Highest Expense: ${highestExpense}
+        - Total Debt: ${totalDebt}
+        - Debt-to-Income Ratio: ${debtToIncomeRatio}
+        - Budget List: ${budgetList}
+        - Expense List: ${expenseList}
+
+        Chat History:
+        ${formattedChatHistory}
+        `,
       ],
-      ["human", question],
+      ["human", `User's Question: ${question}`],
     ]);
 
     // Chain the prompt with the LLM
@@ -154,10 +177,11 @@ export const AskFinora = async (
     // Invoke the chain and get the advice
     const advice = await chain.invoke({});
 
-    // console.log("Generated Financial Advice:", advice.content);
+    // Return the generated advice
     return advice.content;
   } catch (error) {
     console.error("Error fetching financial advice:", error);
     return "Sorry, I couldn't fetch the financial advice at this moment. Please try again later.";
   }
 };
+

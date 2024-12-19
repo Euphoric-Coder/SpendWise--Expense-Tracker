@@ -10,7 +10,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import Chatbot from "./Chatbot";
-import { ModeToggle } from "../ThemeButton";
 
 const AIBudgetAdvisor = ({
   totalBudget,
@@ -58,7 +57,6 @@ const AIBudgetAdvisor = ({
           <h2 className="text-3xl md:text-5xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-teal-400 dark:from-blue-300 dark:via-cyan-400 dark:to-teal-300 flex items-center gap-3 md:gap-5">
             Finora AI
             <Sparkles className="rounded-full text-gray-200 w-14 h-14 p-3 bg-gradient-to-r from-teal-300 via-blue-400 to-purple-500 shadow-lg dark:from-teal-500 dark:via-blue-600 dark:to-purple-500 hover:scale-105 " />
-            <ModeToggle />
           </h2>
 
           <div className="flex gap-4 items-center">
