@@ -142,7 +142,7 @@ const Header = () => {
               <Link href={"/dashboard"}>
                 <Button
                   variant="outline"
-                  className="rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white hover:scale-105 hover:shadow-lg transition-all duration-300 dark:from-blue-500 dark:via-purple-500 dark:to-pink-500"
+                  className="rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white hover:text-white hover:scale-105 hover:shadow-lg transition-all duration-300 dark:from-blue-500 dark:via-purple-500 dark:to-pink-500"
                 >
                   Dashboard
                 </Button>

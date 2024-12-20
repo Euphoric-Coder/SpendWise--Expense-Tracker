@@ -166,6 +166,19 @@ export const AskFinora = async (
 
         Chat History:
         ${formattedChatHistory}
+
+        Please generate the following content as **HTML only** with no additional preamble or explanations. The output should be visually appealing and well-structured, adhering to the following guidelines:
+- Include appropriate use of bold (\`<b>\`) and italic (\`<i>\`) text for emphasis where needed.
+- Use bullet points (\`<ul>\` and \`<li>\`) for lists to improve readability.
+- Ensure all numeric values are properly formatted (e.g., commas for thousands: 1,000,000).
+- Incorporate spacing between sections using \`<br>\` or padding in a CSS-friendly manner.
+- The HTML should be clean, minimalist, and professional.
+- Use class="text-4xl font-bold" for h1 tags, class="text-3xl font-bold" for h2 tags, and class="text-2xl font-bold" for h3 tags.
+- Use class="list-disc" for unordered list items and use unordered list only. 
+- Don't add additional background color to the HTML.
+- First of all add a heading "Comprehensive Financial Analysis" in the middle with text-3xl and font-bold.
+[GIVE NICE FORMATTING FOR BETTER READABILITY & USE TAILWIND CSS CLASSES FOR STYLING THE HTML]
+        
         `,
       ],
       ["human", `User's Question: ${question}`],

@@ -19,7 +19,7 @@ import { db } from "@/utils/dbConfig";
 import { Incomes } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
-import { getISTDate, isSameDate } from "@/utils/utilities";
+import { addOneMonth, getISTDate, isSameDate } from "@/utils/utilities";
 
 function CreateIncomes({ refreshData }) {
   const [emojiIcon, setEmojiIcon] = useState("😀");
@@ -48,18 +48,17 @@ function CreateIncomes({ refreshData }) {
           icon: emojiIcon,
           incomeType: isRecurring ? "recurring" : "non-recurring",
           status: isRecurring
-            ? isSameDate(startDate, getISTDate())
+            ? isSameDate(startDate ? startDate : getISTDate(), getISTDate())
               ? "current"
               : "upcoming"
             : "current",
           frequency: isRecurring ? frequency : null,
-          startDate: isRecurring ? startDate : getISTDate(), // Default to today for non-recurring
-          endDate: !isRecurring
-            ? endDate ||
-              new Date(new Date().setMonth(new Date().getMonth() + 1))
-                .toISOString()
-                .split("T")[0] // Default 1 month for non-recurring
-            : null,
+          startDate: isRecurring
+            ? startDate
+              ? startDate
+              : getISTDate()
+            : getISTDate(), // Default to today for non-recurring
+          endDate: !isRecurring ? endDate || addOneMonth(getISTDate()) : null,
         })
         .returning({ insertedId: Incomes.id });
 
@@ -188,6 +187,7 @@ function CreateIncomes({ refreshData }) {
                 Start Date
               </h2>
               <Input
+              required
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}

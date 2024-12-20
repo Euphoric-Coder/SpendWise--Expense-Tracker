@@ -9,9 +9,10 @@ import { toast } from "sonner";
 import moment from "moment";
 import { eq, getTableColumns, sql } from "drizzle-orm";
 import { useUser } from "@clerk/nextjs";
-import { AlertCircle, Eraser, LucideSquareArrowOutUpRight } from "lucide-react";
+import { AlertCircle, Eraser } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import CSVImportButton from "./CSVImportButton";
+import { ModeToggle } from "../ThemeButton";
 
 const AddExpense = ({ budgetId, refreshData, budgetAmount }) => {
   const { user } = useUser();
@@ -106,9 +107,10 @@ const AddExpense = ({ budgetId, refreshData, budgetAmount }) => {
             onClick={() => clearData()}
             className="px-4 py-2 bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-500 dark:from-blue-600 dark:via-indigo-600 dark:to-cyan-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl hover:from-blue-600 hover:to-cyan-600 transition-transform transform hover:scale-105"
           >
-            Clear Data
+           <Eraser /> Clear Data
           </Button>
           <CSVImportButton />
+          <ModeToggle />
         </div>
       </div>
 

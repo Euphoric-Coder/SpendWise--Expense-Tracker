@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "../ui/button";
 import { AskFinora } from "@/utils/aiAdvisor";
+import parse from "html-react-parser";
 import { MessageCircleMoreIcon, SendIcon, Trash2 } from "lucide-react";
 
 const Chatbot = ({
@@ -90,12 +91,12 @@ const Chatbot = ({
           {/* Chat Header */}
           <div className="p-4 flex justify-between items-center bg-gradient-to-r from-purple-600 via-pink-600 to-red-500 text-white rounded-t-2xl shadow-md dark:from-blue-800 dark:via-teal-700 dark:to-cyan-600">
             <div className="flex gap-3 items-center ">
-              <h2 className="text-lg font-bold">Finora Assistant</h2>
+              <h2 className="text-lg font-bold">Finora AI</h2>
               <Button
                 onClick={clearChat}
-                className="rounded-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 shadow-lg hover:shadow-purple-400/50 hover:scale-110 transition-transform duration-300 dark:from-blue-500 dark:to-teal-400 text-white"
+                className="rounded-full bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 shadow-lg hover:shadow-purple-400/50 hover:scale-110 transition-transform duration-300 dark:from-blue-500 dark:to-teal-400 text-white"
               >
-                <Trash2 size={24} className="ml-2 text-white" /> Clear
+                <Trash2 size={24} className="text-white" /> Clear
               </Button>
             </div>
             <button
@@ -119,19 +120,19 @@ const Chatbot = ({
               chatHistory.map((chat, index) => (
                 <div key={index} className="mb-4 flex">
                   <div
-                    className={`relative max-w-[60%] w-fit px-4 py-2 rounded-lg ${
+                    className={`relative max-w-[90%] w-fit px-4 py-2 rounded-lg ${
                       chat.user === "You"
                         ? "bg-gradient-to-r from-blue-400 to-blue-500 text-white ml-auto"
                         : "bg-gradient-to-r from-gray-300 to-gray-400 text-gray-800 dark:from-gray-700 dark:to-gray-800 dark:text-white mr-auto"
                     }`}
                   >
-                    <p className="whitespace-pre-wrap">{chat.message}</p>
+                    <p className="whitespace-pre-wrap">{parse(chat.message)}</p>
                     {/* Bubble Tail */}
                     <div
                       className={`absolute w-3 h-3 ${
                         chat.user === "You"
                           ? "bg-blue-500 right-[-6px] bottom-2 rotate-45"
-                          : "bg-gray-400 dark:bg-gray-800 left-[-6px] bottom-2 rotate-45"
+                          : "bg-gradient-to-r from-gray-300 to-gray-400 text-gray-800  left-[-6px] bottom-2 rotate-45"
                       } rounded-sm`}
                     ></div>
                   </div>

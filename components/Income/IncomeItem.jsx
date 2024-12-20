@@ -180,6 +180,14 @@ function IncomeItem({ income, refreshData }) {
       </div>
       <div className="mt-1 mb-2">
         <div>
+          {income.incomeType === "recurring" &&
+            income.status === "upcoming" && (
+              <div>
+                <h2 className="text-sm mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 dark:from-blue-400 dark:via-cyan-400 dark:to-indigo-400">
+                  Starting On: {format(income?.startDate, "PPP")}
+                </h2>
+              </div>
+            )}
           {income.incomeType === "non-recurring" && (
             <div>
               <div className="flex items-center justify-between">
@@ -237,20 +245,39 @@ function IncomeItem({ income, refreshData }) {
                   ></div>
                 </div>
                 {/* Percentage Below nonrecurringProgress Bar */}
-                <p
-                  className={`mt-2 text-center text-sm sm:text-lg font-semibold ${
-                    recurringProgress.progress <= 65
-                      ? "text-green-500" // Most time remaining
-                      : recurringProgress.progress <= 85
-                      ? "text-yellow-500" // Moderate time remaining
-                      : "text-red-500" // Time is almost up
-                  }`}
-                >
-                  {(100 - recurringProgress.progress).toFixed(2)}% of days left
-                  to next recurring ({recurringProgress.daysUntilNext} days)
-                </p>
+                {income.frequency === "daily" ? (
+                  <p
+                    className={`mt-2 text-center text-sm sm:text-lg font-semibold ${
+                      recurringProgress.progress <= 65
+                        ? "text-green-500" // Most time remaining
+                        : recurringProgress.progress <= 85
+                        ? "text-yellow-500" // Moderate time remaining
+                        : "text-red-500" // Time is almost up
+                    }`}
+                  >
+                    Approximately{" "}
+                    {Math.floor(
+                      ((100 - recurringProgress.progress).toFixed(2) / 100) * 24
+                    )}{" "}
+                    hours left to next recurring
+                  </p>
+                ) : (
+                  <p
+                    className={`mt-2 text-center text-sm sm:text-lg font-semibold ${
+                      recurringProgress.progress <= 65
+                        ? "text-green-500" // Most time remaining
+                        : recurringProgress.progress <= 85
+                        ? "text-yellow-500" // Moderate time remaining
+                        : "text-red-500" // Time is almost up
+                    }`}
+                  >
+                    {(100 - recurringProgress.progress).toFixed(2)}% of days
+                    left to next recurring ({recurringProgress.daysUntilNext}{" "}
+                    days)
+                  </p>
+                )}
                 <div className="flex justify-between items-center gap-3">
-                  <h2 className="text-sm mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600">
+                  <h2 className="text-sm mt-1 sm:mt-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-blue-500 to-cyan-600">
                     Last Processed:{" "}
                     {income.lastProcessed
                       ? format(income.lastProcessed, "PPP")
@@ -527,21 +554,3 @@ function IncomeItem({ income, refreshData }) {
 }
 
 export default IncomeItem;
-
-
-
-
-
-
-                  {
-                    /* <select
-                    value={frequency}
-                    onChange={(e) => setFrequency(e.target.value)}
-                    className="block w-full p-2 mb-2 border border-gray-300 rounded-md"
-                  >
-                    <option value="daily">Daily</option>
-                    <option value="weekly">Weekly</option>
-                    <option value="monthly">Monthly</option>
-                    <option value="yearly">Yearly</option>
-                  </select> */
-                  }

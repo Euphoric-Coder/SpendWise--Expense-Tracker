@@ -10,7 +10,14 @@ import IncomeItem from "./IncomeItem";
 import { Skeleton } from "../ui/skeleton";
 import DeleteIncome from "./DeleteIncome";
 import { Button } from "../ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import Link from "next/link";
+import { RefreshCcw } from "lucide-react";
 
 function IncomeList() {
   const [incomelist, setIncomelist] = useState([]);
@@ -33,7 +40,7 @@ function IncomeList() {
       .leftJoin(Expenses, eq(Incomes.id, Expenses.budgetId))
       .where(eq(Incomes.createdBy, user?.primaryEmailAddress?.emailAddress))
       .groupBy(Incomes.id)
-      .orderBy(desc(Incomes.id));
+      .orderBy(desc(Incomes.createdAt));
 
     // Separate items into "upcoming" and "current" arrays
     const upcomingItems = result.filter((item) => item.status === "upcoming");
@@ -60,6 +67,21 @@ function IncomeList() {
             incomeData={incomelist}
             refreshData={() => getIncomelist()}
           />
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <Button
+                  className="rounded-full text-md bg-gradient-to-r from-cyan-400 via-blue-400 to-sky-400 dark:from-blue-600 dark:via-cyan-500 dark:to-teal-500 text-white px-6 py-3 font-semibold shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300"
+                  onClick={() => getIncomelist()}
+                >
+                  <RefreshCcw />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent className="rounded-full font-bold">
+                <p>Refresh Income Details</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
       <div className="mb-7 grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-5">

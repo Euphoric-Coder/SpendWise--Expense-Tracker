@@ -16,10 +16,19 @@ const formatCurrency = (amount) => {
     // Less than 1,000
     formattedAmount = amount.toFixed(2);
   }
+  
 
   // Add currency symbol manually
   return `₹${formattedAmount}`;
 };
+
+export function UTCtoIST(utcTimestamp) {
+  const utcDate = new Date(utcTimestamp + "Z"); // Adding "Z" ensures UTC interpretation
+  const istDateString = utcDate.toLocaleString("en-GB", {
+    timeZone: "Asia/Kolkata",
+  });
+  return istDateString;
+}
 
 export const formatCurrencyDashboard = (amount) => {
   // Handle null or undefined amounts
@@ -70,6 +79,28 @@ export const getISTCustomDate = (date) => {
 
   return istDate.toISOString().split("T")[0]; // Return date in YYYY-MM-DD format
 };
+
+export function addOneMonth(dateString) {
+  // Parse the input date string into a Date object
+  const [year, month, day] = dateString.split("-").map(Number);
+  const date = new Date(year, month - 1, day); // Month is 0-based in JavaScript
+
+  // Add one month
+  date.setMonth(date.getMonth() + 1);
+
+  // Handle cases where adding a month changes the day (e.g., Feb 28 -> Mar 28)
+  if (date.getDate() !== day) {
+    // Set to the last day of the previous month
+    date.setDate(0);
+  }
+
+  // Format the result back to YYYY-MM-DD
+  const resultYear = date.getFullYear();
+  const resultMonth = String(date.getMonth() + 1).padStart(2, "0"); // Month is 0-based
+  const resultDay = String(date.getDate()).padStart(2, "0");
+
+  return `${resultYear}-${resultMonth}-${resultDay}`;
+}
 
 export function isSameDate(date, today) {
   const parsedDate = new Date(date);
@@ -144,7 +175,8 @@ export function calculateNonRecurringProgress(startDate, endDate) {
 export function calculateRecurringProgress(startDate, frequency) {
   const today = new Date();
   const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
-  const parsedStartDate = new Date(new Date(startDate).getTime() + istOffset);
+  // const parsedStartDate = new Date(new Date(startDate).getTime() + istOffset);
+  const parsedStartDate = new Date(startDate);
 
   // Convert today's date to IST
   const todayInIST = new Date(today.getTime() + istOffset);

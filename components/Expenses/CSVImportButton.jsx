@@ -31,76 +31,79 @@ const CSVImportButton = () => {
       title: "Step 1: CSV File Format",
       content: (
         <div className="text-center">
-          <p className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500">
+          <p className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-teal-500 to-indigo-500 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400">
             Your CSV file should include the following columns:
           </p>
           <ul className="mt-6 space-y-4 text-left">
             <li className="flex items-start">
-              <span className="w-3 h-3 bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 rounded-full mt-1 mr-3"></span>
-              <span className="text-lg text-gray-800">
-                <strong className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500">
+              <span className="w-3 h-3 bg-gradient-to-br from-blue-600 via-teal-500 to-indigo-500 rounded-full mt-1 mr-3 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400"></span>
+              <span className="text-lg text-gray-800 dark:text-gray-300">
+                <strong className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-blue-600 to-indigo-600 dark:from-teal-400 dark:via-blue-400 dark:to-indigo-400">
                   Date
                 </strong>
                 : The date of the expense in the format:
                 <div className="text-center">
-                  <code className="font-mono bg-gray-800 text-yellow-300 p-1 rounded-md">
+                  <code className="font-mono bg-blue-900 text-gray-300 p-1 rounded-md dark:bg-indigo-600 dark:text-gray-50">
                     YYYY-MM-DD
                   </code>
                 </div>
               </span>
             </li>
             <li className="flex items-start">
-              <span className="w-3 h-3 bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 rounded-full mt-1 mr-3"></span>
-              <span className="text-lg text-gray-800">
-                <strong className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500">
+              <span className="w-3 h-3 bg-gradient-to-br from-blue-600 via-teal-500 to-indigo-500 rounded-full mt-1 mr-3 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400"></span>
+              <span className="text-lg text-gray-800 dark:text-gray-300">
+                <strong className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-blue-600 to-indigo-600 dark:from-teal-400 dark:via-blue-400 dark:to-indigo-400">
                   Name
                 </strong>
                 : A brief description of the expense.
               </span>
             </li>
             <li className="flex items-start">
-              <span className="w-3 h-3 bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 rounded-full mt-1 mr-3"></span>
-              <span className="text-lg text-gray-800">
-                <strong className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500">
+              <span className="w-3 h-3 bg-gradient-to-br from-blue-600 via-teal-500 to-indigo-500 rounded-full mt-1 mr-3 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400"></span>
+              <span className="text-lg text-gray-800 dark:text-gray-300">
+                <strong className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-blue-600 to-indigo-600 dark:from-teal-400 dark:via-blue-400 dark:to-indigo-400">
                   Amount
                 </strong>
                 : The monetary value of the expense in numeric format.
               </span>
             </li>
           </ul>
-          <p className="mt-6 text-gray-500">
+          <p className="mt-6 text-gray-500 dark:text-gray-400">
             Each row represents a single expense record. Ensure there are no
             extra columns or formatting issues.
           </p>
         </div>
       ),
-      image: "/sampleCSV.png", // Replace with your actual image path
+      image: "/sampleCSV.png",
     },
     {
       title: "Step 2: Date Format",
       content: (
         <div className="text-center">
-          <p className="text-lg text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500">
-            The <span className="font-semibold text-yellow-400">Date</span>{" "}
+          <p className="text-lg text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-teal-500 to-indigo-500 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400">
+            The{" "}
+            <span className="font-semibold text-blue-500 dark:text-blue-300">
+              Date
+            </span>{" "}
             column must follow this format:
           </p>
-          <p className="mt-4 text-2xl font-extrabold font-mono text-transparent bg-clip-text bg-gradient-to-tr from-green-400 via-blue-400 to-teal-400">
+          <p className="mt-4 text-2xl font-extrabold font-mono text-transparent bg-clip-text bg-gradient-to-tr from-teal-500 via-blue-500 to-indigo-500 dark:from-teal-400 dark:via-blue-400 dark:to-indigo-400">
             YYYY-MM-DD
           </p>
           <ul className="mt-6 space-y-4 text-left">
             <li className="flex items-start">
-              <span className="w-3 h-3 bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 rounded-full mt-1 mr-3"></span>
-              <span className="text-lg text-gray-800">
-                <code className="font-mono bg-gray-800 text-yellow-300 px-1 py-0.5 rounded">
+              <span className="w-3 h-3 bg-gradient-to-br from-blue-600 via-teal-500 to-indigo-500 rounded-full mt-1 mr-3 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400"></span>
+              <span className="text-lg text-gray-800 dark:text-gray-300">
+                <code className="font-mono bg-gray-100 text-blue-600 px-1 py-0.5 rounded dark:bg-gray-800 dark:text-blue-300">
                   2024-01-01
                 </code>{" "}
                 for January 1, 2024.
               </span>
             </li>
             <li className="flex items-start">
-              <span className="w-3 h-3 bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 rounded-full mt-1 mr-3"></span>
-              <span className="text-lg text-gray-800">
-                <code className="font-mono bg-gray-800 text-yellow-300 px-1 py-0.5 rounded">
+              <span className="w-3 h-3 bg-gradient-to-br from-blue-600 via-teal-500 to-indigo-500 rounded-full mt-1 mr-3 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400"></span>
+              <span className="text-lg text-gray-800 dark:text-gray-300">
+                <code className="font-mono bg-gray-100 text-blue-600 px-1 py-0.5 rounded dark:bg-gray-800 dark:text-blue-300">
                   2024-02-15
                 </code>{" "}
                 for February 15, 2024.
@@ -109,13 +112,13 @@ const CSVImportButton = () => {
           </ul>
         </div>
       ),
-      image: "/images/date-format.png", // Replace with your actual image path
+      image: "/images/date-format.png",
     },
     {
       title: "Step 3: Example File",
       content: (
         <div className="text-center">
-          <p className="text-lg text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500">
+          <p className="text-lg text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-teal-500 to-indigo-500 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400">
             Here&apos;s an example of how your CSV file should look:
           </p>
           <pre className="mt-6 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 p-6 rounded-lg text-sm text-left shadow-lg text-gray-300">
@@ -124,35 +127,38 @@ const CSVImportButton = () => {
 2024-01-02,Transport,50
 2024-01-03,Utilities,100`}
           </pre>
-          <p className="mt-6 text-gray-500 text-lg">
+          <p className="mt-6 text-gray-500 text-lg dark:text-gray-400">
             Ensure your file is saved with the{" "}
-            <strong className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500">
+            <strong className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-blue-600 to-indigo-600 dark:from-teal-400 dark:via-blue-400 dark:to-indigo-400">
               .csv
             </strong>{" "}
             extension.
           </p>
         </div>
       ),
-      image: "/images/example-file.png", // Replace with your actual image path
+      image: "/images/example-file.png",
     },
     {
       title: "Step 4: Ready to Upload",
       content: (
         <div className="text-center">
-          <p className="text-lg text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500">
+          <p className="text-lg text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-teal-500 to-indigo-500 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400">
             Once your file is ready, click{" "}
-            <span className="text-yellow-400 font-semibold">Continue</span> to
-            proceed to the upload screen.
+            <span className="text-blue-500 font-semibold dark:text-blue-300">
+              Continue
+            </span>{" "}
+            to proceed to the upload screen.
           </p>
-          <p className="mt-6 text-gray-400">
+          <p className="mt-6 text-gray-400 dark:text-gray-500">
             Make sure the file format matches the requirements. Invalid files
             may not be processed.
           </p>
         </div>
       ),
-      image: "/images/ready-to-upload.png", // Replace with your actual image path
+      image: "/images/ready-to-upload.png",
     },
   ];
+
 
   useEffect(() => {
     const fetchOrCreateSettings = async () => {
