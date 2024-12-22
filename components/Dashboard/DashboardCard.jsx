@@ -84,18 +84,18 @@ function DashboardCard({ budgetList, incomeList, expenseList }) {
     <div>
       {/* Financial Advisor Section */}
       {totalIncome > 0 && (
-          <AIBudgetAdvisor
-            totalBudget={totalBudget}
-            totalIncome={totalIncome}
-            totalSpend={totalSpend}
-            largestBudget={largestBudget}
-            highestExpense={highestExpense}
-            totalDebt={totalDebt}
-            debtToIncomeRatio={debtToIncomeRatio}
-            budgetList={budgetList}
-            expenseList={expenseList}
-          />
-        )}
+        <AIBudgetAdvisor
+          totalBudget={totalBudget}
+          totalIncome={totalIncome}
+          totalSpend={totalSpend}
+          largestBudget={largestBudget}
+          highestExpense={highestExpense}
+          totalDebt={totalDebt}
+          debtToIncomeRatio={debtToIncomeRatio}
+          budgetList={budgetList}
+          expenseList={expenseList}
+        />
+      )}
 
       {/* Card Section  */}
       <div className="mt-7 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -131,6 +131,20 @@ function DashboardCard({ budgetList, incomeList, expenseList }) {
               label: "Highest Expense",
               value: formatCurrencyDashboard(highestExpense),
             },
+            {
+              label: "Total Debt",
+              value: formatCurrencyDashboard(totalDebt),
+            },
+            {
+              label: "Debt-to-Income Ratio",
+              value: `${debtToIncomeRatio}%`,
+              color: debtToIncomeRatio > 50 ? "text-red-600" : "text-green-600",
+            },
+            {
+              label: "Total Expenses Exceeds Income?",
+              value: totalDebt > 0 ? "Yes" : "No",
+              color: totalDebt > 0 ? "text-red-600" : "text-green-600",
+            },
           ]}
           icon={<ReceiptText />}
         />
@@ -147,25 +161,6 @@ function DashboardCard({ budgetList, incomeList, expenseList }) {
             { label: "% Income Saved", value: `${incomeSavedPercentage}%` },
           ]}
           icon={<CircleDollarSign />}
-        />
-
-        {/* Debt Summary */}
-        <DetailedCard
-          title="Debt Summary"
-          details={[
-            { label: "Total Debt", value: formatCurrencyDashboard(totalDebt) },
-            {
-              label: "Debt-to-Income Ratio",
-              value: `${debtToIncomeRatio}%`,
-              color: debtToIncomeRatio > 50 ? "text-red-600" : "text-green-600",
-            },
-            {
-              label: "Exceeds Income?",
-              value: totalDebt > 0 ? "Yes" : "No",
-              color: totalDebt > 0 ? "text-red-600" : "text-green-600",
-            },
-          ]}
-          icon={<Wallet />}
         />
       </div>
     </div>

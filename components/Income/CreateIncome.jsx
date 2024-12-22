@@ -16,12 +16,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { db } from "@/utils/dbConfig";
-import { Incomes } from "@/utils/schema";
+import { Incomes, Transactions } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
-import { addOneMonth, getISTDate, isSameDate } from "@/utils/utilities";
+import { addOneMonth, getISTDate, getISTDateTime, isSameDate } from "@/utils/utilities";
 
 function CreateIncomes({ refreshData }) {
+  const { v4: uuidv4 } = require("uuid");
   const [emojiIcon, setEmojiIcon] = useState("😀");
   const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
 
@@ -31,37 +32,51 @@ function CreateIncomes({ refreshData }) {
   const [frequency, setFrequency] = useState("monthly"); // Default frequency
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState(""); // Optional end date for non-recurring
-
   const { user } = useUser();
-
+  
   /**
    * To Create New Source of Income
    */
   const onCreateIncomes = async () => {
+    const incomeData = {
+      id: uuidv4(),
+      name: name,
+      amount: amount,
+      createdBy: user?.primaryEmailAddress?.emailAddress,
+      icon: emojiIcon,
+      incomeType: isRecurring ? "recurring" : "non-recurring",
+      status: isRecurring
+        ? isSameDate(startDate ? startDate : getISTDate(), getISTDate())
+          ? "current"
+          : "upcoming"
+        : "current",
+      frequency: isRecurring ? frequency : null,
+      startDate: isRecurring
+        ? startDate
+          ? startDate
+          : getISTDate()
+        : getISTDate(), // Default to today for non-recurring
+      endDate: !isRecurring ? endDate || addOneMonth(getISTDate()) : null,
+      createdAt: getISTDateTime(),
+    };
     try {
       const result = await db
         .insert(Incomes)
+        .values(incomeData)
+        .returning({ insertedId: Incomes.id });
+      
+        const transaction = await db
+        .insert(Transactions)
         .values({
+          id: incomeData.id,
+          category: "income",
           name: name,
           amount: amount,
-          createdBy: user?.primaryEmailAddress?.emailAddress,
-          icon: emojiIcon,
-          incomeType: isRecurring ? "recurring" : "non-recurring",
-          status: isRecurring
-            ? isSameDate(startDate ? startDate : getISTDate(), getISTDate())
-              ? "current"
-              : "upcoming"
-            : "current",
-          frequency: isRecurring ? frequency : null,
-          startDate: isRecurring
-            ? startDate
-              ? startDate
-              : getISTDate()
-            : getISTDate(), // Default to today for non-recurring
-          endDate: !isRecurring ? endDate || addOneMonth(getISTDate()) : null,
+          createdBy: incomeData.createdBy,
+          createdAt: incomeData.createdAt,
         })
-        .returning({ insertedId: Incomes.id });
-
+        .returning({ insertedId: Transactions.id });
+        
       if (result) {
         refreshData();
         toast.success("New Source of Income has been Created!");
@@ -73,7 +88,16 @@ function CreateIncomes({ refreshData }) {
   };
 
   return (
-    <Dialog>
+    <Dialog onOpenChange={(isOpen) => {
+      if(!isOpen){
+        setName("");
+        setAmount("");
+        setIsRecurring(false);
+        setFrequency("monthly");
+        setStartDate("");
+        setEndDate("");
+      }
+    }}>
       <DialogTrigger>
         <div className="bg-gradient-to-b from-white via-cyan-50 to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 p-10 rounded-2xl items-center flex flex-col border-2 border-dashed border-blue-300 dark:border-blue-600 cursor-pointer hover:shadow-[0_4px_20px_rgba(0,150,255,0.5)] hover:scale-105 transition-transform transform">
           <h2 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 dark:from-blue-400 dark:via-cyan-400 dark:to-indigo-400">
@@ -187,7 +211,7 @@ function CreateIncomes({ refreshData }) {
                 Start Date
               </h2>
               <Input
-              required
+                required
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}

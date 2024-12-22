@@ -69,6 +69,25 @@ export const getISTDate = () => {
   return istDate.toISOString().split("T")[0]; // Return date in YYYY-MM-DD format
 };
 
+export const getISTDateTime = () => {
+  // Create a new Date object
+  const now = new Date();
+
+  // Convert to Indian Standard Time (UTC+5:30)
+  const istOffset = 5.5 * 60; // IST is 5 hours 30 minutes ahead of UTC
+  const utcTimestamp = now.getTime() + now.getTimezoneOffset() * 60 * 1000; // Adjust to UTC
+  const istTimestamp = utcTimestamp + istOffset * 60 * 1000; // Add IST offset
+  const istDate = new Date(istTimestamp);
+
+  // Extract date in YYYY-MM-DD format
+  const date = istDate.toISOString().split("T")[0];
+
+  // Extract time in HH:mm:ss format
+  const time = istDate.toTimeString().split(" ")[0];
+
+  return `${date} ${time}`; // Return date and time in "YYYY-MM-DD HH:mm:ss" format
+};
+
 export const getISTCustomDate = (date) => {
   // Create a new Date object
   const now = new Date(date);

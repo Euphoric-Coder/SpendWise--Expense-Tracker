@@ -45,7 +45,7 @@ import {
 } from "@/components/ui/popover";
 import React, { useState } from "react";
 import { CalendarIcon, Edit, Trash } from "lucide-react";
-import { Incomes } from "@/utils/schema";
+import { Incomes, Transactions } from "@/utils/schema";
 import { db } from "@/utils/dbConfig";
 import { eq } from "drizzle-orm";
 import { toast } from "sonner";
@@ -96,14 +96,11 @@ function IncomeItem({ income, refreshData }) {
   };
 
   const saveEditedIncome = async () => {
-    console.log(frequency);
     const defaultEndDate = new Date(
       new Date().setMonth(new Date().getMonth() + 1)
     )
-      .toISOString()
-      .split("T")[0];
-    setEditedStartDate(formatDate(editedStartDate));
-    setEditedEndDate(formatDate(editedEndDate));
+    .toISOString()
+    .split("T")[0];
     const updatedValues = {
       name: editedName,
       amount: editedAmount,
@@ -113,7 +110,7 @@ function IncomeItem({ income, refreshData }) {
       startDate: isRecurring ? editedStartDate : null,
       endDate: isRecurring ? null : editedEndDate || defaultEndDate,
       status: isRecurring
-        ? isSameDate(editedStartDate, getISTDate())
+        ? isSameDate(formatDate(editedStartDate), getISTDate())
           ? "current"
           : "upcoming"
         : "current",
@@ -138,6 +135,7 @@ function IncomeItem({ income, refreshData }) {
   const deleteIncome = async () => {
     const name = income.name;
     try {
+      await db.delete(Transactions).where(eq(Transactions.id, income.id)).returning();
       await db.delete(Incomes).where(eq(Incomes.id, income.id)).returning();
       refreshData(); // Refresh data
       toast.success(`Income "${name}" has been deleted!`);

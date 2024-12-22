@@ -92,7 +92,7 @@ const ExpensesDashboard = ({ params }) => {
       {/* My Expenses Header */}
       <div className="flex flex-col md:flex-row items-center justify-between">
         <h2 className="flex justify-between text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 dark:from-blue-400 dark:via-indigo-400 dark:to-cyan-400 mb-6 animate-gradient-text">
-          My Expenses
+          My Budget Expenses
         </h2>
         <div className="flex gap-4 items-center justify-center">
           {/* Edit Budget Button */}

@@ -31,13 +31,8 @@ function IncomeList() {
 
   const getIncomelist = async () => {
     const result = await db
-      .select({
-        ...getTableColumns(Incomes),
-        totalSpend: sql`sum(${Expenses.amount})`.mapWith(Number),
-        totalItem: sql`count(${Expenses.id})`.mapWith(Number),
-      })
+      .select()
       .from(Incomes)
-      .leftJoin(Expenses, eq(Incomes.id, Expenses.budgetId))
       .where(eq(Incomes.createdBy, user?.primaryEmailAddress?.emailAddress))
       .groupBy(Incomes.id)
       .orderBy(desc(Incomes.createdAt));
