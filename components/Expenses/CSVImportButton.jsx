@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import CsvUpload from "./CSVUpload";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox"; // Shadcn UI Checkbox
 import { db } from "@/utils/dbConfig"; // Assume dbConfig is set up for your database
@@ -358,12 +358,14 @@ const CSVImportButton = () => {
           {csvData.length > 0 && (
             <CsvDataTable csvData={csvData} setCsvData={setCsvData} />
           )}
-          <Button
-            className="mt-4 px-4 py-2 font-semibold text-white bg-gradient-to-r from-purple-400 to-indigo-500 dark:from-purple-500 dark:to-indigo-600 rounded-lg shadow hover:from-purple-500 hover:to-indigo-600"
-            onClick={() => setShowUploadDialog(false)}
-          >
-            Close
-          </Button>
+          <DialogClose asChild>
+            <Button
+              className="mt-4 px-4 py-2 font-semibold text-white bg-gradient-to-r from-purple-400 to-indigo-500 dark:from-purple-500 dark:to-indigo-600 rounded-lg shadow hover:from-purple-500 hover:to-indigo-600"
+              onClick={() => setShowUploadDialog(false)}
+            >
+              Close
+            </Button>
+          </DialogClose>
         </DialogContent>
       </Dialog>
     </div>

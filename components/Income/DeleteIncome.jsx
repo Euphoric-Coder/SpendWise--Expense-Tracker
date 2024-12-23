@@ -22,7 +22,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { eq } from "drizzle-orm";
 import { toast } from "sonner";
 import { db } from "@/utils/dbConfig";
-import { Incomes } from "@/utils/schema";
+import { Incomes, Transactions } from "@/utils/schema";
 import { Trash } from "lucide-react";
 
 const DeleteIncome = ({ incomeData, refreshData }) => {
@@ -44,6 +44,7 @@ const DeleteIncome = ({ incomeData, refreshData }) => {
 
       for (const incomeId of selectedIncomes) {
         const income = incomeData.find((item) => item.id === incomeId);
+        await db.delete(Transactions).where(eq(Transactions.referenceId, income.id)).returning();
         await db.delete(Incomes).where(eq(Incomes.id, income.id)).returning();
         deletedIncomeNames.push(income?.name);
       }

@@ -68,8 +68,9 @@ function CreateIncomes({ refreshData }) {
         const transaction = await db
         .insert(Transactions)
         .values({
-          id: incomeData.id,
+          id: uuidv4(),
           category: "income",
+          referenceId: incomeData.id,
           name: name,
           amount: amount,
           createdBy: incomeData.createdBy,

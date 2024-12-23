@@ -135,7 +135,7 @@ function IncomeItem({ income, refreshData }) {
   const deleteIncome = async () => {
     const name = income.name;
     try {
-      await db.delete(Transactions).where(eq(Transactions.id, income.id)).returning();
+      await db.delete(Transactions).where(eq(Transactions.referenceId, income.id)).returning();
       await db.delete(Incomes).where(eq(Incomes.id, income.id)).returning();
       refreshData(); // Refresh data
       toast.success(`Income "${name}" has been deleted!`);

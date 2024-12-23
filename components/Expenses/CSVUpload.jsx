@@ -10,7 +10,6 @@ const CsvUpload = ({ onFileSelect }) => {
   const [csvFile, setCsvFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isValidFile, setIsValidFile] = useState(false);
-  const [csvData, setCsvData] = useState([]);
 
   const fileInputRef = useRef(null); // Reference for the file input element
 
@@ -104,7 +103,7 @@ const CsvUpload = ({ onFileSelect }) => {
     <div className="mt-6">
       <Label
         htmlFor="csv-upload"
-        className="absolute left-6 text-lg font-semibold text-blue-100 bg-gradient-to-r from-orange-500 via-red-400 to-yellow-500 px-3 py-1 rounded-full shadow-md transform -translate-y-12 -translate-x-1/5 transition-all duration-300 ease-in-out z-20 cursor-pointer hover:scale-105"
+        className="absolute left-6 text-lg font-semibold text-blue-100 bg-gradient-to-r from-blue-500 via-indigo-400 to-purple-500 px-3 py-1 rounded-full shadow-md transform -translate-y-12 -translate-x-1/5 transition-all duration-300 ease-in-out z-20 cursor-pointer hover:scale-105"
       >
         Upload CSV
       </Label>
@@ -114,25 +113,25 @@ const CsvUpload = ({ onFileSelect }) => {
         onDragLeave={handleDragLeave}
         className={`relative flex flex-col items-center justify-center p-8 border-2 rounded-xl cursor-pointer transition-all ${
           isDragging
-            ? "border-orange-600 bg-gradient-to-br from-yellow-100 to-red-200"
-            : "border-orange-300 bg-gradient-to-br from-yellow-50 to-red-100"
+            ? "border-blue-600 bg-gradient-to-br from-cyan-100 to-indigo-200"
+            : "border-blue-300 bg-gradient-to-br from-cyan-50 to-indigo-100"
         } shadow-md hover:shadow-lg`}
       >
-        <FiUploadCloud className="text-orange-600 text-6xl mb-4" />
+        <FiUploadCloud className="text-blue-600 text-6xl mb-4" />
         <div className="text-center">
           {csvFile ? (
-            <p className="text-base font-semibold text-orange-900">
+            <p className="text-base font-semibold text-blue-900">
               {csvFile.name}{" "}
               <span className="text-green-600 font-semibold">(Selected)</span>
             </p>
           ) : (
-            <p className="text-yellow-800 text-lg font-semibold">
+            <p className="text-blue-800 text-lg font-semibold">
               Drag & Drop your CSV file here
               <br />
               (.csv only)
             </p>
           )}
-          <p className="text-md text-orange-500 mt-1">
+          <p className="text-md text-indigo-500 mt-1">
             or click to browse files
           </p>
         </div>
