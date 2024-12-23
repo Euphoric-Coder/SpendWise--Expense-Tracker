@@ -22,10 +22,11 @@ import { db } from "@/utils/dbConfig";
 import { Expenses } from "@/utils/schema";
 import { eq } from "drizzle-orm";
 import { toast } from "sonner";
+import { expenseDateFormat, nextRecurringDate } from "@/utils/utilities";
 /**
  * @todo : Add type of expense & implement the feature
  */
-const ExpenseTable = ({ expenseList = [], refreshData }) => {
+const ExpenseTable = ({ expenseList = [], refreshData, isRecurringBudget, frequency }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingExpense, setEditingExpense] = useState(null);
   const [editedName, setEditedName] = useState("");
@@ -38,7 +39,7 @@ const ExpenseTable = ({ expenseList = [], refreshData }) => {
       .returning();
 
     if (result) {
-      toast(`Expense "${expense.name}" has been deleted!`);
+      toast.success(`Expense "${expense.name}" has been deleted!`);
       refreshData();
     }
   };
@@ -58,7 +59,7 @@ const ExpenseTable = ({ expenseList = [], refreshData }) => {
       .returning();
 
     if (result) {
-      toast(`Expense "${editedName}" has been updated!`);
+      toast.success(`Expense "${editedName}" has been updated!`);
       setIsDialogOpen(false); // Close the dialog after saving
       setEditingExpense(null); // Reset editing state
       refreshData();
@@ -77,7 +78,10 @@ const ExpenseTable = ({ expenseList = [], refreshData }) => {
               Amount
             </TableHead>
             <TableHead className="font-bold text-blue-700 dark:text-blue-400">
-              Date
+              Description
+            </TableHead>
+            <TableHead className="font-bold text-blue-700 dark:text-blue-400">
+              {isRecurringBudget ? "Next Due Date" : "Date"}
             </TableHead>
             {/* <TableHead className="font-bold text-blue-700 dark:text-blue-400">Type of Expense</TableHead> */}
             <TableHead className="font-bold text-blue-700 dark:text-blue-400">
@@ -99,7 +103,12 @@ const ExpenseTable = ({ expenseList = [], refreshData }) => {
                   {expense.amount}
                 </TableCell>
                 <TableCell className="text-gray-800 dark:text-gray-300">
-                  {expense.createdAt}
+                  {expense.description ? expense.description : "N/A"}
+                </TableCell>
+                <TableCell className="text-gray-800 dark:text-gray-300">
+                  {isRecurringBudget
+                    ? expenseDateFormat(nextRecurringDate(expense.createdAt, frequency))
+                    : expenseDateFormat(expense.createdAt)}
                 </TableCell>
                 <TableCell className="flex items-center space-x-2 text-gray-800 dark:text-gray-300">
                   <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

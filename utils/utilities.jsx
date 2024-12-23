@@ -140,6 +140,14 @@ export function formatDate(inputDate) {
   return format(adjustedDate, "yyyy-MM-dd");
 }
 
+export function expenseDateFormat(dateStr) {
+  const dateObj = new Date(dateStr);
+  const formattedDate = `${String(dateObj.getDate()).padStart(2, "0")}/${String(
+    dateObj.getMonth() + 1
+  ).padStart(2, "0")}/${dateObj.getFullYear()}`;
+  return formattedDate;
+}
+
 export function dateDifference(date) {
   // Get today's date
   const today = new Date(getISTDate());
@@ -189,6 +197,45 @@ export function calculateNonRecurringProgress(startDate, endDate) {
   const progressPercentage = ((totalDays - remainingDays) / totalDays) * 100;
 
   return progressPercentage.toFixed(2); // Return percentage with 2 decimal places
+}
+
+export function nextRecurringDate(date, frequency) {
+  const next = new Date(date);
+
+  switch (frequency.toLowerCase()) {
+    case "daily":
+      next.setDate(next.getDate() + 1);
+      break;
+
+    case "weekly":
+      next.setDate(next.getDate() + 7);
+      break;
+
+    case "monthly":
+      next.setMonth(next.getMonth() + 1);
+      break;
+
+    case "yearly":
+      next.setFullYear(next.getFullYear() + 1);
+      break;
+
+    default:
+      throw new Error(
+        "Invalid frequency. Use 'daily', 'weekly', 'monthly', or 'yearly'."
+      );
+  }
+
+  // Convert to IST (GMT +5:30) and format the date
+  const istFormatter = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Kolkata",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+
+  const [day, month, year] = istFormatter.format(next).split("/");
+
+  return `${year}-${month}-${day}`;
 }
 
 export function calculateRecurringProgress(startDate, frequency) {

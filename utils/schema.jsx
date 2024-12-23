@@ -18,7 +18,10 @@ export const Budgets = pgTable("budgets", {
   name: varchar("name").notNull(),
   amount: numeric("amount").notNull(),
   icon: varchar("icon"),
+  budgetType: varchar("budgetType"),
+  frequency: varchar("frequency"), // 'daily', 'weekly', 'monthly', 'yearly'
   createdBy: varchar("createdBy").notNull(),
+  createdAt: varchar("createdAt"), //.notNull()
 });
 
 export const Expenses = pgTable("expenses", {
@@ -26,6 +29,7 @@ export const Expenses = pgTable("expenses", {
   name: varchar("name").notNull(),
   amount: numeric("amount").notNull().default(0),
   budgetId: integer("budgetId").references(() => Budgets.id),
+  description: varchar("description"), //.notNull(),
   createdAt: varchar("createdAt").notNull(),
 });
 
@@ -46,8 +50,9 @@ export const Incomes = pgTable("incomes", {
 });
 
 export const Transactions = pgTable("transactions", {
-  id: varchar("id", { length: 191 }).primaryKey(), // Acts as the primary key, references Expense or Income
+  id: varchar("id", { length: 191 }).primaryKey(), 
   category: varchar("category").notNull(), // 'expense' or 'income'
+  referenceId: varchar("referenceId"),//.notNull(),
   name: varchar("name").notNull(), // Transaction name
   amount: numeric("amount").notNull(),
   createdBy: varchar("createdBy").notNull(),

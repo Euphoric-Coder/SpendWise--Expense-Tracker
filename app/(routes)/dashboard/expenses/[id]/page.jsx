@@ -77,7 +77,7 @@ const ExpensesDashboard = ({ params }) => {
         .where(eq(Budgets.id, params.id))
         .returning();
     }
-    toast.delete(`Budget "${budgetInfo.name}" has been deleted!`);
+    toast.success(`Budget "${budgetInfo.name}" has been deleted!`);
     route.replace("/dashboard/budgets");
   };
 
@@ -150,6 +150,10 @@ const ExpensesDashboard = ({ params }) => {
           budgetId={params.id}
           budgetAmount={budgetInfo ? budgetInfo.amount : 0}
           user={user}
+          isRecurringBudget={
+            budgetInfo?.budgetType === "recurring" ? true : false
+          }
+          frequency={budgetInfo?.frequency}
           refreshData={() => getBudgetInfo()}
         />
       </div>
@@ -163,6 +167,10 @@ const ExpensesDashboard = ({ params }) => {
           <ExpenseTable
             expenseList={expensesList}
             refreshData={() => getBudgetInfo()}
+            isRecurringBudget={
+              budgetInfo?.budgetType === "recurring" ? true : false
+            }
+            frequency={budgetInfo?.frequency}
           />
         </div>
       </div>

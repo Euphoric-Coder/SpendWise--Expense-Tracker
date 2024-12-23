@@ -20,12 +20,15 @@ import { eq } from "drizzle-orm";
 import { toast } from "sonner";
 import { db } from "@/utils/dbConfig";
 import { Budgets } from "@/utils/schema";
+import { Checkbox } from "../ui/checkbox";
 function EditBudget({ budgetInfo, refreshData }) {
   const [emojiIcon, setEmojiIcon] = useState(budgetInfo?.icon);
   const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
 
   const [name, setName] = useState();
   const [amount, setAmount] = useState();
+  const [isRecurring, setIsRecurring] = useState(false); // Toggle for recurring
+  const [frequency, setFrequency] = useState("monthly"); // Default frequency
 
   const { user } = useUser();
 
@@ -34,6 +37,8 @@ function EditBudget({ budgetInfo, refreshData }) {
       setEmojiIcon(budgetInfo?.icon);
       setAmount(budgetInfo.amount);
       setName(budgetInfo.name);
+      setIsRecurring(budgetInfo.budgetType === "recurring");
+      setFrequency(budgetInfo.frequency || "monthly");
     }
   }, [budgetInfo]);
   const onUpdateBudget = async () => {
@@ -43,6 +48,8 @@ function EditBudget({ budgetInfo, refreshData }) {
         name: name,
         amount: amount,
         icon: emojiIcon,
+        budgetType: isRecurring ? "recurring" : "non-recurring",
+        frequency: isRecurring ? frequency : null,
       })
       .where(eq(Budgets.id, budgetInfo.id))
       .returning();
@@ -125,6 +132,38 @@ function EditBudget({ budgetInfo, refreshData }) {
                 className="w-full rounded-lg px-4 py-2 bg-gradient-to-r from-cyan-100 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 shadow-inner focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500"
               />
             </div>
+
+            {/* Recurring Income Section */}
+            <div className="mt-6 flex items-center space-x-2">
+              <Checkbox
+                id="recurring"
+                checked={isRecurring}
+                onCheckedChange={(value) => setIsRecurring(value)}
+              />
+              <label
+                htmlFor="recurring"
+                className="text-gray-700 dark:text-gray-300 font-medium text-sm"
+              >
+                Recurring Income
+              </label>
+            </div>
+            {isRecurring && (
+              <div className="mt-4">
+                <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                  Frequency
+                </h2>
+                <select
+                  value={frequency}
+                  onChange={(e) => setFrequency(e.target.value)}
+                  className="block w-full p-2 border border-gray-300 rounded-md"
+                >
+                  <option value="daily">Daily</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly">Monthly</option>
+                  <option value="yearly">Yearly</option>
+                </select>
+              </div>
+            )}
           </div>
 
           {/* Dialog Footer */}

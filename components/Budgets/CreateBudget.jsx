@@ -19,10 +19,14 @@ import { Button } from "../ui/button";
 import { Budgets } from "@/utils/schema";
 import { Input } from "../ui/input";
 import { useRouter } from "next/navigation";
+import { Checkbox } from "../ui/checkbox";
+import { getISTDateTime } from "@/utils/utilities";
 
 const CreateBudget = ({ refreshData }) => {
   const [emojiIcon, setEmojiIcon] = useState("😀");
   const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
+  const [isRecurring, setIsRecurring] = useState(false); // Toggle for recurring
+  const [frequency, setFrequency] = useState("monthly"); // Default frequency
   const router = useRouter();
   const [name, setname] = useState();
   const [amount, setamount] = useState();
@@ -36,6 +40,9 @@ const CreateBudget = ({ refreshData }) => {
         amount: amount,
         createdBy: user?.primaryEmailAddress?.emailAddress,
         icon: emojiIcon,
+        budgetType: isRecurring ? "recurring" : "non-recurring",
+        frequency: isRecurring ? frequency : null,
+        createdAt: getISTDateTime(),
       })
       .returning({ insertedId: Budgets.id });
     if (result) {
@@ -123,6 +130,38 @@ const CreateBudget = ({ refreshData }) => {
             onChange={(e) => setamount(e.target.value)}
           />
         </div>
+
+        {/* Recurring Income Section */}
+        <div className="mt-6 flex items-center space-x-2">
+          <Checkbox
+            id="recurring"
+            checked={isRecurring}
+            onCheckedChange={(value) => setIsRecurring(value)}
+          />
+          <label
+            htmlFor="recurring"
+            className="text-gray-700 dark:text-gray-300 font-medium text-sm"
+          >
+            Recurring Income
+          </label>
+        </div>
+        {isRecurring && (
+          <div className="mt-4">
+            <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+              Frequency
+            </h2>
+            <select
+              value={frequency}
+              onChange={(e) => setFrequency(e.target.value)}
+              className="block w-full p-2 border border-gray-300 rounded-md"
+            >
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly</option>
+            </select>
+          </div>
+        )}
 
         {/* Footer Section */}
         <DialogFooter className="mt-6">

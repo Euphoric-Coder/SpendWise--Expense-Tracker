@@ -55,9 +55,16 @@ const BudgetCard = ({ isBudget, budget }) => (
               >
                 {budget.name}
               </h2>
-              <h2 className="text-sm text-gray-600 dark:text-gray-400">
-                {budget.totalItem} Item(s)
-              </h2>
+              {budget.budgetType === "recurring" && (
+                <h2 className="inline-block mt-2 mb-2  px-3 py-1 rounded-full bg-gradient-to-r from-blue-500 via-cyan-500 to-indigo-500 dark:from-blue-800 dark:via-cyan-800 dark:to-indigo-800 text-white font-medium text-xs sm:text-sm shadow-sm text-center">
+                  Recurring Budget
+                </h2>
+              )}
+              {budget.budgetType !== "recurring" && (
+                <h2 className="text-sm text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-indigo-400 to-pink-400 dark:from-purple-400 dark:via-indigo-400 dark:to-pink-400">
+              Total Expenses: {budget.totalItem} Item(s)
+            </h2>
+              )}
             </div>
           </div>
 
@@ -75,11 +82,21 @@ const BudgetCard = ({ isBudget, budget }) => (
 
         {/* Spending Overview */}
         <div className="mt-6">
+            {budget.budgetType === "recurring" && (
+          <div className="flex flex-col justify-center md:flex-row md:justify-between items-center mb-2">
+            <h2 className="text-sm text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-indigo-400 to-pink-400 dark:from-purple-400 dark:via-indigo-400 dark:to-pink-400">
+              Total Expenses: {budget.totalItem} Item(s)
+            </h2>
+              <h2 className="text-sm text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-indigo-400 to-pink-400 dark:from-purple-400 dark:via-indigo-400 dark:to-pink-400">
+                Frequency: {budget.frequency}
+              </h2>
+          </div>
+            )}
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-xs text-gray-500 dark:text-gray-400">
+            <h2 className="text-sm text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-indigo-400 to-pink-400 dark:from-purple-400 dark:via-indigo-400 dark:to-pink-400">
               {formatCurrency(budget.totalSpend ? budget.totalSpend : 0)} Spent
             </h2>
-            <h2 className="text-xs text-gray-500 dark:text-gray-400">
+            <h2 className="text-sm text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-indigo-400 to-pink-400 dark:from-purple-400 dark:via-indigo-400 dark:to-pink-400">
               {formatCurrency(budget.amount - budget.totalSpend)} Remaining
             </h2>
           </div>
