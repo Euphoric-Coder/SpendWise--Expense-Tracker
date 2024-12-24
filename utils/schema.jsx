@@ -63,6 +63,7 @@ export const Settings = pgTable("settings", {
   id: varchar("id", { length: 191 }).primaryKey(),
   createdBy: varchar("createdBy").notNull().unique(),
   showcsvimport: boolean("showcsvimport").notNull().default(true), // True or False
+  showrecieptimport: boolean("showrecieptimport").notNull().default(true),
 });
 
 export const Feedback = pgTable("feedback", {

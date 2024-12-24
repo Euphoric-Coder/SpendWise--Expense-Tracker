@@ -22,6 +22,7 @@ import { ModeToggle } from "../ThemeButton";
 import { cn } from "@/lib/utils";
 import { formatDate, getISTDate, isSameDate } from "@/utils/utilities";
 import { format } from "date-fns";
+import RecieptImportButton from "./RecieptImportButton";
 
 const AddExpense = ({ budgetId, refreshData, budgetAmount, isRecurringBudget, frequency }) => {
   const { user } = useUser();
@@ -126,6 +127,7 @@ const AddExpense = ({ budgetId, refreshData, budgetAmount, isRecurringBudget, fr
             <Eraser /> Clear Data
           </Button>
           <CSVImportButton />
+          <RecieptImportButton />
           <ModeToggle />
         </div>
       </div>

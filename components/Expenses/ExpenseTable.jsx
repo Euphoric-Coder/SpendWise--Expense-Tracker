@@ -102,7 +102,7 @@ const ExpenseTable = ({ expenseList = [], refreshData, isRecurringBudget, freque
                 <TableCell className="text-gray-800 dark:text-gray-300">
                   {expense.amount}
                 </TableCell>
-                <TableCell className="text-gray-800 dark:text-gray-300">
+                <TableCell className="text-gray-800 dark:text-gray-300 text-justify">
                   {expense.description ? expense.description : "N/A"}
                 </TableCell>
                 <TableCell className="text-gray-800 dark:text-gray-300">
