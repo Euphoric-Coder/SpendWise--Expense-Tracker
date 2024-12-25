@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import CreateBudget from "./CreateBudget";
 import { db } from "@/utils/dbConfig";
-import { eq, getTableColumns, sql } from "drizzle-orm";
+import { desc, eq, getTableColumns, sql } from "drizzle-orm";
 import { Budgets, Expenses } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import BudgetItem from "./BudgetItem";
@@ -26,7 +26,8 @@ const BudgetList = () => {
       .from(Budgets)
       .leftJoin(Expenses, eq(Budgets.id, Expenses.budgetId))
       .where(eq(Budgets.createdBy, user?.primaryEmailAddress?.emailAddress))
-      .groupBy(Budgets.id);
+      .groupBy(Budgets.id)
+      .orderBy(desc(Budgets.createdAt));
     setBudgetList(result);
   };
   return (

@@ -6,6 +6,7 @@ const llm = new ChatGroq({
   apiKey: process.env.NEXT_PUBLIC_GROQ_API_KEY,
   model: "llama-3.1-70b-versatile",
 });
+
 export const GiveFinancialAdvice = async (
   totalBudget,
   totalIncome,
@@ -126,15 +127,62 @@ This analysis is based on the provided data. Regular updates to your financial d
   }
 };
 
-export const AskFinora = async (question) => {
+export const AskFinora = async (
+  question,
+  totalBudget,
+  totalIncome,
+  totalSpend,
+  largestBudget,
+  highestExpense,
+  totalDebt,
+  debtToIncomeRatio,
+  budgetList,
+  expenseList,
+  chatHistory
+) => {
   try {
-    // Define the prompt with comprehensive financial data
+    // Format chat history into a readable string
+    const formattedChatHistory = chatHistory
+      .map(
+        (entry) =>
+          `${entry.user === "You" ? "User" : "Finora"}: ${entry.message}`
+      )
+      .join("\n");
+
+    // Define the prompt with financial data and chat history
     const prompt = ChatPromptTemplate.fromMessages([
       [
         "system",
-        "You are a financial advisor. Based on the provided question, provide a short answer in a concise format.",
+        `You are a professional financial advisor. Your role is to provide clear, concise, and accurate financial advice based on the user's question, the provided data, and the chat history. Avoid repeating the question and focus on actionable insights. Here is the context:
+
+        - Total Budget: ${totalBudget}
+        - Total Income: ${totalIncome}
+        - Total Spend: ${totalSpend}
+        - Largest Budget: ${largestBudget}
+        - Highest Expense: ${highestExpense}
+        - Total Debt: ${totalDebt}
+        - Debt-to-Income Ratio: ${debtToIncomeRatio}
+        - Budget List: ${budgetList}
+        - Expense List: ${expenseList}
+
+        Chat History:
+        ${formattedChatHistory}
+
+        Please generate the following content as **HTML only** with no additional preamble or explanations. The output should be visually appealing and well-structured, adhering to the following guidelines:
+- Include appropriate use of bold (\`<b>\`) and italic (\`<i>\`) text for emphasis where needed.
+- Use bullet points (\`<ul>\` and \`<li>\`) for lists to improve readability.
+- Ensure all numeric values are properly formatted (e.g., commas for thousands: 1,000,000).
+- Incorporate spacing between sections using \`<br>\` or padding in a CSS-friendly manner.
+- The HTML should be clean, minimalist, and professional.
+- Use class="text-4xl font-bold" for h1 tags, class="text-3xl font-bold" for h2 tags, and class="text-2xl font-bold" for h3 tags.
+- Use class="list-disc" for unordered list items and use unordered list only. 
+- Don't add additional background color to the HTML.
+- First of all add a heading "Comprehensive Financial Analysis" in the middle with text-3xl and font-bold.
+[GIVE NICE FORMATTING FOR BETTER READABILITY & USE TAILWIND CSS CLASSES FOR STYLING THE HTML]
+        
+        `,
       ],
-      ["human", question],
+      ["human", `User's Question: ${question}`],
     ]);
 
     // Chain the prompt with the LLM
@@ -143,10 +191,11 @@ export const AskFinora = async (question) => {
     // Invoke the chain and get the advice
     const advice = await chain.invoke({});
 
-    // console.log("Generated Financial Advice:", advice.content);
+    // Return the generated advice
     return advice.content;
   } catch (error) {
     console.error("Error fetching financial advice:", error);
     return "Sorry, I couldn't fetch the financial advice at this moment. Please try again later.";
   }
 };
+

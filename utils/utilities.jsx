@@ -16,10 +16,19 @@ const formatCurrency = (amount) => {
     // Less than 1,000
     formattedAmount = amount.toFixed(2);
   }
+  
 
   // Add currency symbol manually
   return `₹${formattedAmount}`;
 };
+
+export function UTCtoIST(utcTimestamp) {
+  const utcDate = new Date(utcTimestamp + "Z"); // Adding "Z" ensures UTC interpretation
+  const istDateString = utcDate.toLocaleString("en-GB", {
+    timeZone: "Asia/Kolkata",
+  });
+  return istDateString;
+}
 
 export const formatCurrencyDashboard = (amount) => {
   // Handle null or undefined amounts
@@ -60,6 +69,25 @@ export const getISTDate = () => {
   return istDate.toISOString().split("T")[0]; // Return date in YYYY-MM-DD format
 };
 
+export const getISTDateTime = () => {
+  // Create a new Date object
+  const now = new Date();
+
+  // Convert to Indian Standard Time (UTC+5:30)
+  const istOffset = 5.5 * 60; // IST is 5 hours 30 minutes ahead of UTC
+  const utcTimestamp = now.getTime() + now.getTimezoneOffset() * 60 * 1000; // Adjust to UTC
+  const istTimestamp = utcTimestamp + istOffset * 60 * 1000; // Add IST offset
+  const istDate = new Date(istTimestamp);
+
+  // Extract date in YYYY-MM-DD format
+  const date = istDate.toISOString().split("T")[0];
+
+  // Extract time in HH:mm:ss format
+  const time = istDate.toTimeString().split(" ")[0];
+
+  return `${date} ${time}`; // Return date and time in "YYYY-MM-DD HH:mm:ss" format
+};
+
 export const getISTCustomDate = (date) => {
   // Create a new Date object
   const now = new Date(date);
@@ -70,6 +98,28 @@ export const getISTCustomDate = (date) => {
 
   return istDate.toISOString().split("T")[0]; // Return date in YYYY-MM-DD format
 };
+
+export function addOneMonth(dateString) {
+  // Parse the input date string into a Date object
+  const [year, month, day] = dateString.split("-").map(Number);
+  const date = new Date(year, month - 1, day); // Month is 0-based in JavaScript
+
+  // Add one month
+  date.setMonth(date.getMonth() + 1);
+
+  // Handle cases where adding a month changes the day (e.g., Feb 28 -> Mar 28)
+  if (date.getDate() !== day) {
+    // Set to the last day of the previous month
+    date.setDate(0);
+  }
+
+  // Format the result back to YYYY-MM-DD
+  const resultYear = date.getFullYear();
+  const resultMonth = String(date.getMonth() + 1).padStart(2, "0"); // Month is 0-based
+  const resultDay = String(date.getDate()).padStart(2, "0");
+
+  return `${resultYear}-${resultMonth}-${resultDay}`;
+}
 
 export function isSameDate(date, today) {
   const parsedDate = new Date(date);
@@ -88,6 +138,14 @@ export function formatDate(inputDate) {
 
   // Format the adjusted date to 'YYYY-MM-DD'
   return format(adjustedDate, "yyyy-MM-dd");
+}
+
+export function expenseDateFormat(dateStr) {
+  const dateObj = new Date(dateStr);
+  const formattedDate = `${String(dateObj.getDate()).padStart(2, "0")}/${String(
+    dateObj.getMonth() + 1
+  ).padStart(2, "0")}/${dateObj.getFullYear()}`;
+  return formattedDate;
 }
 
 export function dateDifference(date) {
@@ -141,10 +199,50 @@ export function calculateNonRecurringProgress(startDate, endDate) {
   return progressPercentage.toFixed(2); // Return percentage with 2 decimal places
 }
 
+export function nextRecurringDate(date, frequency) {
+  const next = new Date(date);
+
+  switch (frequency.toLowerCase()) {
+    case "daily":
+      next.setDate(next.getDate() + 1);
+      break;
+
+    case "weekly":
+      next.setDate(next.getDate() + 7);
+      break;
+
+    case "monthly":
+      next.setMonth(next.getMonth() + 1);
+      break;
+
+    case "yearly":
+      next.setFullYear(next.getFullYear() + 1);
+      break;
+
+    default:
+      throw new Error(
+        "Invalid frequency. Use 'daily', 'weekly', 'monthly', or 'yearly'."
+      );
+  }
+
+  // Convert to IST (GMT +5:30) and format the date
+  const istFormatter = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Kolkata",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+
+  const [day, month, year] = istFormatter.format(next).split("/");
+
+  return `${year}-${month}-${day}`;
+}
+
 export function calculateRecurringProgress(startDate, frequency) {
   const today = new Date();
   const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
-  const parsedStartDate = new Date(new Date(startDate).getTime() + istOffset);
+  // const parsedStartDate = new Date(new Date(startDate).getTime() + istOffset);
+  const parsedStartDate = new Date(startDate);
 
   // Convert today's date to IST
   const todayInIST = new Date(today.getTime() + istOffset);
@@ -163,7 +261,7 @@ export function calculateRecurringProgress(startDate, frequency) {
   let nextRecurringDate = new Date(parsedStartDate);
 
   // Calculate the next recurring date based on the frequency
-  switch (frequency.toLowerCase()) {
+  switch (frequency?.toLowerCase()) {
     case "daily":
       while (nextRecurringDate <= todayInIST) {
         nextRecurringDate.setDate(nextRecurringDate.getDate() + 1);
@@ -197,7 +295,7 @@ export function calculateRecurringProgress(startDate, frequency) {
 
   // Determine the duration of the current period in milliseconds
   let periodDuration;
-  switch (frequency.toLowerCase()) {
+  switch (frequency?.toLowerCase()) {
     case "daily":
       periodDuration = 24 * 60 * 60 * 1000; // 1 day
       break;

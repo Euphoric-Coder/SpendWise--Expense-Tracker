@@ -43,7 +43,7 @@ const AnimatedScrollDashboardImg = () => {
   };
 
   return (
-    <div className="bg-gradient-to-b from-white via-gray-50 to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-black transition-colors duration-500">
+    <div id="ai-features" className="bg-gradient-to-b from-white via-gray-50 to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-black transition-colors duration-500">
       <ContainerScroll
         titleComponent={
           <>

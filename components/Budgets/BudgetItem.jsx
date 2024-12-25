@@ -7,8 +7,8 @@ const BudgetCard = ({ isBudget, budget }) => (
     <div
       className={`p-5 sm:p-6 border-2 rounded-3xl shadow-2xl relative overflow-hidden transition-transform transform ${
         isBudget
-          ? "bg-gradient-to-b from-blue-50 via-indigo-100 to-purple-100 hover:scale-105 hover:shadow-[0_4px_30px_rgba(0,200,255,0.5)] cursor-pointer"
-          : "bg-gradient-to-b from-yellow-50 via-orange-100 to-red-100 hover:scale-105 hover:shadow-[0_4px_30px_rgba(255,200,0,0.5)] cursor-default"
+          ? "bg-gradient-to-b from-blue-50 via-indigo-100 to-purple-100 hover:scale-105 hover:shadow-[0_4px_30px_rgba(0,200,255,0.5)] cursor-pointer dark:bg-gradient-to-b dark:from-gray-900 dark:via-gray-800 dark:to-gray-700"
+          : "bg-gradient-to-b from-cyan-50 via-blue-100 to-indigo-100 hover:scale-105 hover:shadow-[0_4px_30px_rgba(100,200,255,0.5)] cursor-default dark:bg-gradient-to-b dark:from-gray-900 dark:via-gray-800 dark:to-gray-700"
       }`}
     >
       {/* Background Effects */}
@@ -16,15 +16,15 @@ const BudgetCard = ({ isBudget, budget }) => (
         <div
           className={`absolute -top-10 -left-10 w-40 h-40 ${
             isBudget
-              ? "bg-gradient-to-r from-blue-300 via-teal-300 to-purple-400"
-              : "bg-gradient-to-r from-yellow-300 via-orange-300 to-red-400"
+              ? "bg-gradient-to-r from-blue-300 via-teal-300 to-purple-400 dark:from-indigo-800 dark:via-purple-700 dark:to-blue-700"
+              : "bg-gradient-to-r from-cyan-300 via-blue-300 to-indigo-400 dark:from-indigo-800 dark:via-blue-700 dark:to-cyan-700"
           } opacity-30 blur-3xl animate-spin-slow`}
         ></div>
         <div
           className={`absolute bottom-10 right-10 w-60 h-60 ${
             isBudget
-              ? "bg-gradient-to-br from-purple-500 via-indigo-400 to-blue-300"
-              : "bg-gradient-to-br from-orange-500 via-red-400 to-yellow-300"
+              ? "bg-gradient-to-br from-purple-500 via-indigo-400 to-blue-300 dark:from-indigo-900 dark:via-purple-800 dark:to-blue-800"
+              : "bg-gradient-to-br from-indigo-500 via-blue-400 to-cyan-300 dark:from-indigo-800 dark:via-blue-700 dark:to-cyan-700"
           } opacity-20 blur-[80px]`}
         ></div>
       </div>
@@ -37,8 +37,8 @@ const BudgetCard = ({ isBudget, budget }) => (
             <h2
               className={`text-2xl sm:text-3xl p-4 sm:p-5 px-5 sm:px-6 rounded-full shadow-md ${
                 isBudget
-                  ? "bg-gradient-to-r from-teal-300 via-blue-300 to-indigo-300 text-indigo-700"
-                  : "bg-gradient-to-r from-orange-300 via-yellow-300 to-red-300 text-red-700"
+                  ? "bg-gradient-to-r from-teal-300 via-blue-300 to-indigo-300 text-indigo-700 dark:bg-gradient-to-r dark:from-indigo-700 dark:via-purple-700 dark:to-blue-700 dark:text-indigo-300"
+                  : "bg-gradient-to-r from-cyan-300 via-blue-300 to-indigo-300 text-blue-700 dark:bg-gradient-to-r dark:from-indigo-700 dark:via-blue-700 dark:to-cyan-700 dark:text-blue-300"
               }`}
             >
               {budget?.icon}
@@ -49,15 +49,22 @@ const BudgetCard = ({ isBudget, budget }) => (
               <h2
                 className={`font-bold text-lg sm:text-xl text-transparent bg-clip-text ${
                   isBudget
-                    ? "bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
-                    : "bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500"
+                    ? "bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 dark:bg-gradient-to-r dark:from-indigo-400 dark:via-purple-400 dark:to-pink-400"
+                    : "bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 dark:bg-gradient-to-r dark:from-indigo-400 dark:via-blue-400 dark:to-cyan-400"
                 } animate-gradient-text`}
               >
                 {budget.name}
               </h2>
-              <h2 className="text-sm text-gray-600">
-                {budget.totalItem} Item(s)
-              </h2>
+              {budget.budgetType === "recurring" && (
+                <h2 className="inline-block mt-2 mb-2  px-3 py-1 rounded-full bg-gradient-to-r from-blue-500 via-cyan-500 to-indigo-500 dark:from-blue-800 dark:via-cyan-800 dark:to-indigo-800 text-white font-medium text-xs sm:text-sm shadow-sm text-center">
+                  Recurring Budget
+                </h2>
+              )}
+              {budget.budgetType !== "recurring" && (
+                <h2 className="text-sm text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-indigo-400 to-pink-400 dark:from-purple-400 dark:via-indigo-400 dark:to-pink-400">
+              Total Expenses: {budget.totalItem} Item(s)
+            </h2>
+              )}
             </div>
           </div>
 
@@ -65,8 +72,8 @@ const BudgetCard = ({ isBudget, budget }) => (
           <h2
             className={`font-bold text-lg sm:text-xl text-transparent bg-clip-text ${
               isBudget
-                ? "bg-gradient-to-r from-blue-600 via-teal-500 to-purple-500"
-                : "bg-gradient-to-r from-yellow-600 via-orange-500 to-red-500"
+                ? "bg-gradient-to-r from-blue-600 via-teal-500 to-purple-500 dark:bg-gradient-to-r dark:from-indigo-500 dark:via-purple-500 dark:to-teal-500"
+                : "bg-gradient-to-r from-cyan-600 via-blue-500 to-indigo-500 dark:bg-gradient-to-r dark:from-indigo-500 dark:via-blue-500 dark:to-cyan-500"
             }`}
           >
             {formatCurrency(budget.amount)}
@@ -75,21 +82,31 @@ const BudgetCard = ({ isBudget, budget }) => (
 
         {/* Spending Overview */}
         <div className="mt-6">
+            {budget.budgetType === "recurring" && (
+          <div className="flex flex-col justify-center md:flex-row md:justify-between items-center mb-2">
+            <h2 className="text-sm text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-indigo-400 to-pink-400 dark:from-purple-400 dark:via-indigo-400 dark:to-pink-400">
+              Total Expenses: {budget.totalItem} Item(s)
+            </h2>
+              <h2 className="text-sm text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-indigo-400 to-pink-400 dark:from-purple-400 dark:via-indigo-400 dark:to-pink-400">
+                Frequency: {budget.frequency}
+              </h2>
+          </div>
+            )}
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-xs text-gray-500">
+            <h2 className="text-sm text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-indigo-400 to-pink-400 dark:from-purple-400 dark:via-indigo-400 dark:to-pink-400">
               {formatCurrency(budget.totalSpend ? budget.totalSpend : 0)} Spent
             </h2>
-            <h2 className="text-xs text-gray-500">
+            <h2 className="text-sm text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-indigo-400 to-pink-400 dark:from-purple-400 dark:via-indigo-400 dark:to-pink-400">
               {formatCurrency(budget.amount - budget.totalSpend)} Remaining
             </h2>
           </div>
           {/* Progress Bar */}
-          <div className="w-full bg-gray-300 h-2 rounded-full shadow-inner">
+          <div className="w-full bg-gray-300 dark:bg-gray-500 h-2 rounded-full shadow-inner">
             <div
               className={`h-2 rounded-full shadow-md ${
                 isBudget
-                  ? "bg-gradient-to-r from-purple-500 via-teal-500 to-blue-500"
-                  : "bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500"
+                  ? "bg-gradient-to-r from-purple-500 via-teal-500 to-blue-500 dark:bg-gradient-to-r dark:from-indigo-500 dark:via-purple-500 dark:to-teal-500"
+                  : "bg-gradient-to-r from-indigo-500 via-blue-500 to-cyan-500 dark:bg-gradient-to-r dark:from-indigo-500 dark:via-blue-500 dark:to-cyan-500"
               }`}
               style={{
                 width: `${((budget.totalSpend / budget.amount) * 100).toFixed(

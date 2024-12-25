@@ -21,7 +21,7 @@ const Header = () => {
   const { user, isSignedIn } = useUser();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,7 +37,7 @@ const Header = () => {
   };
 
   const togleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen)
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   // Define nav links array
@@ -65,7 +65,7 @@ const Header = () => {
     <header
       className={`fixed top-0 left-0 w-full z-50 h-20 flex items-center transition-all duration-300 border-b border-indigo-300 dark:border-cyan-800 ${
         isScrolled
-          ? "bg-gradient-to-r from-teal-100 via-blue-100 to-indigo-300 dark:from-gray-800 dark:via-gray-900 dark:to-purple-900 shadow-lg"
+          ? "bg-gradient-to-r from-white via-blue-50 to-indigo-200 dark:from-gray-800 dark:via-gray-900 dark:to-purple-900 shadow-lg"
           : "bg-gradient-to-r from-cyan-50 via-purple-50 to-indigo-50 dark:bg-gradient-to-r dark:from-gray-700 dark:via-gray-800 dark:to-gray-900"
       }`}
     >
@@ -78,18 +78,34 @@ const Header = () => {
           <Image
             src={"/favicon.png"}
             alt="Logo of SpendWise"
-            width={50}
-            height={50}
-            className="drop-shadow-lg"
+            width={35}
+            height={35}
+            className="drop-shadow-lg sm:w-[50px] sm:h-[50px]"
           />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-yellow-500 to-red-500 font-extrabold text-4xl hover:animate-pulse dark:from-purple-400 dark:via-pink-500 dark:to-blue-500">
+          <span className="text-transparent text-xl sm:text-4xl bg-clip-text bg-gradient-to-r from-teal-400 via-yellow-500 to-red-500 font-extrabold hover:animate-pulse dark:from-purple-400 dark:via-pink-500 dark:to-blue-500">
             SpendWise
           </span>
         </Link>
 
         {/* Hamburger Menu for Mobile */}
-        <div className="md:hidden flex items-center gap-1">
+        <div className="md:hidden flex items-center gap-2">
           <ModeToggle />
+          {isSignedIn ? (
+            <>
+              <UserMenu />
+            </>
+          ) : (
+            <>
+              <Link href="/sign-in">
+                <Button
+                  variant="outline"
+                  className="rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white hover:scale-105 hover:shadow-lg transition-all duration-300 dark:from-blue-500 dark:via-purple-500 dark:to-pink-500"
+                >
+                  Sign In
+                </Button>
+              </Link>
+            </>
+          )}
           <button
             onClick={togleMobileMenu}
             className="text-gray-500 hover:text-teal-500 transition-all duration-300 text-2xl dark:text-gray-300 dark:hover:text-purple-500"
@@ -120,13 +136,13 @@ const Header = () => {
 
         {/* Action Buttons */}
         <div className="hidden md:flex gap-4 items-center">
+          <ModeToggle />
           {isSignedIn ? (
             <>
-              <ModeToggle />
               <Link href={"/dashboard"}>
                 <Button
                   variant="outline"
-                  className="rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white hover:scale-105 hover:shadow-lg transition-all duration-300 dark:from-blue-500 dark:via-purple-500 dark:to-pink-500"
+                  className="rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white hover:text-white hover:scale-105 hover:shadow-lg transition-all duration-300 dark:from-blue-500 dark:via-purple-500 dark:to-pink-500"
                 >
                   Dashboard
                 </Button>
@@ -180,14 +196,9 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <nav className="absolute top-20 left-0 w-full bg-gradient-to-r from-teal-300 via-blue-300 to-indigo-400 dark:from-gray-800 dark:via-gray-900 dark:to-purple-900 shadow-lg py-6 text-center xl:hidden">
-          {/* UserMenu at the Top */}
-          <div className="flex justify-end px-4">
-            <UserMenu />
-          </div>
-
+        <nav className="absolute top-20 left-0 w-full bg-gradient-to-r from-teal-300 via-blue-200 to-indigo-200 dark:from-gray-800 dark:via-gray-900 dark:to-purple-900 shadow-lg py-6 text-center xl:hidden">
           {/* Navigation Links */}
-          <div className="mt-4 space-y-3">
+          <div className="mt-2 space-y-3">
             {navLinks.map((link) => (
               <Link
                 key={link.href}

@@ -75,47 +75,45 @@ const ExpenseDashboard = () => {
   const { totalBudgets, totalExpenses, remaining } = calculateStats();
 
   return (
-    <div className="p-10 bg-gradient-to-b from-yellow-50 via-orange-50 to-red-50 rounded-3xl shadow-2xl relative overflow-hidden">
+    <div className="p-10 bg-gradient-to-b from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-900 dark:via-indigo-950 dark:to-gray-900 rounded-3xl shadow-2xl relative overflow-hidden transition-colors duration-300">
       {/* Background Effects */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-10 -left-10 w-40 h-40 bg-gradient-to-r from-yellow-200 via-orange-200 to-red-200 opacity-30 blur-3xl"></div>
-        <div className="absolute bottom-10 right-10 w-60 h-60 bg-gradient-to-br from-orange-300 via-red-300 to-yellow-300 opacity-30 blur-[80px]"></div>
+        <div className="absolute -top-10 -left-10 w-40 h-40 bg-gradient-to-r from-blue-300 via-indigo-300 to-purple-300 dark:from-blue-800 dark:via-indigo-900 dark:to-gray-800 opacity-30 blur-3xl"></div>
+        <div className="absolute bottom-10 right-10 w-60 h-60 bg-gradient-to-br from-indigo-400 via-purple-400 to-blue-400 dark:from-blue-800 dark:via-indigo-900 dark:to-gray-800 opacity-30 blur-[80px]"></div>
       </div>
 
       {/* Header */}
-      <h1 className="text-5xl font-extrabold text-center bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 bg-clip-text text-transparent mb-12">
+      <h1 className="text-5xl font-extrabold text-center bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 bg-clip-text text-transparent mb-12">
         Expense Dashboard
       </h1>
 
       {/* Statistics Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        <div className="relative bg-gradient-to-br from-yellow-200 via-orange-300 to-red-300 shadow-xl rounded-3xl p-8 text-center text-gray-900 hover:scale-105 transition-transform">
-          <div className="relative z-10">
-            <h2 className="mb-2 text-2xl font-bold text-gray-100">Total Budgets</h2>
-            <p className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500">
-              {formatCurrencyDashboard(totalBudgets)}
-            </p>
-          </div>
+        <div className="relative bg-gradient-to-br from-blue-200 via-indigo-300 to-purple-300 dark:from-blue-800 dark:via-indigo-900 dark:to-gray-800 shadow-xl rounded-3xl p-8 text-center hover:scale-105 transition-transform">
+          <h2 className="mb-2 text-2xl font-bold text-gray-100 dark:text-gray-300">
+            Total Budgets
+          </h2>
+          <p className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400">
+            {formatCurrencyDashboard(totalBudgets)}
+          </p>
         </div>
 
-        <div className="relative bg-gradient-to-br from-red-200 via-pink-300 to-orange-300 shadow-xl rounded-3xl p-8 text-center text-gray-900 hover:scale-105 transition-transform">
-          <div className="relative z-10">
-            <h2 className="mb-2 text-2xl font-bold text-gray-100">Total Expenses</h2>
-            <p className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500">
-              {formatCurrencyDashboard(totalExpenses)}
-            </p>
-          </div>
+        <div className="relative bg-gradient-to-br from-indigo-200 via-purple-300 to-blue-300 dark:from-blue-800 dark:via-indigo-900 dark:to-gray-800 shadow-xl rounded-3xl p-8 text-center hover:scale-105 transition-transform">
+          <h2 className="mb-2 text-2xl font-bold text-gray-100 dark:text-gray-300">
+            Total Expenses
+          </h2>
+          <p className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-blue-500 dark:from-indigo-400 dark:via-purple-400 dark:to-blue-400">
+            {formatCurrencyDashboard(totalExpenses)}
+          </p>
         </div>
 
-        <div className="relative bg-gradient-to-br from-orange-200 via-yellow-300 to-green-300 shadow-xl rounded-3xl p-8 text-center text-gray-900 hover:scale-105 transition-transform">
-          <div className="relative z-10">
-            <h2 className="mb-2 text-2xl font-bold text-gray-100">
-              Remaining Balance
-            </h2>
-            <p className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-orange-500 via-yellow-500 to-green-500">
-              {formatCurrencyDashboard(remaining)}
-            </p>
-          </div>
+        <div className="relative bg-gradient-to-br from-purple-200 via-blue-300 to-indigo-300 dark:from-blue-800 dark:via-indigo-900 dark:to-gray-800 shadow-xl rounded-3xl p-8 text-center hover:scale-105 transition-transform">
+          <h2 className="mb-2 text-2xl font-bold text-gray-100 dark:text-gray-300">
+            Remaining Balance
+          </h2>
+          <p className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-purple-500 via-blue-500 to-indigo-500 dark:from-purple-400 dark:via-blue-400 dark:to-indigo-400">
+            {formatCurrencyDashboard(remaining)}
+          </p>
         </div>
       </div>
 
@@ -124,17 +122,16 @@ const ExpenseDashboard = () => {
         {budgetList.length === 0
           ? [1, 2, 3, 4, 5, 6].map((item, index) => (
               <div key={index}>
-                <Skeleton className="h-[145px] rounded-3xl bg-gradient-to-r from-yellow-200 via-orange-300 to-red-300 shadow-lg" />
+                <Skeleton className="h-[145px] rounded-3xl bg-gradient-to-r from-blue-200 via-indigo-300 to-purple-300 dark:from-blue-800 dark:via-indigo-900 dark:to-gray-800 shadow-lg" />
                 <div className="mt-2 space-y-2">
-                  <Skeleton className="h-4 bg-slate-300" />
-                  <Skeleton className="h-4 w-[75%] bg-slate-300" />
+                  <Skeleton className="h-4 bg-slate-300 dark:bg-gray-700" />
+                  <Skeleton className="h-4 w-[75%] bg-slate-300 dark:bg-gray-700" />
                 </div>
               </div>
             ))
           : budgetList.map((budget) => (
-              <div className="p-2">
+              <div className="p-2" key={budget.id}>
                 <ExpenseCard
-                  key={budget.id}
                   budget={budget}
                   expenses={expensesByBudget[budget.id] || []}
                   onOpen={() => setSelectedBudget(budget)} // Open dialog for selected budget
@@ -153,6 +150,7 @@ const ExpenseDashboard = () => {
       )}
     </div>
   );
+
 };
 
 export default ExpenseDashboard;

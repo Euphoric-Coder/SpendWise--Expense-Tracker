@@ -19,7 +19,7 @@ const steps = [
 
 const HowItWorks = () => {
   return (
-    <section className="py-20 p-8 cursor-default bg-gradient-to-b from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-black transition-colors duration-500">
+    <section id="how-it-works" className="py-20 p-8 cursor-default bg-gradient-to-b from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-black transition-colors duration-500">
       <div className="text-center mb-16">
         <h2 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-yellow-500 to-red-500 dark:from-purple-500 dark:via-pink-500 dark:to-blue-500">
           How It Works

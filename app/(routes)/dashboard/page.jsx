@@ -1,6 +1,5 @@
 "use client";
 
-import AIBudgetAdvisor from "@/components/Dashboard/AIBudgetAdvisor";
 import DashboardCard from "@/components/Dashboard/DashboardCard";
 import { db } from "@/utils/dbConfig";
 import { Budgets, Expenses, Incomes } from "@/utils/schema";
@@ -52,6 +51,7 @@ const page = () => {
           ),
         })
         .from(Incomes)
+        .where(eq(Incomes.createdBy, user?.primaryEmailAddress?.emailAddress))
         .groupBy(Incomes.id); // Assuming you want to group by ID or any other relevant column
 
       setIncomeList(result);
