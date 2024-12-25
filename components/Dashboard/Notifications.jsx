@@ -91,12 +91,12 @@ const NotificationTab = () => {
         <h3 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 border-b border-gray-300 dark:border-gray-600 pb-4">
           Notifications
         </h3>
-        <div className="mt-6 max-h-[28rem] overflow-y-auto space-y-8 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-100 dark:scrollbar-track-gray-800">
+        <div className="mt-6 max-h-[28rem] overflow-y-auto space-y-6 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-100 dark:scrollbar-track-gray-800">
           {notifications.length > 0 ? (
             notifications.map((notification) => (
               <div
                 key={notification.id}
-                className={`p-6 rounded-2xl transition-all shadow-lg hover:shadow-2xl hover:scale-105 backdrop-blur-lg ${
+                className={`p-5 rounded-2xl shadow-lg backdrop-blur-md ${
                   notification.read
                     ? "bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
                     : "bg-gradient-to-r from-blue-100 via-purple-100 to-blue-50 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 text-gray-800 dark:text-gray-200 bg-opacity-80"
@@ -111,7 +111,7 @@ const NotificationTab = () => {
                 >
                   {notification.message}
                 </p>
-                <div className="flex justify-between mt-4">
+                <div className="flex justify-end mt-4">
                   {!notification.read && (
                     <Button
                       variant="ghost"
@@ -153,6 +153,7 @@ const NotificationTab = () => {
             </p>
           )}
         </div>
+
         <div className="flex justify-between mt-8">
           {notifications.length > 0 && (
             <Button
