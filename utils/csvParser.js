@@ -18,7 +18,7 @@ export const processCsv = (file) => {
         const errors = [];
 
         rows.slice(1).forEach((row, index) => {
-          const [date, name, amount] = row
+          const [date, name, amount, description] = row
             .split(",")
             .map((item) => item.trim());
 
@@ -36,7 +36,7 @@ export const processCsv = (file) => {
             return;
           }
 
-          expenses.push({ date, name, amount });
+          expenses.push({ date, name, amount, description });
         });
 
         if (errors.length > 0) {

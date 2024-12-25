@@ -195,7 +195,7 @@ const RecieptDataTable = ({ recieptData = [], setRecieptData }) => {
                           />
                         </TooltipTrigger>
                         <TooltipContent className="rounded-full font-bold z-20">
-                          <p>Add to library</p>
+                          <p>Add to Expenses</p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
