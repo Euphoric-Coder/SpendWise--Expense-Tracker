@@ -67,7 +67,7 @@ function EditBudget({ budgetInfo, refreshData }) {
             <PenBox className="w-5" /> Edit
           </Button>
         </DialogTrigger>
-        <DialogContent className="bg-gradient-to-b from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 shadow-2xl rounded-3xl border border-blue-300 dark:border-gray-700">
+        <DialogContent className="border-2 border-blue-200 p-8 bg-gradient-to-b from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 shadow-2xl overflow-auto">
           {/* Background Effects */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute -top-10 -left-10 w-40 h-40 bg-gradient-to-r from-cyan-200 via-blue-200 to-indigo-200 dark:from-gray-700 dark:via-gray-800 dark:to-gray-900 opacity-30 blur-3xl"></div>
@@ -115,7 +115,7 @@ function EditBudget({ budgetInfo, refreshData }) {
                 placeholder="e.g. Home Decor"
                 defaultValue={budgetInfo?.name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full rounded-lg px-4 py-2 bg-gradient-to-r from-cyan-100 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 shadow-inner focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500"
+                className="w-full border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-4 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-105 duration-200"
               />
             </div>
 
@@ -129,7 +129,7 @@ function EditBudget({ budgetInfo, refreshData }) {
                 defaultValue={budgetInfo?.amount}
                 placeholder="e.g. 5000₹"
                 onChange={(e) => setAmount(e.target.value)}
-                className="w-full rounded-lg px-4 py-2 bg-gradient-to-r from-cyan-100 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 shadow-inner focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500"
+                className="w-full border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-4 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-105 duration-200"
               />
             </div>
 
@@ -155,7 +155,7 @@ function EditBudget({ budgetInfo, refreshData }) {
                 <select
                   value={frequency}
                   onChange={(e) => setFrequency(e.target.value)}
-                  className="block w-full p-2 border border-gray-300 rounded-md"
+                  className="w-full border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-2 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-105 duration-200"
                 >
                   <option value="daily">Daily</option>
                   <option value="weekly">Weekly</option>

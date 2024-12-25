@@ -67,7 +67,7 @@ const AddExpense = ({ budgetId, refreshData, budgetAmount, isRecurringBudget, fr
       alertTimeoutRef.current = setTimeout(() => {
         setOverBudget(false);
         setOverBudgetAmount(0);
-      }, 3000);
+      }, 4000);
 
       return;
     }
@@ -227,7 +227,7 @@ const AddExpense = ({ budgetId, refreshData, budgetAmount, isRecurringBudget, fr
       <Button
         onClick={() => addNewExpense()}
         disabled={!(name && amount)}
-        className="mt-8 w-full bg-gradient-to-r from-blue-600 via-indigo-500 to-cyan-500 dark:from-blue-700 dark:via-indigo-600 dark:to-cyan-500 text-white font-bold py-4 rounded-2xl shadow-lg hover:shadow-2xl hover:from-blue-700 hover:to-cyan-600 transition-transform transform hover:scale-105 duration-300 disabled:opacity-50"
+        className="mt-8 text-md w-full bg-gradient-to-r from-purple-500 via-indigo-500 to-cyan-500 text-white font-bold py-4 rounded-2xl shadow-lg hover:shadow-2xl transition-transform transform hover:scale-105 duration-500 disabled:opacity-50 dark:from-purple-700 dark:via-indigo-700 dark:to-cyan-600 dark:text-gray-200 hover:from-purple-600 hover:via-indigo-600 hover:to-cyan-400 dark:hover:from-purple-800 dark:hover:via-indigo-800 dark:hover:to-cyan-500 active:scale-95"
       >
         Add New Expense
       </Button>

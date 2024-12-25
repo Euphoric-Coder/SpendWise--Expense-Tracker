@@ -13,6 +13,7 @@ import { Upload } from "lucide-react";
 import CsvDataTable from "./CsvDataTable";
 
 const CSVImportButton = () => {
+  const { v4: uuidv4 } = require("uuid");
   const [showTutorialDialog, setShowTutorialDialog] = useState(false);
   const [showUploadDialog, setShowUploadDialog] = useState(false);
   const [currentTutorialPage, setCurrentTutorialPage] = useState(0);
@@ -172,6 +173,7 @@ const CSVImportButton = () => {
       if (result.length === 0) {
         // If no entry exists, insert a new one with default `showcsvimport` value
         await db.insert(Settings).values({
+          id: uuidv4(),
           createdBy: user.primaryEmailAddress.emailAddress,
           showcsvimport: true, // Default to showing the tutorial
         });
@@ -214,6 +216,7 @@ const CSVImportButton = () => {
     if (result.length === 0) {
       // Insert a new entry if none exists
       await db.insert(Settings).values({
+        id: uuidv4(),
         createdBy: user?.primaryEmailAddress?.emailAddress,
         showcsvimport: newShowCSVImportValue,
       });
@@ -262,14 +265,13 @@ const CSVImportButton = () => {
         onOpenChange={handleTutorialDialogClose}
       >
         <DialogContent
-          className="fixed rounded-3xl bg-gradient-to-b from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 p-6 shadow-2xl overflow-hidden"
+          className="fixed rounded-3xl max-w-4xl bg-gradient-to-b from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 p-6 shadow-2xl overflow-y-auto"
           style={{
             position: "fixed",
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: "90%",
-            maxWidth: "500px",
           }}
         >
           {/* Tutorial Header */}
@@ -341,14 +343,13 @@ const CSVImportButton = () => {
         }}
       >
         <DialogContent
-          className="rounded-3xl bg-gradient-to-b from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 p-6 shadow-2xl overflow-hidden"
+          className="rounded-3xl max-w-4xl bg-gradient-to-b from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 p-6 shadow-2xl overflow-hidden"
           style={{
             position: "fixed",
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: "90%",
-            maxWidth: "700px",
           }}
         >
           <h2 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-500 dark:from-blue-500 dark:via-indigo-500 dark:to-purple-400 animate-gradient-text mb-4">

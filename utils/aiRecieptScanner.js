@@ -17,7 +17,7 @@ export async function processReciept(file) {
     const prompt = `
       Analyze this receipt image and extract the following information in JSON format:
       - Name of each item
-      - amount of each item (just the amount, no currency symbol)
+      - amount of each item (just the amount, no currency symbol and if any other currency other than INR is their convert it to INR)
       - Date, if any otherwise give null (in ISO format)
       - Description of items purchased, if any (brief summary)
       

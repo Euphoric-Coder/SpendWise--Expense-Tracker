@@ -11,12 +11,14 @@ import { eq } from "drizzle-orm";
 import { ScanText } from "lucide-react";
 import CsvDataTable from "./CsvDataTable";
 import RecieptUpload from "./RecieptUpload";
+import RecieptDataTable from "./RecieptDataTable";
 
 const RecieptImportButton = () => {
+  const { v4: uuidv4 } = require("uuid");
   const [showTutorialDialog, setShowTutorialDialog] = useState(false);
   const [showUploadDialog, setShowUploadDialog] = useState(false);
   const [currentTutorialPage, setCurrentTutorialPage] = useState(0);
-  const [showCSVImport, setShowCSVImport] = useState(true); // Default to true
+  const [showRecieptImport, setShowRecieptImport] = useState(true); // Default to true
   const [recieptData, setRecieptData] = useState([]);
   const { user } = useUser();
 
@@ -28,136 +30,147 @@ const RecieptImportButton = () => {
 
   const tutorialPages = [
     {
-      title: "Step 1: CSV File Format",
+      title: "Step 1: Capture a Clear Image",
       content: (
         <div className="text-center">
           <p className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-teal-500 to-indigo-500 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400">
-            Your CSV file should include the following columns:
+            Start by taking a clear photo of your receipt.
           </p>
           <ul className="mt-6 space-y-4 text-left">
             <li className="flex items-start">
               <span className="w-3 h-3 bg-gradient-to-br from-blue-600 via-teal-500 to-indigo-500 rounded-full mt-1 mr-3 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400"></span>
               <span className="text-lg text-gray-800 dark:text-gray-300">
-                <strong className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-blue-600 to-indigo-600 dark:from-teal-400 dark:via-blue-400 dark:to-indigo-400">
-                  Date
-                </strong>
-                : The date of the expense in the format:
-                <div className="text-center">
-                  <code className="font-mono bg-blue-900 text-gray-300 p-1 rounded-md dark:bg-indigo-600 dark:text-gray-50">
-                    YYYY-MM-DD
-                  </code>
-                </div>
+                Ensure good lighting and avoid shadows over the receipt.
               </span>
             </li>
             <li className="flex items-start">
               <span className="w-3 h-3 bg-gradient-to-br from-blue-600 via-teal-500 to-indigo-500 rounded-full mt-1 mr-3 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400"></span>
               <span className="text-lg text-gray-800 dark:text-gray-300">
-                <strong className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-blue-600 to-indigo-600 dark:from-teal-400 dark:via-blue-400 dark:to-indigo-400">
-                  Name
-                </strong>
-                : A brief description of the expense.
+                The text on the receipt should be legible without any blur.
               </span>
             </li>
             <li className="flex items-start">
               <span className="w-3 h-3 bg-gradient-to-br from-blue-600 via-teal-500 to-indigo-500 rounded-full mt-1 mr-3 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400"></span>
               <span className="text-lg text-gray-800 dark:text-gray-300">
-                <strong className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-blue-600 to-indigo-600 dark:from-teal-400 dark:via-blue-400 dark:to-indigo-400">
-                  Amount
-                </strong>
-                : The monetary value of the expense in numeric format.
+                If the receipt is long, capture multiple overlapping images.
               </span>
             </li>
           </ul>
           <p className="mt-6 text-gray-500 dark:text-gray-400">
-            Each row represents a single expense record. Ensure there are no
-            extra columns or formatting issues.
+            A clear image ensures accurate extraction of receipt details.
           </p>
         </div>
       ),
-      image: "/sampleCSV.png",
+      image: "/images/capture-receipt.png",
     },
     {
-      title: "Step 2: Date Format",
+      title: "Step 2: Upload Your Receipt",
       content: (
         <div className="text-center">
-          <p className="text-lg text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-teal-500 to-indigo-500 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400">
-            The{" "}
-            <span className="font-semibold text-blue-500 dark:text-blue-300">
-              Date
-            </span>{" "}
-            column must follow this format:
-          </p>
-          <p className="mt-4 text-2xl font-extrabold font-mono text-transparent bg-clip-text bg-gradient-to-tr from-teal-500 via-blue-500 to-indigo-500 dark:from-teal-400 dark:via-blue-400 dark:to-indigo-400">
-            YYYY-MM-DD
+          <p className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-teal-500 to-indigo-500 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400">
+            Upload your receipt image to the AI Receipt Scanner.
           </p>
           <ul className="mt-6 space-y-4 text-left">
             <li className="flex items-start">
               <span className="w-3 h-3 bg-gradient-to-br from-blue-600 via-teal-500 to-indigo-500 rounded-full mt-1 mr-3 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400"></span>
               <span className="text-lg text-gray-800 dark:text-gray-300">
-                <code className="font-mono bg-gray-100 text-blue-600 px-1 py-0.5 rounded dark:bg-gray-800 dark:text-blue-300">
-                  2024-01-01
-                </code>{" "}
-                for January 1, 2024.
+                Drag and drop the image into the upload area or click the{" "}
+                <strong className="text-blue-500 dark:text-blue-300">
+                  Upload
+                </strong>{" "}
+                button to select the file.
               </span>
             </li>
             <li className="flex items-start">
               <span className="w-3 h-3 bg-gradient-to-br from-blue-600 via-teal-500 to-indigo-500 rounded-full mt-1 mr-3 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400"></span>
               <span className="text-lg text-gray-800 dark:text-gray-300">
-                <code className="font-mono bg-gray-100 text-blue-600 px-1 py-0.5 rounded dark:bg-gray-800 dark:text-blue-300">
-                  2024-02-15
-                </code>{" "}
-                for February 15, 2024.
+                Supported formats include{" "}
+                <code className="font-mono px-1 py-0.5 bg-gray-200 rounded dark:bg-gray-700">
+                  .jpg
+                </code>
+                ,{" "}
+                <code className="font-mono px-1 py-0.5 bg-gray-200 rounded dark:bg-gray-700">
+                  .png
+                </code>
+                , and{" "}
+                <code className="font-mono px-1 py-0.5 bg-gray-200 rounded dark:bg-gray-700">
+                  .jpeg
+                </code>
+                .
               </span>
             </li>
           </ul>
+          <p className="mt-6 text-gray-500 dark:text-gray-400">
+            The image will be analyzed, and key details like date, vendor, and
+            amount will be extracted.
+          </p>
         </div>
       ),
-      image: "/images/date-format.png",
+      image: "/images/upload-receipt.png",
     },
     {
-      title: "Step 3: Example File",
+      title: "Step 3: Review Extracted Data",
       content: (
         <div className="text-center">
-          <p className="text-lg text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-teal-500 to-indigo-500 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400">
-            Here&apos;s an example of how your CSV file should look:
+          <p className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-teal-500 to-indigo-500 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400">
+            Verify and edit the extracted data.
           </p>
-          <pre className="mt-6 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 p-6 rounded-lg text-sm text-left shadow-lg text-gray-300">
-            {`date,name,amount
-2024-01-01,Groceries,150
-2024-01-02,Transport,50
-2024-01-03,Utilities,100`}
-          </pre>
-          <p className="mt-6 text-gray-500 text-lg dark:text-gray-400">
-            Ensure your file is saved with the{" "}
-            <strong className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-blue-600 to-indigo-600 dark:from-teal-400 dark:via-blue-400 dark:to-indigo-400">
-              .csv
-            </strong>{" "}
-            extension.
+          <ul className="mt-6 space-y-4 text-left">
+            <li className="flex items-start">
+              <span className="w-3 h-3 bg-gradient-to-br from-blue-600 via-teal-500 to-indigo-500 rounded-full mt-1 mr-3 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400"></span>
+              <span className="text-lg text-gray-800 dark:text-gray-300">
+                Check if the date, vendor, and amount details are correct.
+              </span>
+            </li>
+            <li className="flex items-start">
+              <span className="w-3 h-3 bg-gradient-to-br from-blue-600 via-teal-500 to-indigo-500 rounded-full mt-1 mr-3 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400"></span>
+              <span className="text-lg text-gray-800 dark:text-gray-300">
+                You can make edits if any data is incorrectly extracted.
+              </span>
+            </li>
+          </ul>
+          <p className="mt-6 text-gray-500 dark:text-gray-400">
+            Accurate data ensures seamless expense management.
           </p>
         </div>
       ),
-      image: "/images/example-file.png",
+      image: "/images/review-data.png",
     },
     {
-      title: "Step 4: Ready to Upload",
+      title: "Step 4: Save and Continue",
       content: (
         <div className="text-center">
-          <p className="text-lg text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-teal-500 to-indigo-500 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400">
-            Once your file is ready, click{" "}
-            <span className="text-blue-500 font-semibold dark:text-blue-300">
-              Continue
-            </span>{" "}
-            to proceed to the upload screen.
+          <p className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-teal-500 to-indigo-500 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400">
+            Save the extracted data to your records.
           </p>
-          <p className="mt-6 text-gray-400 dark:text-gray-500">
-            Make sure the file format matches the requirements. Invalid files
-            may not be processed.
+          <ul className="mt-6 space-y-4 text-left">
+            <li className="flex items-start">
+              <span className="w-3 h-3 bg-gradient-to-br from-blue-600 via-teal-500 to-indigo-500 rounded-full mt-1 mr-3 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400"></span>
+              <span className="text-lg text-gray-800 dark:text-gray-300">
+                Once verified, click the{" "}
+                <strong className="text-blue-500 dark:text-blue-300">
+                  Save
+                </strong>{" "}
+                button to store the data.
+              </span>
+            </li>
+            <li className="flex items-start">
+              <span className="w-3 h-3 bg-gradient-to-br from-blue-600 via-teal-500 to-indigo-500 rounded-full mt-1 mr-3 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400"></span>
+              <span className="text-lg text-gray-800 dark:text-gray-300">
+                Your receipt details will now be part of your expense history.
+              </span>
+            </li>
+          </ul>
+          <p className="mt-6 text-gray-500 dark:text-gray-400">
+            You can add more receipts or view your expense summary anytime.
           </p>
         </div>
       ),
-      image: "/images/ready-to-upload.png",
+      image: "/images/save-data.png",
     },
   ];
+
+
 
   useEffect(() => {
     const fetchOrCreateSettings = async () => {
@@ -169,15 +182,15 @@ const RecieptImportButton = () => {
         .where(eq(Settings.createdBy, user.primaryEmailAddress.emailAddress));
 
       if (result.length === 0) {
-        // If no entry exists, insert a new one with default `showcsvimport` value
+        // If no entry exists, insert a new one with default `showrecieptimport` value
         await db.insert(Settings).values({
+          id: uuidv4(),
           createdBy: user.primaryEmailAddress.emailAddress,
-          showcsvimport: true, // Default to showing the tutorial
         });
-        setShowCSVImport(true); // Set the state to match the default value
+        setShowRecieptImport(true); // Set the state to match the default value
       } else {
-        // If entry exists, set `showCSVImport` based on the fetched value
-        setShowCSVImport(result[0].showcsvimport);
+        // If entry exists, set `showRecieptImport` based on the fetched value
+        setShowRecieptImport(result[0].showrecieptimport);
       }
     };
 
@@ -200,11 +213,11 @@ const RecieptImportButton = () => {
   };
 
   const handleCheckboxChange = async (checked) => {
-    const newShowCSVImportValue = !checked; // Checkbox indicates "Don't show tutorial"
+    const newShowRecieptImportValue = !checked; // Checkbox indicates "Don't show tutorial"
 
-    setShowCSVImport(newShowCSVImportValue);
+    setShowRecieptImport(newShowRecieptImportValue);
 
-    // Update the `showcsvimport` value in the database
+    // Update the `showrecieptimport` value in the database
     const result = await db
       .select()
       .from(Settings)
@@ -213,20 +226,21 @@ const RecieptImportButton = () => {
     if (result.length === 0) {
       // Insert a new entry if none exists
       await db.insert(Settings).values({
+        id: uuidv4(),
         createdBy: user?.primaryEmailAddress?.emailAddress,
-        showcsvimport: newShowCSVImportValue,
+        showrecieptimport: newShowRecieptImportValue,
       });
     } else {
       // Update the existing entry
       await db
         .update(Settings)
-        .set({ showcsvimport: newShowCSVImportValue })
+        .set({ showrecieptimport: newShowRecieptImportValue })
         .where(eq(Settings.createdBy, user?.primaryEmailAddress?.emailAddress));
     }
   };
 
   const handleImportClick = () => {
-    if (showCSVImport) {
+    if (showRecieptImport) {
       setShowTutorialDialog(true);
     } else {
       setShowUploadDialog(true);
@@ -268,7 +282,7 @@ const RecieptImportButton = () => {
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: "90%",
-            maxWidth: "500px",
+            maxWidth: "1400px",
           }}
         >
           {/* Tutorial Header */}
@@ -318,7 +332,7 @@ const RecieptImportButton = () => {
           <div className="mt-4 flex items-center">
             <Checkbox
               id="show-tutorial"
-              checked={!showCSVImport} // Checkbox indicates "Don't show tutorial"
+              checked={!showRecieptImport} // Checkbox indicates "Don't show tutorial"
               onCheckedChange={handleCheckboxChange}
             />
             <label
@@ -340,24 +354,23 @@ const RecieptImportButton = () => {
         }}
       >
         <DialogContent
-          className="rounded-3xl bg-gradient-to-b from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 p-6 shadow-2xl overflow-hidden"
+          className="rounded-3xl bg-gradient-to-b from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 max-w-4xl dark:via-gray-800 dark:to-gray-700 p-6 shadow-2xl overflow-auto"
           style={{
             position: "fixed",
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: "90%",
-            maxWidth: "700px",
           }}
         >
           <h2 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-500 dark:from-blue-500 dark:via-indigo-500 dark:to-purple-400 animate-gradient-text mb-4">
             Upload Your Expense CSV
           </h2>
           <RecieptUpload onFileSelect={handleFileSelect} />
-          {/* {recieptData.length > 0 && (
-            <CsvDataTable recieptData={recieptData} setRecieptData={setRecieptData} />
-          )} */}
-          {recieptData?.length > 0 && (
+          {recieptData.length > 0 && (
+            <RecieptDataTable recieptData={recieptData} setRecieptData={setRecieptData} />
+          )}
+          {/* {recieptData?.length > 0 && (
             <div>
               {recieptData?.map((reciept, index) => (
                 <div>
@@ -372,7 +385,7 @@ const RecieptImportButton = () => {
                 </div>
               ))}
             </div>
-          )}
+          )} */}
           <DialogClose asChild>
             <Button
               className="mt-4 px-4 py-2 font-semibold text-white bg-gradient-to-r from-purple-400 to-indigo-500 dark:from-purple-500 dark:to-indigo-600 rounded-lg shadow hover:from-purple-500 hover:to-indigo-600"

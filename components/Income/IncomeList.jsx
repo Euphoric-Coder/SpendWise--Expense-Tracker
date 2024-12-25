@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { db } from "@/utils/dbConfig";
-import { desc, eq, getTableColumns, sql } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { Incomes, Expenses } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import CreateIncomes from "./CreateIncome";
@@ -23,9 +23,17 @@ function IncomeList() {
   const [incomelist, setIncomelist] = useState([]);
   const [upcomingItems, setUpcomingItems] = useState([]);
   const [currentItems, setCurrentItems] = useState([]);
+  const [loading, setLoading] = useState(true);
   const { user } = useUser();
 
   useEffect(() => {
+    try {
+      setLoading(true);
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
+    }
     user && getIncomelist();
   }, [user]);
 
@@ -44,6 +52,7 @@ function IncomeList() {
     setIncomelist(result);
     setUpcomingItems(upcomingItems);
     setCurrentItems(currentItems);
+    console.log(currentItems.length)
   };
 
   return (
@@ -86,37 +95,63 @@ function IncomeList() {
         Ongoing Incomes
       </h2>
       <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6 mb-10">
-        {currentItems?.length > 0 && currentItems?.length !== 0
-          ? currentItems.map((income, index) => (
-              <IncomeItem
-                income={income}
-                refreshData={() => getIncomelist()}
-                key={`ongoing-${index}`}
-              />
-            ))
-          : [1, 2, 3, 4, 5].map((item, index) => (
-              <div key={index}>
-                <IncomeSkeleton />
-              </div>
-            ))}
+        {loading ? (
+          // Show skeletons while loading
+          [1, 2, 3, 4, 5].map((item, index) => (
+            <div key={index}>
+              <IncomeSkeleton />
+            </div>
+          ))
+        ) : currentItems.length > 0 ? (
+          // Show items once loaded
+          currentItems.map((income, index) => (
+            <IncomeItem
+              income={income}
+              refreshData={() => getIncomelist()}
+              key={`ongoing-${index}`}
+            />
+          ))
+        ) : (
+          // Show message when no data is available
+          <div className="col-span-3">
+            <div className="flex justify-center items-center">
+              <p className="p-2 text-3xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-blue-600 to-sky-500 animate-pulse">
+                No ongoing incomes found...
+              </p>
+            </div>
+          </div>
+        )}
       </div>
       <h2 className="mb-5 p-2 font-extrabold text-3xl md:text-4xl text-transparent bg-clip-text bg-gradient-to-tr from-cyan-600 via-blue-600 to-sky-500 dark:from-blue-400 dark:via-cyan-400 dark:to-teal-400">
         Upcoming Recurring Incomes
       </h2>
       <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6 mb-5">
-        {upcomingItems?.length > 0 && upcomingItems?.length !== 0
-          ? upcomingItems.map((income, index) => (
-              <IncomeItem
-                income={income}
-                refreshData={() => getIncomelist()}
-                key={`upcoming-${index}`}
-              />
-            ))
-          : [1, 2, 3, 4, 5].map((item, index) => (
-              <div key={index}>
-                <IncomeSkeleton />
-              </div>
-            ))}
+        {loading ? (
+          // Show skeletons while loading
+          [1, 2, 3, 4, 5].map((item, index) => (
+            <div key={index}>
+              <IncomeSkeleton />
+            </div>
+          ))
+        ) : upcomingItems.length > 0 ? (
+          // Show items once loaded
+          upcomingItems.map((income, index) => (
+            <IncomeItem
+              income={income}
+              refreshData={() => getIncomelist()}
+              key={`upcoming-${index}`}
+            />
+          ))
+        ) : (
+          // Show message when no data is available
+          <div className="col-span-3">
+            <div className="flex justify-center items-center">
+              <p className="p-2 text-3xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-blue-600 to-sky-500 animate-pulse">
+                No Upcoming Recurring Income available...
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
