@@ -8,6 +8,20 @@ module.exports = {
   ],
   theme: {
   	extend: {
+		animation: {
+        wiggle: "wiggle 0.5s ease-in-out infinite",
+      },
+      keyframes: {
+        wiggle: {
+          "0%": { transform: "translateX(0) rotate(20deg) scale(1)" },
+          "15%": { transform: "translateX(-2px) rotate(0deg) scale(1.1)" },
+          "30%": { transform: "translateX(2px) rotate(-20deg) scale(1.05)" },
+          "45%": { transform: "translateX(-1px) rotate(10deg) scale(1)" },
+          "60%": { transform: "translateX(1px) rotate(-10deg) scale(1.05)" },
+          "75%": { transform: "translateX(-1px) rotate(5deg) scale(1.02)" },
+          "100%": { transform: "translateX(0) rotate(0deg) scale(1)" },
+        },
+	},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',

@@ -72,33 +72,34 @@ const NotificationTab = () => {
 
   return (
     <Popover>
-      <PopoverTrigger className="relative flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 shadow-md hover:shadow-lg transition-all">
+      <PopoverTrigger className="relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-gray-300 to-gray-400 dark:from-gray-800 dark:to-gray-700 shadow-lg hover:shadow-xl transition-transform transform hover:scale-110">
         <Bell
-          className="text-gray-700 dark:text-gray-300 w-6 h-6"
-          style={{ animation: "wiggle 2s ease-in-out infinite" }}
+          className={`text-gray-700 dark:text-gray-300 w-8 h-8 ${
+            unreadCount > 0 ? "animate-wiggle" : ""
+          }`}
         />
         {unreadCount > 0 && (
-          <div className="absolute right-2 top-2 h-4 w-4 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs flex items-center justify-center">
+          <div className="absolute left-8 top-2 px-3 py-1 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-bold shadow-lg">
             {unreadCount}
           </div>
         )}
       </PopoverTrigger>
       <PopoverContent
         align="end"
-        className="w-96 p-4 rounded-lg bg-white dark:bg-gray-900 shadow-xl border border-gray-200 dark:border-gray-700"
+        className="w-[30rem] p-6 rounded-2xl bg-gradient-to-br from-white to-gray-100 dark:from-gray-900 dark:to-gray-800 shadow-2xl border border-gray-200 dark:border-gray-700 transition-transform transform hover:scale-105"
       >
-        <h3 className="text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500 dark:from-blue-400 dark:to-purple-400 border-b border-gray-200 dark:border-gray-700 pb-2">
+        <h3 className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 border-b border-gray-300 dark:border-gray-600 pb-3">
           Notifications
         </h3>
-        <div className="mt-3 max-h-80 overflow-y-auto space-y-3 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-100 dark:scrollbar-track-gray-800">
+        <div className="mt-5 max-h-96 overflow-y-auto space-y-6 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-100 dark:scrollbar-track-gray-800">
           {notifications.length > 0 ? (
             notifications.map((notification) => (
               <div
                 key={notification.id}
-                className={`p-4 rounded-md shadow-sm hover:shadow-md transition ${
+                className={`p-5 rounded-lg transition-all shadow-md hover:shadow-lg hover:scale-105 ${
                   notification.read
                     ? "bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
-                    : "bg-blue-50 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+                    : "bg-gradient-to-r from-blue-100 via-purple-100 to-blue-50 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 text-gray-800 dark:text-gray-200 backdrop-blur-lg bg-opacity-90"
                 }`}
               >
                 <p
@@ -110,12 +111,12 @@ const NotificationTab = () => {
                 >
                   {notification.message}
                 </p>
-                <div className="flex justify-between mt-2">
+                <div className="flex justify-between mt-4">
                   {!notification.read && (
                     <Button
                       variant="ghost"
                       size="xs"
-                      className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500 hover:from-purple-500 hover:to-blue-500"
+                      className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 hover:from-purple-600 hover:to-blue-600"
                       onClick={() => markAsRead(notification.id)}
                     >
                       Mark as Read
@@ -127,14 +128,14 @@ const NotificationTab = () => {
                         <Button
                           variant="ghost"
                           size="xs"
-                          className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500 hover:from-purple-500 hover:to-blue-500"
+                          className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 hover:from-purple-600 hover:to-blue-600"
                           onClick={() => setCurrentNotification(notification)}
                         >
                           Show More
                         </Button>
                       </DialogTrigger>
-                      <DialogContent className="rounded-lg p-6 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-lg">
-                        <h4 className="text-lg font-bold mb-2">
+                      <DialogContent className="rounded-lg p-6 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-xl">
+                        <h4 className="text-lg font-bold mb-3">
                           Notification Details
                         </h4>
                         <p className="text-sm">
@@ -152,17 +153,25 @@ const NotificationTab = () => {
             </p>
           )}
         </div>
-        <div className="flex justify-between mt-4">
+        <div className="flex justify-between mt-6">
           {notifications.length > 0 && (
             <Button
               variant="outline"
               size="sm"
-              className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500 border-gray-300 dark:border-gray-600 hover:bg-blue-50 dark:hover:bg-gray-700"
+              className="px-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 border-gray-300 dark:border-gray-600 hover:bg-blue-50 dark:hover:bg-gray-700"
               onClick={clearNotifications}
             >
               Clear All
             </Button>
           )}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="px-6 text-gray-600 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-400"
+            onClick={() => alert("Redirecting to notifications page...")}
+          >
+            See All
+          </Button>
         </div>
       </PopoverContent>
     </Popover>
