@@ -6,7 +6,6 @@ import {
   pgTable,
   serial,
   timestamp,
-  uniqueIndex,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -64,6 +63,14 @@ export const Settings = pgTable("settings", {
   createdBy: varchar("createdBy").notNull().unique(),
   showcsvimport: boolean("showcsvimport").notNull().default(true), // True or False
   showrecieptimport: boolean("showrecieptimport").notNull().default(true),
+});
+
+export const Notifications = pgTable("notifications", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  createdFor: varchar("createdFor").notNull().unique(),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  message: varchar("message").notNull().unique(),
+  read: boolean("read").notNull().default(false),
 });
 
 export const Feedback = pgTable("feedback", {
