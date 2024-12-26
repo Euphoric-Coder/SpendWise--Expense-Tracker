@@ -200,9 +200,11 @@ export function calculateNonRecurringProgress(startDate, endDate) {
 }
 
 export function nextRecurringDate(date, frequency) {
+  console.log(date, frequency)
+  if (date !== null && frequency !== null) {
   const next = new Date(date);
 
-  switch (frequency.toLowerCase()) {
+  switch (frequency?.toLowerCase()) {
     case "daily":
       next.setDate(next.getDate() + 1);
       break;
@@ -220,9 +222,7 @@ export function nextRecurringDate(date, frequency) {
       break;
 
     default:
-      throw new Error(
-        "Invalid frequency. Use 'daily', 'weekly', 'monthly', or 'yearly'."
-      );
+      console.log("error")
   }
 
   // Convert to IST (GMT +5:30) and format the date
@@ -236,6 +236,7 @@ export function nextRecurringDate(date, frequency) {
   const [day, month, year] = istFormatter.format(next).split("/");
 
   return `${year}-${month}-${day}`;
+}
 }
 
 export function calculateRecurringProgress(startDate, frequency) {

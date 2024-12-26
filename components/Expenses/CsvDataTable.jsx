@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/table";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -40,7 +41,7 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
   const deleteRow = (index) => {
     const updatedData = csvData.filter((_, i) => i !== index);
     setCsvData(updatedData);
-    toast(`Row ${index + 1} has been deleted!`);
+    toast.success(`Row ${index + 1} has been deleted!`);
   };
 
   const startEditing = (row, index) => {
@@ -132,11 +133,11 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
                   <TableCell>{row.date}</TableCell>
                   <TableCell>{row.description}</TableCell>
                   <TableCell className="flex items-center space-x-2">
-                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                      <DialogTrigger asChild>
+                    <Dialog>
+                      <DialogTrigger>
                         <TooltipProvider>
                           <Tooltip>
-                            <TooltipTrigger>
+                            <TooltipTrigger asChild>
                               <Edit
                                 className="text-blue-600 cursor-pointer mr-2 hover:text-purple-800 hover:scale-110 active:scale-90 transition-all duration-500"
                                 onClick={() => startEditing(row, index)}
@@ -204,12 +205,14 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
                             placeholder="Date"
                             className="border p-2 rounded-md"
                           />
-                          <button
-                            onClick={saveEditedRow}
-                            className="bg-blue-500 text-white p-2 rounded-md"
-                          >
-                            Save
-                          </button>
+                          <DialogClose>
+                            <button
+                              onClick={saveEditedRow}
+                              className="w-full bg-blue-500 text-white p-2 rounded-md"
+                            >
+                              Save
+                            </button>
+                          </DialogClose>
                         </div>
                       </DialogContent>
                     </Dialog>

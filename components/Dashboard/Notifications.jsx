@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/tooltip";
 import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { animate } from "framer-motion";
 
 const NotificationTab = () => {
   const [notifications, setNotifications] = useState([
