@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/utils/dbConfig";
 import { Notifications } from "@/utils/schema";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 // GET: Fetch all notifications
 export async function GET() {
@@ -9,7 +9,7 @@ export async function GET() {
     const notifications = await db
       .select()
       .from(Notifications)
-      .orderBy("createdAt", "desc"); // Optional sorting
+      .orderBy(desc(Notifications.createdAt));
     return NextResponse.json(notifications);
   } catch (error) {
     console.error("Error fetching notifications:", error);

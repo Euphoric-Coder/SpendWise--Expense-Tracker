@@ -366,7 +366,6 @@ const CSVImportButton = () => {
             <CsvDataTable
               csvData={csvData}
               setCsvData={setCsvData}
-              setReuploadReset={setReuploadReset}
             />
           )}
           <DialogClose asChild>
