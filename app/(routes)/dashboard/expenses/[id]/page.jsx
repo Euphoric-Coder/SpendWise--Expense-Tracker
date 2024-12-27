@@ -160,9 +160,9 @@ const ExpensesDashboard = ({ params }) => {
 
       {/* Latest Expenses Section */}
       <div className="mt-12">
-        <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 dark:from-blue-400 dark:via-indigo-400 dark:to-cyan-400 mb-6 animate-gradient-text">
-          Latest Expenses
-        </h2>
+        <h1 className="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-tl from-blue-600 to-teal-400 dark:from-purple-400 dark:to-pink-400 mb-10">
+          Latest Expenses ({expensesList.length} Items)
+        </h1>
         <div className="bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 rounded-2xl shadow-md p-6 border border-blue-200 dark:border-gray-600">
           <ExpenseTable
             expenseList={expensesList}

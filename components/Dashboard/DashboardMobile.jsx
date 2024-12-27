@@ -60,61 +60,62 @@ const DashboardMobile = () => {
             {user?.fullName || "User"}
           </span>
         </div>
-
-        <NotificationTab />
-        {/* Hamburger Menu Trigger */}
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button
-              variant="ghost"
-              className="p-2 rounded-md bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 hover:shadow-md dark:from-blue-700 dark:via-purple-700 dark:to-pink-700"
+        <div className="flex items-center gap-3">
+          <NotificationTab />
+          {/* Hamburger Menu Trigger */}
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button
+                variant="ghost"
+                className="p-2 rounded-md bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 hover:shadow-md dark:from-blue-700 dark:via-purple-700 dark:to-pink-700"
+              >
+                <Menu
+                  size={28}
+                  className="text-blue-600 dark:text-blue-300 hover:animate-pulse"
+                />
+              </Button>
+            </SheetTrigger>
+            <SheetContent
+              side="left"
+              className="p-6 bg-gradient-to-br from-white via-blue-50 to-purple-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 shadow-xl rounded-r-lg"
             >
-              <Menu
-                size={28}
-                className="text-blue-600 dark:text-blue-300 hover:animate-pulse"
-              />
-            </Button>
-          </SheetTrigger>
-          <SheetContent
-            side="left"
-            className="p-6 bg-gradient-to-br from-white via-blue-50 to-purple-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 shadow-xl rounded-r-lg"
-          >
-            <SheetHeader>
-              <div className="flex items-center gap-3">
-                {/* User Avatar */}
-                <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white font-extrabold text-lg shadow-lg">
-                  {user?.firstName?.charAt(0) || "U"}
-                </div>
-                {/* User Name with Gradient */}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-500 dark:to-pink-500 text-lg font-extrabold">
-                  {user?.fullName || "User"}
-                </span>
-              </div>
-            </SheetHeader>
-
-            {/* Menu Items */}
-            <div className="mt-8 flex flex-col gap-5">
-              {menuList.map((menu) => (
-                <Link key={menu.id} href={menu.path}>
-                  <div
-                    className={`flex items-center gap-4 px-4 py-3 rounded-xl cursor-pointer transition-transform duration-300 hover:bg-gradient-to-br from-blue-200/60 via-purple-200/50 to-pink-200/40 dark:hover:bg-gradient-to-br dark:from-blue-700 dark:via-purple-700 dark:to-pink-700 hover:shadow-lg transform hover:scale-105 ${
-                      path === menu.path &&
-                      "bg-gradient-to-br from-blue-300/70 via-purple-300/60 to-pink-300/50 dark:bg-gradient-to-br dark:from-blue-800 dark:via-purple-800 dark:to-pink-800 shadow-lg"
-                    }`}
-                  >
-                    <menu.icon
-                      className="text-blue-600 dark:text-blue-300"
-                      size={24}
-                    />
-                    <span className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-500 dark:to-pink-500">
-                      {menu.name}
-                    </span>
+              <SheetHeader>
+                <div className="flex items-center gap-3">
+                  {/* User Avatar */}
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white font-extrabold text-lg shadow-lg">
+                    {user?.firstName?.charAt(0) || "U"}
                   </div>
-                </Link>
-              ))}
-            </div>
-          </SheetContent>
-        </Sheet>
+                  {/* User Name with Gradient */}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-500 dark:to-pink-500 text-lg font-extrabold">
+                    {user?.fullName || "User"}
+                  </span>
+                </div>
+              </SheetHeader>
+
+              {/* Menu Items */}
+              <div className="mt-8 flex flex-col gap-5">
+                {menuList.map((menu) => (
+                  <Link key={menu.id} href={menu.path}>
+                    <div
+                      className={`flex items-center gap-4 px-4 py-3 rounded-xl cursor-pointer transition-transform duration-300 hover:bg-gradient-to-br from-blue-200/60 via-purple-200/50 to-pink-200/40 dark:hover:bg-gradient-to-br dark:from-blue-700 dark:via-purple-700 dark:to-pink-700 hover:shadow-lg transform hover:scale-105 ${
+                        path === menu.path &&
+                        "bg-gradient-to-br from-blue-300/70 via-purple-300/60 to-pink-300/50 dark:bg-gradient-to-br dark:from-blue-800 dark:via-purple-800 dark:to-pink-800 shadow-lg"
+                      }`}
+                    >
+                      <menu.icon
+                        className="text-blue-600 dark:text-blue-300"
+                        size={24}
+                      />
+                      <span className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-500 dark:to-pink-500">
+                        {menu.name}
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
     </div>
   );

@@ -27,7 +27,8 @@ const NotificationTab = () => {
     };
 
     fetchNotifications();
-  });
+  // }, []);
+  }, [notifications]);
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 
@@ -77,10 +78,10 @@ const NotificationTab = () => {
 
   return (
     <Popover>
-      <PopoverTrigger className="relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-gray-300 to-gray-400 dark:from-gray-800 dark:to-gray-700 shadow-xl hover:shadow-2xl transition-transform transform hover:scale-110">
+      <PopoverTrigger className="m-2 relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-gray-300 to-gray-400 dark:from-gray-950 dark:to-gray-950 shadow-xl hover:shadow-2xl transition-transform transform hover:scale-110">
         <Bell
-          className={`text-gray-700 dark:text-gray-300 w-8 h-8 ${
-            unreadCount > 0 ? "animate-pulse" : ""
+          className={`text-white dark:text-gray-300 w-8 h-8 ${
+            unreadCount > 0 ? "animate-wiggle transition-all duration-1000" : ""
           }`}
         />
         {unreadCount > 0 && (
@@ -119,26 +120,28 @@ const NotificationTab = () => {
                       Mark as Read
                     </Button>
                   )}
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600"
-                        onClick={() => setCurrentNotification(notification)}
-                      >
-                        Show More
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="rounded-xl p-6 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-2xl">
-                      <h4 className="text-xl font-bold mb-3">
-                        Notification Details
-                      </h4>
-                      <p className="text-base">
-                        {currentNotification?.message}
-                      </p>
-                    </DialogContent>
-                  </Dialog>
+                  {notification.message.length > 80 && (
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600"
+                          onClick={() => setCurrentNotification(notification)}
+                        >
+                          Show More
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="rounded-xl p-6 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-2xl">
+                        <h4 className="text-xl font-bold mb-3">
+                          Notification Details
+                        </h4>
+                        <p className="text-base">
+                          {currentNotification?.message}
+                        </p>
+                      </DialogContent>
+                    </Dialog>
+                  )}
                 </div>
               </div>
             ))
