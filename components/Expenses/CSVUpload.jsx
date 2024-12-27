@@ -6,7 +6,12 @@ import { processCsv } from "@/utils/csvParser";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-const CsvUpload = ({ onFileSelect }) => {
+const CsvUpload = ({
+  onFileSelect,
+  reuploadReset,
+  setReuploadReset,
+  setCsvData,
+}) => {
   const [csvFile, setCsvFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isValidFile, setIsValidFile] = useState(false);
@@ -17,6 +22,7 @@ const CsvUpload = ({ onFileSelect }) => {
   const resetState = () => {
     setCsvFile(null);
     setIsValidFile(false);
+    setReuploadReset(false);
     if (fileInputRef.current) {
       fileInputRef.current.value = ""; // Reset file input
     }
@@ -65,7 +71,7 @@ const CsvUpload = ({ onFileSelect }) => {
         setCsvFile(file);
         setIsValidFile(true);
         onFileSelect(expenses);
-        toast.success("CSV file processed successfully!");
+        toast.success(`CSV file "${file.name}" processed successfully!`);
       } catch (error) {
         resetState(); // Reset state after error
         toast.error(error);
@@ -75,7 +81,14 @@ const CsvUpload = ({ onFileSelect }) => {
     }
   };
 
-  if (isValidFile) {
+  const resetData = () => {
+    setReuploadReset(true);
+    resetState();
+    setCsvData([]);
+    toast.success("All Data has been reset successfully!");
+  };
+
+  if (isValidFile && reuploadReset !== true) {
     // Reduced View with File Info and Reupload Button
     return (
       <div className="p-4 border border-gray-300 rounded-lg bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 shadow-md">
@@ -88,12 +101,20 @@ const CsvUpload = ({ onFileSelect }) => {
               File size: {(csvFile.size / 1024).toFixed(2)} KB
             </p>
           </div>
-          <Button
-            onClick={resetState}
-            className="px-4 py-2 bg-gradient-to-r from-red-500 to-yellow-500 text-white font-semibold rounded-md shadow hover:from-red-600 hover:to-yellow-600 transition-all"
-          >
-            Reupload
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              onClick={resetState}
+              className="px-4 py-2 bg-gradient-to-r from-red-500 to-yellow-500 text-white font-semibold rounded-md shadow hover:from-red-600 hover:to-yellow-600 transition-all"
+            >
+              Reupload
+            </Button>
+            <Button
+              onClick={resetData}
+              className="px-4 py-2 bg-gradient-to-r from-red-500 to-yellow-500 text-white font-semibold rounded-md shadow hover:from-red-600 hover:to-yellow-600 transition-all"
+            >
+              Reset Data
+            </Button>
+          </div>
         </div>
       </div>
     );

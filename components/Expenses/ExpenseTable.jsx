@@ -12,6 +12,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Card,
   CardHeader,
   CardTitle,
@@ -151,11 +157,11 @@ const ExpenseTable = ({
     //     )}
     //   </div>
     // </div>
-    <div className="w-full px-4 sm:px-6 lg:px-8">
+    <div className="w-full">
       <div className="overflow-hidden rounded-3xl shadow-lg bg-gradient-to-br from-white/70 via-blue-50/60 to-indigo-50/50 dark:from-gray-800/70 dark:via-gray-700/60 dark:to-gray-600/50 backdrop-blur-lg">
         <table className="w-full border-collapse text-sm sm:text-base">
           {/* Table Header */}
-          <thead className="bg-gradient-to-r via-cyan-600 from-blue-600 to-teal-500 dark:from-blue-400 dark:via-pink-500 dark:to-purple-600 text-white">
+          <thead className="bg-gradient-to-r uppercase via-cyan-600 from-blue-600 to-teal-500 dark:from-blue-400 dark:via-pink-500 dark:to-purple-600 text-white">
             <tr>
               <th className="py-4 px-6 font-bold text-left">Name</th>
               <th className="py-4 px-6 font-bold text-left">Amount</th>
@@ -193,11 +199,20 @@ const ExpenseTable = ({
                   </td>
                   <td className="py-4 px-6 flex gap-2 justify-start sm:justify-center items-center">
                     <Dialog>
-                      <DialogTrigger asChild>
-                        <Edit
-                          className="text-blue-600 dark:text-blue-400 cursor-pointer mr-2 hover:text-purple-800 hover:dark:text-purple-500 hover:scale-110 active:scale-90 transition-all duration-500"
-                          onClick={() => startEditing(expense)}
-                        />
+                      <DialogTrigger>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Edit
+                                className="text-blue-600 dark:text-blue-400 cursor-pointer mr-2 hover:text-purple-800 hover:dark:text-purple-500 hover:scale-110 active:scale-90 transition-all duration-500"
+                                onClick={() => startEditing(expense)}
+                              />
+                            </TooltipTrigger>
+                            <TooltipContent className="font-bold rounded-full">
+                              <p>Edit Expense</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       </DialogTrigger>
                       <DialogContent className="border-2 border-blue-200 p-8 bg-gradient-to-b from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 shadow-2xl overflow-auto">
                         {/* Background Effects */}
@@ -278,10 +293,19 @@ const ExpenseTable = ({
                       </DialogContent>
                     </Dialog>
                     <span className="text-gray-400">|</span>
-                    <Trash
-                      className="text-red-600 cursor-pointer hover:scale-110 active:scale-90 transition-transform duration-500"
-                      onClick={() => deleteExpense(expense)}
-                    />
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Trash
+                            className="text-red-600 cursor-pointer hover:scale-110 active:scale-90 transition-transform duration-500"
+                            onClick={() => deleteExpense(expense)}
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent className="font-bold rounded-full p-2 m-2">
+                          <p>Delete Expense</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </td>
                 </tr>
               ))

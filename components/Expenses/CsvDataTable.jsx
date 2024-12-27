@@ -73,11 +73,6 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
     toast.success("All rows added to expense successfully!");
   };
 
-  const clearAllData = () => {
-    setCsvData([]); // Clear all data from the table
-    toast.success("All data cleared successfully!");
-  };
-
   return (
     <div className="mt-6">
       <div className="mb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -94,20 +89,12 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
           </span>
         </div>
         {csvData.length > 0 && (
-          <div className="flex items-center gap-2">
-            <Button
-              onClick={addAllToExpense}
-              className="bg-gradient-to-r from-green-500 to-blue-500 text-white font-semibold px-4 py-2 rounded-lg shadow-lg hover:shadow-xl hover:from-green-600 hover:to-blue-600 dark:bg-gradient-to-r dark:from-green-400 dark:to-blue-400 dark:hover:from-green-500 dark:hover:to-blue-500 transition-transform transform hover:scale-105 dark:shadow-md dark:hover:shadow-lg"
-            >
-              Add All to Expense
-            </Button>
-            <Button
-              onClick={clearAllData}
-              className="bg-gradient-to-r from-green-500 to-blue-500 text-white font-semibold px-4 py-2 rounded-lg shadow-lg hover:shadow-xl hover:from-green-600 hover:to-blue-600 dark:bg-gradient-to-r dark:from-green-400 dark:to-blue-400 dark:hover:from-green-500 dark:hover:to-blue-500 transition-transform transform hover:scale-105 dark:shadow-md dark:hover:shadow-lg"
-            >
-              Clear Data
-            </Button>
-          </div>
+          <Button
+            onClick={addAllToExpense}
+            className="bg-gradient-to-r from-green-500 to-blue-500 text-white font-semibold px-4 py-2 rounded-lg shadow-lg hover:shadow-xl hover:from-green-600 hover:to-blue-600 dark:bg-gradient-to-r dark:from-green-400 dark:to-blue-400 dark:hover:from-green-500 dark:hover:to-blue-500 transition-transform transform hover:scale-105 dark:shadow-md dark:hover:shadow-lg"
+          >
+            Add All to Expense
+          </Button>
         )}
       </div>
       <div className="overflow-y-auto max-h-[400px] scroll">

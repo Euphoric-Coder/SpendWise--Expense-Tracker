@@ -19,6 +19,7 @@ const CSVImportButton = () => {
   const [currentTutorialPage, setCurrentTutorialPage] = useState(0);
   const [showCSVImport, setShowCSVImport] = useState(true); // Default to true
   const [csvData, setCsvData] = useState([]);
+  const [reuploadReset, setReuploadReset] = useState(false)
   const { user } = useUser();
 
   const progressColors = [
@@ -355,9 +356,18 @@ const CSVImportButton = () => {
           <h2 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-500 dark:from-blue-500 dark:via-indigo-500 dark:to-purple-400 animate-gradient-text mb-4">
             Upload Your Expense CSV
           </h2>
-          <CsvUpload onFileSelect={handleFileSelect} />
+          <CsvUpload
+            onFileSelect={handleFileSelect}
+            reuploadReset={reuploadReset}
+            setReuploadReset={setReuploadReset}
+            setCsvData={setCsvData}
+          />
           {csvData.length > 0 && (
-            <CsvDataTable csvData={csvData} setCsvData={setCsvData} />
+            <CsvDataTable
+              csvData={csvData}
+              setCsvData={setCsvData}
+              setReuploadReset={setReuploadReset}
+            />
           )}
           <DialogClose asChild>
             <Button
