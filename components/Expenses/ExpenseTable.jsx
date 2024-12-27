@@ -35,6 +35,7 @@ const ExpenseTable = ({
   const [editingExpense, setEditingExpense] = useState(null);
   const [editedName, setEditedName] = useState("");
   const [editedAmount, setEditedAmount] = useState("");
+  const [editedDescription, setEditedDescription] = useState("");
 
   const deleteExpense = async (expense) => {
     const result = await db
@@ -52,12 +53,17 @@ const ExpenseTable = ({
     setEditingExpense(expense);
     setEditedName(expense.name);
     setEditedAmount(expense.amount);
+    setEditedDescription(expense.description);
   };
 
   const saveEditedExpense = async () => {
     const result = await db
       .update(Expenses)
-      .set({ name: editedName, amount: editedAmount })
+      .set({
+        name: editedName,
+        amount: editedAmount,
+        description: editedDescription,
+      })
       .where(eq(Expenses.id, editingExpense.id))
       .returning();
 
@@ -173,7 +179,7 @@ const ExpenseTable = ({
                     {expense.name}
                   </td>
                   <td className="py-4 px-6 font-medium text-gray-700 dark:text-gray-300">
-                    ${expense.amount}
+                    ₹{expense.amount}
                   </td>
                   <td className="py-4 px-6 text-gray-600 dark:text-gray-400 whitespace-nowrap">
                     {isRecurringBudget
@@ -193,12 +199,18 @@ const ExpenseTable = ({
                           onClick={() => startEditing(expense)}
                         />
                       </DialogTrigger>
-                      <DialogContent className="p-6 rounded-3xl bg-gradient-to-br from-white/70 via-blue-50/60 to-indigo-50/50 dark:from-gray-800/70 dark:via-gray-700/60 dark:to-gray-600/50 shadow-lg backdrop-blur-lg">
+                      <DialogContent className="border-2 border-blue-200 p-8 bg-gradient-to-b from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 shadow-2xl overflow-auto">
+                        {/* Background Effects */}
+                        <div className="absolute inset-0 pointer-events-none">
+                          <div className="absolute -top-10 -left-10 w-40 h-40 bg-gradient-to-r from-cyan-200 via-blue-200 to-indigo-200 dark:from-gray-700 dark:via-gray-800 dark:to-gray-900 opacity-30 blur-3xl"></div>
+                          <div className="absolute bottom-10 right-10 w-60 h-60 bg-gradient-to-br from-blue-300 via-indigo-300 to-cyan-300 dark:from-gray-700 dark:via-gray-800 dark:to-gray-900 opacity-30 blur-[80px]"></div>
+                        </div>
+
                         <DialogHeader>
-                          <DialogTitle className="text-xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400 dark:from-purple-400 dark:to-pink-400">
+                          <DialogTitle className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 dark:from-blue-400 dark:via-indigo-400 dark:to-cyan-400">
                             Edit Expense
                           </DialogTitle>
-                          <DialogDescription className="text-sm text-gray-700 dark:text-gray-300">
+                          <DialogDescription className="text-gray-600 dark:text-gray-400 mt-4">
                             Update the details for this expense.
                           </DialogDescription>
                         </DialogHeader>
@@ -206,7 +218,7 @@ const ExpenseTable = ({
                           {/* Name Input */}
                           <label
                             htmlFor="name"
-                            className="text-gray-600 dark:text-gray-300 text-sm"
+                            className="text-blue-700 dark:text-blue-300 text-md font-bold"
                           >
                             Name
                           </label>
@@ -216,13 +228,13 @@ const ExpenseTable = ({
                             value={editedName}
                             onChange={(e) => setEditedName(e.target.value)}
                             placeholder="Name"
-                            className="border border-gray-300 dark:border-gray-600 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-teal-400"
+                            className="w-full border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-2 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-105 duration-200"
                           />
 
                           {/* Amount Input */}
                           <label
                             htmlFor="amount"
-                            className="text-gray-600 dark:text-gray-300 text-sm"
+                            className="text-blue-700 dark:text-blue-300 text-md font-bold"
                           >
                             Amount
                           </label>
@@ -232,16 +244,36 @@ const ExpenseTable = ({
                             value={editedAmount}
                             onChange={(e) => setEditedAmount(e.target.value)}
                             placeholder="Amount"
-                            className="border border-gray-300 dark:border-gray-600 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-teal-400"
+                            className="w-full border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-2 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-105 duration-200"
+                          />
+
+                          {/* Amount Input */}
+                          <label
+                            htmlFor="description"
+                            className="text-blue-700 dark:text-blue-300 text-md font-bold"
+                          >
+                            Description
+                          </label>
+                          <input
+                            id="description"
+                            type="text"
+                            value={editedDescription}
+                            onChange={(e) =>
+                              setEditedDescription(e.target.value)
+                            }
+                            placeholder="Description"
+                            className="w-full border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-2 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-105 duration-200"
                           />
 
                           {/* Save Button */}
-                          <button
-                            onClick={saveEditedExpense}
-                            className="mt-4 bg-gradient-to-r from-blue-500 to-teal-400 hover:from-teal-400 hover:to-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
-                          >
-                            Save
-                          </button>
+                          <DialogClose asChild>
+                            <button
+                              onClick={saveEditedExpense}
+                              className="w-full py-3 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 dark:from-blue-600 dark:via-indigo-600 dark:to-purple-600 text-white font-medium rounded-full shadow-lg hover:scale-105 transition-transform"
+                            >
+                              Update Expense
+                            </button>
+                          </DialogClose>
                         </div>
                       </DialogContent>
                     </Dialog>

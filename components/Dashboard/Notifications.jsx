@@ -69,8 +69,8 @@ const NotificationTab = () => {
   // Clear all notifications
   const clearNotifications = async () => {
     try {
-      await fetch("/api/notifications", { method: "DELETE" });
       setNotifications([]);
+      await fetch("/api/notifications", { method: "DELETE" });
     } catch (error) {
       console.error("Error clearing notifications:", error);
     }
@@ -102,7 +102,7 @@ const NotificationTab = () => {
             notifications.map((notification) => (
               <div
                 key={notification.id}
-                className={`p-5 rounded-2xl shadow-lg ${
+                className={`p-5 rounded-3xl shadow-lg ${
                   notification.read
                     ? "bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
                     : "bg-gradient-to-r from-blue-100 via-purple-100 to-blue-50 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 text-gray-800 dark:text-gray-200"
