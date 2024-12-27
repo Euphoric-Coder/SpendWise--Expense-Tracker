@@ -20,7 +20,6 @@ const NotificationTab = () => {
       try {
         const response = await fetch("/api/notifications");
         const data = await response.json();
-        console.log(data)
         setNotifications(data);
       } catch (error) {
         console.error("Error fetching notifications:", error);
@@ -160,14 +159,6 @@ const NotificationTab = () => {
               Clear All
             </Button>
           )}
-          <Button
-            variant="ghost"
-            size="md"
-            className="px-8 py-2 text-gray-600 dark:text-gray-300"
-            onClick={() => alert("Redirecting to notifications page...")}
-          >
-            See All
-          </Button>
         </div>
       </PopoverContent>
     </Popover>
