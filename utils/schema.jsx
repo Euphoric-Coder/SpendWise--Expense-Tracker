@@ -67,7 +67,7 @@ export const Settings = pgTable("settings", {
 
 export const Notifications = pgTable("notifications", {
   id: uuid("id").defaultRandom().primaryKey(),
-  createdFor: varchar("createdFor").notNull().unique(),
+  createdFor: varchar("createdFor").notNull(),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   message: varchar("message").notNull().unique(),
   read: boolean("read").notNull().default(false),

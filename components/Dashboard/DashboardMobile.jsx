@@ -22,6 +22,7 @@ import {
   SheetHeader,
 } from "@/components/ui/sheet"; // shadcn Drawer
 import Link from "next/link";
+import NotificationTab from "./Notifications";
 
 const DashboardMobile = () => {
   const { user } = useUser();
@@ -60,6 +61,7 @@ const DashboardMobile = () => {
           </span>
         </div>
 
+        <NotificationTab />
         {/* Hamburger Menu Trigger */}
         <Sheet>
           <SheetTrigger asChild>
