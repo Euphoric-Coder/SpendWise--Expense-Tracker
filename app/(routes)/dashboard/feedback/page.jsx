@@ -94,32 +94,56 @@ const FeedbackForm = () => {
       {/* <h1 className="text-3xl font-bold mt-40 text-center text-gray-600 animate-pulse">
         Still Working on it....
       </h1> */}
-      <div className="max-w-md mx-auto p-6 border rounded-lg shadow-lg bg-white">
-        <h2 className="text-2xl font-bold text-center mb-4">Feedback Form</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="flex items-center mb-2">
+      <div className="max-w-md mx-auto p-8 border-2 rounded-3xl shadow-lg bg-gradient-to-b from-white via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden transition-all duration-300">
+        {/* Background Effects */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-10 -left-10 w-40 h-40 bg-gradient-to-r from-blue-500 via-teal-400 to-indigo-500 opacity-25 blur-3xl"></div>
+          <div className="absolute bottom-10 right-10 w-60 h-60 bg-gradient-to-br from-indigo-500 via-purple-400 to-blue-400 opacity-20 blur-[80px]"></div>
+          <div className="absolute top-1/2 -left-10 w-96 h-96 bg-gradient-radial from-blue-300 via-transparent to-transparent opacity-20 blur-[120px] transform -translate-y-1/2"></div>
+        </div>
+
+        {/* Title */}
+        <h2 className="text-3xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-500 to-indigo-500 dark:from-blue-400 dark:via-teal-400 dark:to-blue-500 mb-6">
+          Feedback Form
+        </h2>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
+          {/* Anonymous Toggle */}
+          {/* <div className="flex items-center">
             <input
               type="checkbox"
               id="anonymous"
               checked={isAnonymous}
               onChange={(e) => setIsAnonymous(e.target.checked)}
-              className="mr-2"
+              className="w-5 h-5 border border-indigo-300 rounded-md focus:ring focus:ring-indigo-200 dark:focus:ring-indigo-500 text-indigo-500 dark:text-teal-500 transition-all mr-3"
             />
-            <label htmlFor="anonymous" className="text-gray-700">
+            <label
+              htmlFor="anonymous"
+              className="text-gray-700 dark:text-gray-300 font-medium"
+            >
               Submit Anonymously
             </label>
-          </div>
+          </div> */}
+
+          {/* Username */}
           <div>
-            <label className="block text-gray-700">Username</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Username
+            </label>
             <Input
               type="text"
               value={isAnonymous ? "Anonymous" : username}
               disabled
-              className="w-full"
+              className="w-full p-3 border rounded-lg shadow-inner focus:outline-none focus:ring focus:ring-indigo-300 dark:focus:ring-blue-500 transition-all bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-300"
             />
           </div>
+
+          {/* Rating */}
           <div>
-            <label className="block text-gray-700">Rating</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Rating
+            </label>
             <Input
               type="number"
               value={rating}
@@ -128,32 +152,45 @@ const FeedbackForm = () => {
               min="1"
               max="5"
               required
-              className="w-full"
+              className="w-full p-3 border rounded-lg shadow-inner focus:outline-none focus:ring focus:ring-indigo-300 dark:focus:ring-blue-500 transition-all bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-300"
             />
           </div>
+
+          {/* Comments */}
           <div>
-            <label className="block text-gray-700">Comments</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Comments
+            </label>
             <textarea
               value={comments}
               onChange={(e) => setComments(e.target.value)}
               placeholder="Enter your comments"
-              className="w-full border rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300"
+              required
+              className="w-full p-3 border rounded-lg shadow-inner focus:outline-none focus:ring focus:ring-indigo-300 dark:focus:ring-blue-500 transition-all bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-300"
             ></textarea>
           </div>
-          <Button type="submit" className="w-full bg-blue-500 text-white">
+
+          {/* Submit Button */}
+          <Button
+            type="submit"
+            className="w-full py-3 rounded-lg text-white font-bold shadow-lg bg-gradient-to-r from-blue-500 via-teal-500 to-indigo-500 dark:from-blue-600 dark:via-teal-600 dark:to-indigo-700 hover:scale-105 hover:shadow-xl transition-transform duration-300"
+          >
             {existingFeedback ? "Update Feedback" : "Submit Feedback"}
           </Button>
+
+          {/* Delete Button */}
           {existingFeedback && (
             <Button
               type="button"
               onClick={handleDelete}
-              className="w-full mt-2 bg-red-500 text-white"
+              className="w-full py-3 mt-2 rounded-lg text-white font-bold shadow-lg bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 dark:from-red-600 dark:via-orange-600 dark:to-yellow-600 hover:scale-105 hover:shadow-xl transition-transform duration-300"
             >
               Delete Feedback
             </Button>
           )}
         </form>
       </div>
+
       <TestimonialsCarousel />
     </div>
   );

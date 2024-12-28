@@ -6,7 +6,6 @@ import { Button } from "../ui/button";
 import { db } from "@/utils/dbConfig";
 import { Budgets, Expenses } from "@/utils/schema";
 import { toast } from "sonner";
-import moment from "moment";
 import { desc, eq, getTableColumns, sql } from "drizzle-orm";
 import { useUser } from "@clerk/nextjs";
 import { AlertCircle, CalendarIcon, Eraser } from "lucide-react";
@@ -18,7 +17,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import CSVImportButton from "./CSVImportButton";
-import { ModeToggle } from "../ThemeButton";
 import { cn } from "@/lib/utils";
 import { formatDate, getISTDate, isSameDate } from "@/utils/utilities";
 import { format } from "date-fns";
@@ -128,7 +126,6 @@ const AddExpense = ({ budgetId, refreshData, budgetAmount, isRecurringBudget, fr
           </Button>
           <CSVImportButton />
           <RecieptImportButton />
-          <ModeToggle />
         </div>
       </div>
 

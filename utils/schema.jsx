@@ -83,7 +83,7 @@ export const Feedback = pgTable("feedback", {
   id: varchar("id", { length: 191 }).primaryKey().default(uuidv4()),
   username: varchar("username").notNull(),
   avatar: varchar("avatar"),
-  rating: integer("rating").notNull(),
+  rating: numeric("rating").notNull(),
   comments: varchar("comments"),
   createdBy: varchar("createdBy").notNull(),
 });

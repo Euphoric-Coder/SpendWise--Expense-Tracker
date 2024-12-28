@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/sheet"; // shadcn Drawer
 import Link from "next/link";
 import NotificationTab from "./Notifications";
+import { ModeToggle } from "../ThemeButton";
 
 const DashboardMobile = () => {
   const { user } = useUser();
@@ -61,6 +62,7 @@ const DashboardMobile = () => {
           </span>
         </div>
         <div className="flex items-center gap-3">
+          <ModeToggle />
           <NotificationTab />
           {/* Hamburger Menu Trigger */}
           <Sheet>
