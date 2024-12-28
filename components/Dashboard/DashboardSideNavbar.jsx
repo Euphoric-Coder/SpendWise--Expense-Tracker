@@ -2,17 +2,25 @@
 
 import { useClerk } from "@clerk/nextjs";
 import {
+  ArrowRight,
   ChartArea,
   IndianRupee,
   LayoutGrid,
+  LucideShieldCheck,
   PiggyBank,
   ReceiptIndianRupee,
+  Settings,
   ShieldCheck,
   Users,
   Wallet,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import { usePathname } from "next/navigation";
 import { UserButtonMenu } from "../UserButton";
 
@@ -42,7 +50,6 @@ const DashboardSideNavbar = () => {
       icon: ChartArea,
       path: "/dashboard/finance-stats",
     },
-    { id: 8, name: "Feedback", icon: ShieldCheck, path: "/dashboard/feedback" },
   ];
 
   const path = usePathname();
@@ -91,8 +98,7 @@ const DashboardSideNavbar = () => {
                 <span className="text-xs text-gray-500 dark:text-gray-400 animate-pulse">
                   {/* <br /> */}
                   {(menu.name === "Transactions" ||
-                    menu.name === "FairShare" ||
-                    menu.name === "Feedback") &&
+                    menu.name === "FairShare") &&
                     " (beta)"}
                 </span>
               </span>
@@ -108,7 +114,7 @@ const DashboardSideNavbar = () => {
           <UserButtonMenu />
 
           {/* Profile Info */}
-          <div className="flex flex-col">
+          <div className="flex flex-col flex-1">
             <span className="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400">
               Your Profile
             </span>
@@ -118,6 +124,36 @@ const DashboardSideNavbar = () => {
             >
               Manage your account
             </button>
+            {/* Styled HoverCard */}
+            <HoverCard>
+              <HoverCardTrigger>
+                <button className="text-sm text-gray-600 dark:text-gray-400 cursor-pointer hover:underline transition-colors duration-200">
+                  More Actions →
+                </button>
+              </HoverCardTrigger>
+              <HoverCardContent className="w-60 bg-gradient-to-br from-white/70 via-blue-100/60 to-purple-200/50 dark:from-gray-800 dark:via-gray-700 dark:to-gray-600 border border-gray-300 dark:border-gray-500 rounded-3xl shadow-xl p-4">
+                <div className="flex flex-col gap-4">
+                  {/* Feedback Option */}
+                  <div className="flex items-center gap-5 cursor-pointer text-sm font-bold text-gray-900 dark:text-gray-300 bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 dark:from-blue-900 dark:via-purple-900 dark:to-pink-900 rounded-3xl px-4 py-2 shadow hover:shadow-lg hover:scale-105 transition-transform duration-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-400">
+                    <LucideShieldCheck className="inline text-indigo-600 dark:text-blue-300" />
+                    <span className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-500 dark:to-pink-500">
+                      {" "}
+                      <Link href={"/dashboard/feedback"} className="block">
+                        Feedback
+                      </Link>
+                    </span>
+                  </div>
+                  {/* Settings Option */}
+                  <div className="flex items-center gap-5 cursor-pointer text-sm font-bold text-gray-900 dark:text-gray-300 bg-gradient-to-br from-blue-200 via-purple-200 to-pink-200 dark:from-blue-900 dark:via-purple-900 dark:to-pink-900 rounded-3xl px-4 py-2 shadow hover:shadow-lg hover:scale-105 transition-transform duration-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-400">
+                    <Settings className="inline text-indigo-600 dark:text-blue-300" />
+                    <span className="text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-500 dark:to-pink-500">
+                      {" "}
+                      Settings
+                    </span>
+                  </div>
+                </div>
+              </HoverCardContent>
+            </HoverCard>
           </div>
 
           {/* Subtle Glow */}
