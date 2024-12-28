@@ -9,7 +9,7 @@ const BudgetCard = ({ isBudget, budget }) => (
       className={`p-5 sm:p-6 border-2 rounded-3xl shadow-2xl relative overflow-hidden transition-transform transform ${
         isBudget
           ? "bg-gradient-to-b from-blue-50 via-indigo-100 to-purple-100 hover:scale-105 hover:shadow-[0_4px_30px_rgba(0,200,255,0.5)] cursor-pointer dark:bg-gradient-to-b dark:from-gray-900 dark:via-gray-800 dark:to-gray-700"
-          : "bg-gradient-to-b from-cyan-50 via-blue-100 to-indigo-100 hover:scale-105 hover:shadow-[0_4px_30px_rgba(100,200,255,0.5)] cursor-default dark:bg-gradient-to-b dark:from-gray-900 dark:via-gray-800 dark:to-gray-700"
+          : "bg-gradient-to-b from-cyan-50 via-blue-100 to-indigo-100 cursor-default dark:bg-gradient-to-b dark:from-gray-900 dark:via-gray-800 dark:to-gray-700"
       }`}
     >
       {/* Background Effects */}
@@ -58,13 +58,13 @@ const BudgetCard = ({ isBudget, budget }) => (
               </h2>
               {budget.budgetType === "recurring" && (
                 <h2 className="inline-flex items-center gap-1 mt-2 mb-2  px-3 py-1 rounded-full bg-gradient-to-r from-blue-500 via-cyan-500 to-indigo-500 dark:from-blue-800 dark:via-cyan-800 dark:to-indigo-800 text-white font-medium text-xs sm:text-sm shadow-sm text-center">
-                  <Repeat size={20}/> Recurring Budget
+                  <Repeat size={20} /> Recurring Budget
                 </h2>
               )}
               {budget.budgetType !== "recurring" && (
                 <h2 className="text-sm text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-indigo-400 to-pink-400 dark:from-purple-400 dark:via-indigo-400 dark:to-pink-400">
-              Total Expenses: {budget.totalItem} Item(s)
-            </h2>
+                  Total Expenses: {budget.totalItem} Item(s)
+                </h2>
               )}
             </div>
           </div>
@@ -83,16 +83,16 @@ const BudgetCard = ({ isBudget, budget }) => (
 
         {/* Spending Overview */}
         <div className="mt-6">
-            {budget.budgetType === "recurring" && (
-          <div className="flex flex-col justify-center md:flex-row md:justify-between items-center mb-2">
-            <h2 className="text-sm text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-indigo-400 to-pink-400 dark:from-purple-400 dark:via-indigo-400 dark:to-pink-400">
-              Total Expenses: {budget.totalItem} Item(s)
-            </h2>
+          {budget.budgetType === "recurring" && (
+            <div className="flex flex-col justify-center md:flex-row md:justify-between items-center mb-2">
+              <h2 className="text-sm text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-indigo-400 to-pink-400 dark:from-purple-400 dark:via-indigo-400 dark:to-pink-400">
+                Total Expenses: {budget.totalItem} Item(s)
+              </h2>
               <h2 className="text-sm text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-indigo-400 to-pink-400 dark:from-purple-400 dark:via-indigo-400 dark:to-pink-400">
                 Frequency: {budget.frequency}
               </h2>
-          </div>
-            )}
+            </div>
+          )}
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-indigo-400 to-pink-400 dark:from-purple-400 dark:via-indigo-400 dark:to-pink-400">
               {formatCurrency(budget.totalSpend ? budget.totalSpend : 0)} Spent
