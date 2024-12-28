@@ -61,7 +61,7 @@ const DashboardMobile = () => {
             {user?.fullName || "User"}
           </span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-5">
           <ModeToggle />
           <NotificationTab />
           {/* Hamburger Menu Trigger */}

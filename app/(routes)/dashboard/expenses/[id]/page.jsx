@@ -140,7 +140,7 @@ const ExpensesDashboard = ({ params }) => {
       </div>
 
       {/* Budget Item and Skeleton Placeholder */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 mt-8 gap-6">
+      <div className="grid grid-cols-1 2xl:grid-cols-2 mt-8 gap-6">
         {budgetInfo ? (
           <BudgetItem budget={budgetInfo} />
         ) : (

@@ -74,24 +74,24 @@ const DashboardLayout = ({ children }) => {
 
   return (
     <div className="flex h-screen">
-      <div className="fixed top-0 left-0 lg:w-80 xl:block hidden w-full h-screen bg-transparent z-10">
+      <div className="fixed top-0 left-0 2xl:w-80 2xl:block hidden w-full h-screen bg-transparent z-10">
         <DashboardSideNavbar />
       </div>
 
-      <div className="flex-1 xl:ml-80">
-        <div className="block xl:hidden">
+      <div className="flex-1 2xl:ml-80">
+        <div className="block 2xl:hidden">
           <DashboardMobile />
         </div>
 
 
-        <div className="hidden xl:block p-6">
+        <div className="hidden 2xl:block p-6">
           <div className="p-8 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 rounded-3xl shadow-2xl relative overflow-hidden transition-transform transform hover:scale-y-105 duration-500">
             <div className="absolute inset-0 pointer-events-none">
               <div className="absolute -top-10 -left-10 w-40 h-40 bg-gradient-to-r from-blue-300 via-teal-300 to-purple-500 dark:from-gray-700 dark:via-gray-600 dark:to-gray-500 opacity-30 blur-3xl"></div>
               <div className="absolute bottom-10 right-10 w-60 h-60 bg-gradient-to-br from-purple-400 via-indigo-300 to-blue-400 dark:from-gray-600 dark:via-gray-500 dark:to-gray-400 opacity-20 blur-[100px]"></div>
             </div>
-            
-            <div className="relative z-10 flex justify-between">
+
+            <div className="relative z-10 flex justify-between items-center">
               <h2 className="font-extrabold text-4xl text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 dark:from-blue-300 dark:via-purple-400 dark:to-pink-300 animate-gradient-text">
                 {getGreeting()}, {user?.fullName || "Valued User"}
               </h2>

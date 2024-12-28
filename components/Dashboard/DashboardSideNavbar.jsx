@@ -76,7 +76,7 @@ const DashboardSideNavbar = () => {
       </Link>
 
       {/* Menu List */}
-      <div className="w-full flex flex-col space-y-5">
+      <div className="w-full flex flex-col space-y-6">
         {menuList.map((menu) => (
           <Link key={menu.id} href={menu.path}>
             <div
