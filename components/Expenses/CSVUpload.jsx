@@ -104,13 +104,13 @@ const CsvUpload = ({
           <div className="flex gap-2">
             <Button
               onClick={resetState}
-              className="px-4 py-2 bg-gradient-to-r from-red-500 to-yellow-500 text-white font-semibold rounded-md shadow hover:from-red-600 hover:to-yellow-600 transition-all"
+              className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 dark:from-blue-500 dark:via-purple-600 dark:to-pink-500 rounded-xl shadow-xl hover:from-blue-500 hover:to-purple-700 dark:hover:from-purple-600 dark:hover:to-pink-600 transition-transform transform hover:scale-110 hover:backdrop-brightness-125 dark:hover:backdrop-brightness-110"
             >
               Reupload
             </Button>
             <Button
               onClick={resetData}
-              className="px-4 py-2 bg-gradient-to-r from-red-500 to-yellow-500 text-white font-semibold rounded-md shadow hover:from-red-600 hover:to-yellow-600 transition-all"
+              className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 dark:from-blue-500 dark:via-purple-600 dark:to-pink-500 rounded-xl shadow-xl hover:from-blue-500 hover:to-purple-700 dark:hover:from-purple-600 dark:hover:to-pink-600 transition-transform transform hover:scale-110 hover:backdrop-brightness-125 dark:hover:backdrop-brightness-110"
             >
               Reset Data
             </Button>

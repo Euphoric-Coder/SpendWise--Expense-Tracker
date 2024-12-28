@@ -165,7 +165,9 @@ const ExpenseTable = ({
             <tr>
               <th className="py-4 px-6 font-bold text-left">Name</th>
               <th className="py-4 px-6 font-bold text-left">Amount</th>
-              <th className="py-4 px-6 font-bold text-left">Date</th>
+              <th className="py-4 px-6 font-bold text-left">
+                {isRecurringBudget ? "Due Date" : "Date"}
+              </th>
               <th className="py-4 px-8 font-bold text-left w-2/5">
                 Description
               </th>
@@ -284,7 +286,7 @@ const ExpenseTable = ({
                           <DialogClose asChild>
                             <button
                               onClick={saveEditedExpense}
-                              className="w-full py-3 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 dark:from-blue-600 dark:via-indigo-600 dark:to-purple-600 text-white font-medium rounded-full shadow-lg hover:scale-105 transition-transform"
+                              className="mt-4 text-md w-full bg-gradient-to-r from-fuchsia-500 via-blue-600 to-teal-500 text-white font-bold p-2 rounded-3xl shadow-xl hover:shadow-2xl transition-transform transform hover:scale-105 duration-300 disabled:opacity-50 disabled:cursor-not-allowed dark:from-pink-600 dark:via-purple-700 dark:to-blue-600 dark:text-gray-200 hover:from-purple-600 hover:via-blue-500 hover:to-teal-400 dark:hover:from-pink-700 dark:hover:via-purple-800 dark:hover:to-blue-700 active:scale-95 active:shadow-md"
                             >
                               Update Expense
                             </button>

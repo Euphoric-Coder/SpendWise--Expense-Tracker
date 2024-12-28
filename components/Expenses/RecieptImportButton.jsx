@@ -20,6 +20,7 @@ const RecieptImportButton = () => {
   const [currentTutorialPage, setCurrentTutorialPage] = useState(0);
   const [showRecieptImport, setShowRecieptImport] = useState(true); // Default to true
   const [recieptData, setRecieptData] = useState([]);
+  const [reuploadReset, setReuploadReset] = useState(false)
   const { user } = useUser();
 
   const progressColors = [
@@ -263,7 +264,7 @@ const RecieptImportButton = () => {
   return (
     <div>
       <Button
-        className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 dark:from-blue-600 dark:via-indigo-600 dark:to-purple-600 rounded-lg shadow-lg hover:from-blue-600 hover:to-purple-600 transition-transform transform hover:scale-105"
+        className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 dark:from-blue-500 dark:via-purple-600 dark:to-pink-500 rounded-xl shadow-xl hover:from-blue-500 hover:to-purple-700 dark:hover:from-purple-600 dark:hover:to-pink-600 transition-transform transform hover:scale-110 hover:backdrop-brightness-125 dark:hover:backdrop-brightness-110"
         onClick={handleImportClick}
       >
         <ScanText className="mr-1 w-9 h-9" /> Import Reciept
@@ -366,9 +367,17 @@ const RecieptImportButton = () => {
           <h2 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-500 dark:from-blue-500 dark:via-indigo-500 dark:to-purple-400 animate-gradient-text mb-4">
             Upload Your Expense CSV
           </h2>
-          <RecieptUpload onFileSelect={handleFileSelect} />
+          <RecieptUpload
+            onFileSelect={handleFileSelect}
+            reuploadReset={reuploadReset}
+            setReuploadReset={setReuploadReset}
+            setRecieptData={setRecieptData}
+          />
           {recieptData.length > 0 && (
-            <RecieptDataTable recieptData={recieptData} setRecieptData={setRecieptData} />
+            <RecieptDataTable
+              recieptData={recieptData}
+              setRecieptData={setRecieptData}
+            />
           )}
           {/* {recieptData?.length > 0 && (
             <div>

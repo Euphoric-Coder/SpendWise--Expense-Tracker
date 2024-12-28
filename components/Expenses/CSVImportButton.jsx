@@ -254,7 +254,7 @@ const CSVImportButton = () => {
   return (
     <div>
       <Button
-        className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 dark:from-blue-600 dark:via-indigo-600 dark:to-purple-600 rounded-lg shadow-lg hover:from-blue-600 hover:to-purple-600 transition-transform transform hover:scale-105"
+        className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 dark:from-blue-500 dark:via-purple-600 dark:to-pink-500 rounded-xl shadow-xl hover:from-blue-500 hover:to-purple-700 dark:hover:from-purple-600 dark:hover:to-pink-600 transition-transform transform hover:scale-110 hover:backdrop-brightness-125 dark:hover:backdrop-brightness-110"
         onClick={handleImportClick}
       >
         <Upload className="mr-1 w-9 h-9" /> Import CSV
@@ -363,10 +363,7 @@ const CSVImportButton = () => {
             setCsvData={setCsvData}
           />
           {csvData.length > 0 && (
-            <CsvDataTable
-              csvData={csvData}
-              setCsvData={setCsvData}
-            />
+            <CsvDataTable csvData={csvData} setCsvData={setCsvData} />
           )}
           <DialogClose asChild>
             <Button

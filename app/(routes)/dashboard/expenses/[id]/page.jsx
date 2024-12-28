@@ -106,7 +106,7 @@ const ExpensesDashboard = ({ params }) => {
             <AlertDialogTrigger asChild>
               <Button
                 variant="destructive"
-                className="flex gap-2 items-center bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 dark:from-blue-500 dark:via-indigo-500 dark:to-cyan-500 text-white font-semibold px-4 py-2 rounded-xl shadow-md hover:shadow-lg hover:from-cyan-500 hover:to-blue-500 transition-transform transform hover:scale-105"
+                className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 dark:from-blue-500 dark:via-purple-600 dark:to-pink-500 rounded-xl shadow-xl hover:from-blue-500 hover:to-purple-700 dark:hover:from-purple-600 dark:hover:to-pink-600 transition-transform transform hover:scale-110 hover:backdrop-brightness-125 dark:hover:backdrop-brightness-110"
               >
                 <Trash2 />
                 Delete
@@ -132,7 +132,7 @@ const ExpensesDashboard = ({ params }) => {
 
           {/* Go to Budgets Button */}
           <Link href={"/dashboard/budgets"}>
-            <Button className="px-4 py-2 bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 dark:from-blue-500 dark:via-indigo-500 dark:to-cyan-500 text-white font-semibold rounded-xl shadow-md hover:shadow-lg hover:from-cyan-500 hover:to-blue-500 transition-transform transform hover:scale-105">
+            <Button className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 dark:from-blue-500 dark:via-purple-600 dark:to-pink-500 rounded-xl shadow-xl hover:from-blue-500 hover:to-purple-700 dark:hover:from-purple-600 dark:hover:to-pink-600 transition-transform transform hover:scale-110 hover:backdrop-brightness-125 dark:hover:backdrop-brightness-110">
               Go to Budgets
             </Button>
           </Link>

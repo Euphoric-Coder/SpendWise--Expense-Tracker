@@ -63,8 +63,8 @@ function EditBudget({ budgetInfo, refreshData }) {
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <Button className="flex gap-2 items-center bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-400 dark:from-blue-500 dark:via-indigo-500 dark:to-cyan-500 text-white font-semibold px-4 py-2 rounded-xl shadow-md hover:shadow-lg hover:from-cyan-500 hover:to-blue-500 transition-transform transform hover:scale-105">
-            <PenBox className="w-5" /> Edit
+          <Button className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 dark:from-blue-500 dark:via-purple-600 dark:to-pink-500 rounded-xl shadow-xl hover:from-blue-500 hover:to-purple-700 dark:hover:from-purple-600 dark:hover:to-pink-600 transition-transform transform hover:scale-110 hover:backdrop-brightness-125 dark:hover:backdrop-brightness-110">
+            <PenBox /> Edit
           </Button>
         </DialogTrigger>
         <DialogContent className="border-2 border-blue-200 p-8 bg-gradient-to-b from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 shadow-2xl overflow-auto">
@@ -172,7 +172,7 @@ function EditBudget({ budgetInfo, refreshData }) {
               <Button
                 disabled={!(name && amount)}
                 onClick={() => onUpdateBudget()}
-                className="w-full py-3 bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 dark:from-blue-600 dark:via-indigo-600 dark:to-purple-500 text-white font-medium rounded-full shadow-lg hover:scale-105 transition-transform"
+                className="text-md w-full bg-gradient-to-r from-fuchsia-500 via-blue-600 to-teal-500 text-white font-bold py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-transform transform hover:scale-105 duration-300 disabled:opacity-50 disabled:cursor-not-allowed dark:from-pink-600 dark:via-purple-700 dark:to-blue-600 dark:text-gray-200 hover:from-purple-600 hover:via-blue-500 hover:to-teal-400 dark:hover:from-pink-700 dark:hover:via-purple-800 dark:hover:to-blue-700 active:scale-95 active:shadow-md"
               >
                 Update Budget
               </Button>

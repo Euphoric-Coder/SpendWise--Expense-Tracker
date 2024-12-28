@@ -91,7 +91,7 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
         {csvData.length > 0 && (
           <Button
             onClick={addAllToExpense}
-            className="bg-gradient-to-r from-green-500 to-blue-500 text-white font-semibold px-4 py-2 rounded-lg shadow-lg hover:shadow-xl hover:from-green-600 hover:to-blue-600 dark:bg-gradient-to-r dark:from-green-400 dark:to-blue-400 dark:hover:from-green-500 dark:hover:to-blue-500 transition-transform transform hover:scale-105 dark:shadow-md dark:hover:shadow-lg"
+            className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 dark:from-blue-500 dark:via-purple-600 dark:to-pink-500 rounded-lg shadow-xl hover:from-blue-500 hover:to-purple-700 dark:hover:from-purple-600 dark:hover:to-pink-600 transition-transform transform hover:scale-110 hover:backdrop-brightness-125 dark:hover:backdrop-brightness-110"
           >
             Add All to Expense
           </Button>

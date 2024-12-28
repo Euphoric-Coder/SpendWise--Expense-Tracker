@@ -119,10 +119,10 @@ const AddExpense = ({ budgetId, refreshData, budgetAmount, isRecurringBudget, fr
         <h2 className="font-bold text-3xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-500 dark:from-blue-500 dark:via-indigo-500 dark:to-cyan-400 animate-gradient-text">
           Add Expense
         </h2>
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           <Button
             onClick={() => clearData()}
-            className="px-4 py-2 bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-500 dark:from-blue-600 dark:via-indigo-600 dark:to-cyan-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl hover:from-blue-600 hover:to-cyan-600 transition-transform transform hover:scale-105"
+            className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 dark:from-blue-500 dark:via-purple-600 dark:to-pink-500 rounded-xl shadow-xl hover:from-blue-500 hover:to-purple-700 dark:hover:from-purple-600 dark:hover:to-pink-600 transition-transform transform hover:scale-110 hover:backdrop-brightness-125 dark:hover:backdrop-brightness-110"
           >
             <Eraser /> Clear Data
           </Button>
@@ -227,7 +227,7 @@ const AddExpense = ({ budgetId, refreshData, budgetAmount, isRecurringBudget, fr
       <Button
         onClick={() => addNewExpense()}
         disabled={!(name && amount)}
-        className="mt-8 text-md w-full bg-gradient-to-r from-purple-500 via-indigo-500 to-cyan-500 text-white font-bold py-4 rounded-2xl shadow-lg hover:shadow-2xl transition-transform transform hover:scale-105 duration-500 disabled:opacity-50 dark:from-purple-700 dark:via-indigo-700 dark:to-cyan-600 dark:text-gray-200 hover:from-purple-600 hover:via-indigo-600 hover:to-cyan-400 dark:hover:from-purple-800 dark:hover:via-indigo-800 dark:hover:to-cyan-500 active:scale-95"
+        className="mt-8 text-md w-full bg-gradient-to-r from-fuchsia-500 via-blue-600 to-teal-500 text-white font-bold py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-transform transform hover:scale-105 duration-300 disabled:opacity-50 disabled:cursor-not-allowed dark:from-pink-600 dark:via-purple-700 dark:to-blue-600 dark:text-gray-200 hover:from-purple-600 hover:via-blue-500 hover:to-teal-400 dark:hover:from-pink-700 dark:hover:via-purple-800 dark:hover:to-blue-700 active:scale-95 active:shadow-md"
       >
         Add New Expense
       </Button>

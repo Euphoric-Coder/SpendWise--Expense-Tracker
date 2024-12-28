@@ -23,7 +23,12 @@ const DashboardSideNavbar = () => {
     { id: 1, name: "Dashboard", icon: LayoutGrid, path: "/dashboard" },
     { id: 2, name: "Income", icon: IndianRupee, path: "/dashboard/income" },
     { id: 3, name: "Budgets", icon: PiggyBank, path: "/dashboard/budgets" },
-    { id: 4, name: "Expenses", icon: ReceiptIndianRupee, path: "/dashboard/expenses" },
+    {
+      id: 4,
+      name: "Expenses",
+      icon: ReceiptIndianRupee,
+      path: "/dashboard/expenses",
+    },
     {
       id: 5,
       name: "Transactions",
@@ -41,7 +46,7 @@ const DashboardSideNavbar = () => {
   ];
 
   const path = usePathname();
-  console.log(path)
+  console.log(path);
   console.log(path.startsWith(`/dashboard/expenses/`));
 
   return (
@@ -69,7 +74,11 @@ const DashboardSideNavbar = () => {
           <Link key={menu.id} href={menu.path}>
             <div
               className={`flex items-center gap-5 px-6 py-4 rounded-3xl cursor-pointer transition-transform duration-500 hover:bg-gradient-to-br from-blue-200/60 via-purple-200/50 to-pink-200/40 dark:hover:bg-gradient-to-br dark:from-blue-700 dark:via-purple-700 dark:to-pink-700 hover:shadow-lg dark:hover:shadow-[0px_10px_40px_rgba(100,150,255,0.3)] transform hover:scale-105 ${
-                (path === menu.path || (menu.path === "/dashboard/expenses" && path.startsWith(`/dashboard/expenses/`))) &&
+                (path === menu.path ||
+                  (menu.path === "/dashboard/expenses" &&
+                    path.startsWith(`/dashboard/expenses/`)) ||
+                  (menu.path === "/dashboard/income" &&
+                    path.startsWith(`/dashboard/income/`))) &&
                 "bg-gradient-to-br from-blue-300/70 via-purple-300/60 to-pink-300/50 dark:bg-gradient-to-br dark:from-blue-800 dark:via-purple-800 dark:to-pink-800 shadow-lg dark:shadow-[0px_5px_20px_rgba(100,100,255,0.4)]"
               }`}
             >
@@ -78,7 +87,14 @@ const DashboardSideNavbar = () => {
                 size={30}
               />
               <span className="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-500 dark:to-pink-500">
-                {menu.name}
+                {menu.name}{" "}
+                <span className="text-xs text-gray-500 dark:text-gray-400 animate-pulse">
+                  {/* <br /> */}
+                  {(menu.name === "Transactions" ||
+                    menu.name === "FairShare" ||
+                    menu.name === "Feedback") &&
+                    " (beta)"}
+                </span>
               </span>
             </div>
           </Link>
