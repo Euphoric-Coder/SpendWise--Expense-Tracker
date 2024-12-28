@@ -5,6 +5,7 @@ import { desc, eq } from "drizzle-orm";
 
 // GET: Fetch all notifications
 export async function GET() {
+  
   try {
     const notifications = await db
       .select()

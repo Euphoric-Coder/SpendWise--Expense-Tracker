@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { useUser } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Budgets } from "@/utils/schema";
+import { Budgets, Users } from "@/utils/schema";
 import { db } from "@/utils/dbConfig";
 import DashboardSideNavbar from "@/components/Dashboard/DashboardSideNavbar";
 import Loading from "@/components/Loader";
@@ -23,6 +23,27 @@ const DashboardLayout = ({ children }) => {
     if (hour < 18) return "Good Afternoon";
     return "Good Evening";
   };
+
+  useEffect(() => {
+      const fetchOrCreateUser = async () => {
+        if (!user?.primaryEmailAddress?.emailAddress) return;
+  
+        const userData = await db
+          .select()
+          .from(Users)
+          .where(eq(Users.email, user.primaryEmailAddress.emailAddress));
+  
+        if (userData.length === 0) {
+          // If no entry exists, insert a new one with default `showcsvimport` value
+          await db.insert(Users).values({
+            email: user?.primaryEmailAddress.emailAddress,
+            name: user?.fullName, // Default to showing the tutorial
+          });
+        }
+      };
+  
+      fetchOrCreateUser();
+    }, [user]);
 
   useEffect(() => {
     const checkUserBudgets = async () => {

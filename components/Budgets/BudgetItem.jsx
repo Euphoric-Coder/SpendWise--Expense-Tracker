@@ -1,4 +1,5 @@
 import { formatCurrency } from "@/utils/utilities";
+import { Repeat } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
@@ -56,8 +57,8 @@ const BudgetCard = ({ isBudget, budget }) => (
                 {budget.name}
               </h2>
               {budget.budgetType === "recurring" && (
-                <h2 className="inline-block mt-2 mb-2  px-3 py-1 rounded-full bg-gradient-to-r from-blue-500 via-cyan-500 to-indigo-500 dark:from-blue-800 dark:via-cyan-800 dark:to-indigo-800 text-white font-medium text-xs sm:text-sm shadow-sm text-center">
-                  Recurring Budget
+                <h2 className="inline-flex items-center gap-1 mt-2 mb-2  px-3 py-1 rounded-full bg-gradient-to-r from-blue-500 via-cyan-500 to-indigo-500 dark:from-blue-800 dark:via-cyan-800 dark:to-indigo-800 text-white font-medium text-xs sm:text-sm shadow-sm text-center">
+                  <Repeat size={20}/> Recurring Budget
                 </h2>
               )}
               {budget.budgetType !== "recurring" && (

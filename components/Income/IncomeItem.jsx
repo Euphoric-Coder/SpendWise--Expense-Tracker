@@ -44,7 +44,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import React, { useState } from "react";
-import { CalendarIcon, Edit, Trash } from "lucide-react";
+import { CalendarIcon, Edit, Repeat, Trash } from "lucide-react";
 import { Incomes, Transactions } from "@/utils/schema";
 import { db } from "@/utils/dbConfig";
 import { eq } from "drizzle-orm";
@@ -162,7 +162,8 @@ function IncomeItem({ income, refreshData }) {
             </h2>
             {/* Recurring Label */}
             {income.incomeType === "recurring" && (
-              <span className="inline-block mt-2 px-3 py-1 rounded-full bg-gradient-to-r from-blue-500 via-cyan-500 to-indigo-500 dark:from-blue-700 dark:via-cyan-700 dark:to-indigo-700 text-white font-medium text-xs sm:text-sm shadow-sm text-center">
+              <span className="inline-flex items-center gap-1 mt-2 px-3 py-1 rounded-full bg-gradient-to-r from-blue-500 via-cyan-500 to-indigo-500 dark:from-blue-700 dark:via-cyan-700 dark:to-indigo-700 text-white font-medium text-xs sm:text-sm shadow-sm text-center">
+                <Repeat size={20} />
                 Recurring Income
               </span>
             )}

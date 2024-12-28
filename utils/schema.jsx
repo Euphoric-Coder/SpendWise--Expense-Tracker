@@ -12,6 +12,12 @@ import {
 
 const { v4: uuidv4 } = require("uuid");
 
+export const Users = pgTable("users", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: varchar("name").notNull(),
+  email: varchar("email").notNull().unique(),
+});
+
 export const Budgets = pgTable("budgets", {
   id: serial("id").primaryKey(),
   name: varchar("name").notNull(),
@@ -69,7 +75,7 @@ export const Notifications = pgTable("notifications", {
   id: uuid("id").defaultRandom().primaryKey(),
   createdFor: varchar("createdFor").notNull(),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
-  message: varchar("message").notNull().unique(),
+  message: varchar("message").notNull(),
   read: boolean("read").notNull().default(false),
 });
 

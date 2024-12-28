@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 
 const NotificationTab = () => {
   const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0)
   const [currentNotification, setCurrentNotification] = useState(null);
 
   // Fetch notifications on component mount
@@ -21,17 +22,16 @@ const NotificationTab = () => {
         const response = await fetch("/api/notifications");
         const data = await response.json();
         setNotifications(data);
+        setUnreadCount(notifications?.filter((n) => !n.read).length);
       } catch (error) {
         console.error("Error fetching notifications:", error);
       }
     };
-
+    
     fetchNotifications();
-  // }, []);
+    
   }, [notifications]);
-
-  const unreadCount = notifications.filter((n) => !n.read).length;
-
+  
   // Mark a notification as read
   const markAsRead = async (id) => {
     try {

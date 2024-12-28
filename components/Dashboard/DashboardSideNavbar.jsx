@@ -3,11 +3,12 @@
 import { useClerk } from "@clerk/nextjs";
 import {
   ChartArea,
-  DollarSign,
+  IndianRupee,
   LayoutGrid,
   PiggyBank,
-  ReceiptText,
+  ReceiptIndianRupee,
   ShieldCheck,
+  Users,
   Wallet,
 } from "lucide-react";
 import Image from "next/image";
@@ -20,25 +21,28 @@ const DashboardSideNavbar = () => {
 
   const menuList = [
     { id: 1, name: "Dashboard", icon: LayoutGrid, path: "/dashboard" },
-    { id: 2, name: "Income", icon: DollarSign, path: "/dashboard/income" },
+    { id: 2, name: "Income", icon: IndianRupee, path: "/dashboard/income" },
     { id: 3, name: "Budgets", icon: PiggyBank, path: "/dashboard/budgets" },
-    { id: 4, name: "Expenses", icon: ReceiptText, path: "/dashboard/expenses" },
+    { id: 4, name: "Expenses", icon: ReceiptIndianRupee, path: "/dashboard/expenses" },
     {
       id: 5,
       name: "Transactions",
       icon: Wallet,
       path: "/dashboard/transactions",
     },
+    { id: 6, name: "FairShare", icon: Users, path: "/dashboard/fairshare" },
     {
-      id: 6,
+      id: 7,
       name: "Finance Stats",
       icon: ChartArea,
       path: "/dashboard/finance-stats",
     },
-    { id: 7, name: "Feedback", icon: ShieldCheck, path: "/dashboard/feedback" },
+    { id: 8, name: "Feedback", icon: ShieldCheck, path: "/dashboard/feedback" },
   ];
 
   const path = usePathname();
+  console.log(path)
+  console.log(path.startsWith(`/dashboard/expenses/`));
 
   return (
     <div className="h-screen w-80 p-6 shadow-xl bg-gradient-to-br from-white/80 via-blue-50/60 to-purple-100/40 border border-gray-200 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 dark:border-gray-600 rounded-3xl backdrop-blur-3xl flex flex-col items-center space-y-10 font-sans text-gray-700 dark:text-gray-300">
@@ -65,13 +69,13 @@ const DashboardSideNavbar = () => {
           <Link key={menu.id} href={menu.path}>
             <div
               className={`flex items-center gap-5 px-6 py-4 rounded-3xl cursor-pointer transition-transform duration-500 hover:bg-gradient-to-br from-blue-200/60 via-purple-200/50 to-pink-200/40 dark:hover:bg-gradient-to-br dark:from-blue-700 dark:via-purple-700 dark:to-pink-700 hover:shadow-lg dark:hover:shadow-[0px_10px_40px_rgba(100,150,255,0.3)] transform hover:scale-105 ${
-                path === menu.path &&
+                (path === menu.path || (menu.path === "/dashboard/expenses" && path.startsWith(`/dashboard/expenses/`))) &&
                 "bg-gradient-to-br from-blue-300/70 via-purple-300/60 to-pink-300/50 dark:bg-gradient-to-br dark:from-blue-800 dark:via-purple-800 dark:to-pink-800 shadow-lg dark:shadow-[0px_5px_20px_rgba(100,100,255,0.4)]"
               }`}
             >
               <menu.icon
                 className="text-indigo-600 dark:text-blue-300"
-                size={24}
+                size={30}
               />
               <span className="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-500 dark:to-pink-500">
                 {menu.name}
