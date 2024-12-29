@@ -43,7 +43,7 @@ const DashboardSideNavbar = () => {
       icon: Wallet,
       path: "/dashboard/transactions",
     },
-    { id: 6, name: "FairShare", icon: Users, path: "/dashboard/fairshare" },
+    { id: 6, name: "Fair Share", icon: Users, path: "/dashboard/fairshare" },
     {
       id: 7,
       name: "Finance Stats",
@@ -98,7 +98,7 @@ const DashboardSideNavbar = () => {
                 <span className="text-xs text-gray-500 dark:text-gray-400 animate-pulse">
                   {/* <br /> */}
                   {(menu.name === "Transactions" ||
-                    menu.name === "FairShare") &&
+                    menu.name === "Fair Share") &&
                     " (beta)"}
                 </span>
               </span>

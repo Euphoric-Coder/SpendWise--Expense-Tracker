@@ -91,9 +91,11 @@ const FeedbackForm = () => {
 
   return (
     <div>
-      {/* <h1 className="text-3xl font-bold mt-40 text-center text-gray-600 animate-pulse">
-        Still Working on it....
-      </h1> */}
+      {existingFeedback && (
+        <div className="text-center text-2xl font-bold text-gray-600 mt-10 animate-pulse">
+          Thank you for your feedback!
+        </div>
+      )}
       <div className="max-w-md mx-auto p-8 border-2 rounded-3xl shadow-lg bg-gradient-to-b from-white via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative overflow-hidden transition-all duration-300">
         {/* Background Effects */}
         <div className="absolute inset-0 pointer-events-none">
