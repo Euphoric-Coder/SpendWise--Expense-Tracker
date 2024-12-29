@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Trash, Edit } from "lucide-react";
+import { Trash, Edit, Pen, Trash2 } from "lucide-react";
 import {
   Dialog,
   DialogClose,
@@ -131,20 +131,20 @@ const ExpenseTable = ({
                 </div>
 
                 {/* Card Footer */}
-                <CardFooter className="flex justify-between gap-4">
+                <CardFooter className="flex justify-between gap-2">
                   <Button
                     variant="outline"
                     onClick={() => startEditing(expense)}
                     className="bg-gradient-to-r from-blue-500 to-teal-400 hover:from-teal-400 hover:to-blue-500 text-white px-6 py-3 rounded-lg shadow-lg hover:shadow-2xl transition-transform transform hover:scale-110"
                   >
-                    Edit
+                    <Pen /> Edit
                   </Button>
                   <Button
                     variant="destructive"
                     onClick={() => deleteExpense(expense)}
                     className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-pink-500 hover:to-red-500 text-white px-6 py-3 rounded-lg shadow-lg hover:shadow-2xl transition-transform transform hover:scale-110"
                   >
-                    Delete
+                    <Trash2 /> Delete
                   </Button>
                 </CardFooter>
               </Card>

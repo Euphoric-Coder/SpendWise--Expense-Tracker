@@ -156,7 +156,7 @@ const AddExpense = ({ budgetId, refreshData, budgetAmount, isRecurringBudget, fr
         <Input
           type="text"
           placeholder="e.g. Home Decor"
-          className="w-full border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-4 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-105 duration-200"
+          className="w-full border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-4 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-[1.03] duration-200"
           value={name}
           onChange={(e) => setname(e.target.value)}
         />
@@ -170,7 +170,7 @@ const AddExpense = ({ budgetId, refreshData, budgetAmount, isRecurringBudget, fr
         <Input
           type="number"
           placeholder="e.g. Rs.5000"
-          className="w-full border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-4 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-105 duration-200"
+          className="w-full border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-4 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-[1.03] duration-200"
           value={amount}
           onChange={(e) => setamount(e.target.value)}
         />
@@ -184,7 +184,7 @@ const AddExpense = ({ budgetId, refreshData, budgetAmount, isRecurringBudget, fr
         <Input
           type="text"
           placeholder="e.g. For decorating the living room"
-          className="w-full border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-4 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-105 duration-200"
+          className="w-full border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-4 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-[1.03] duration-200"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
@@ -200,7 +200,7 @@ const AddExpense = ({ budgetId, refreshData, budgetAmount, isRecurringBudget, fr
               <Button
                 variant={"outline"}
                 className={cn(
-                  "w-full border justify-start border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-4 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-105 duration-200",
+                  "w-full border justify-start border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-4 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-[1.03] duration-200",
                   isSameDate(dueDate, getISTDate()) && "text-muted-foreground"
                 )}
               >
@@ -224,7 +224,7 @@ const AddExpense = ({ budgetId, refreshData, budgetAmount, isRecurringBudget, fr
       <Button
         onClick={() => addNewExpense()}
         disabled={!(name && amount)}
-        className="mt-8 text-md w-full bg-gradient-to-r from-fuchsia-500 via-blue-600 to-teal-500 text-white font-bold py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-transform transform hover:scale-105 duration-300 disabled:opacity-50 disabled:cursor-not-allowed dark:from-pink-600 dark:via-purple-700 dark:to-blue-600 dark:text-gray-200 hover:from-purple-600 hover:via-blue-500 hover:to-teal-400 dark:hover:from-pink-700 dark:hover:via-purple-800 dark:hover:to-blue-700 active:scale-95 active:shadow-md"
+        className="mt-8 text-md w-full bg-gradient-to-r from-fuchsia-500 via-blue-600 to-teal-500 text-white font-bold py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-transform transform hover:scale-[1.03] duration-300 disabled:opacity-50 disabled:cursor-not-allowed dark:from-pink-600 dark:via-purple-700 dark:to-blue-600 dark:text-gray-200 hover:from-purple-600 hover:via-blue-500 hover:to-teal-400 dark:hover:from-pink-700 dark:hover:via-purple-800 dark:hover:to-blue-700 active:scale-95 active:shadow-md"
       >
         Add New Expense
       </Button>
