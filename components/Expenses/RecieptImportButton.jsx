@@ -373,7 +373,7 @@ const RecieptImportButton = () => {
             setReuploadReset={setReuploadReset}
             setRecieptData={setRecieptData}
           />
-          {recieptData.length > 0 && (
+          {recieptData?.length > 0 && (
             <RecieptDataTable
               recieptData={recieptData}
               setRecieptData={setRecieptData}

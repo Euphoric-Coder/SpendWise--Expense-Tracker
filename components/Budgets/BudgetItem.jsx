@@ -1,42 +1,70 @@
-import { formatCurrency } from "@/utils/utilities";
-import { Repeat } from "lucide-react";
-import Link from "next/link";
-import React from "react";
-import HoverInfo from "../Popover";
+"use client";
 
-const data = {
-  title: "Understanding Recurring Budgets",
-  description: (
-    <>
-      <p className="mb-2">
-        A <strong>Recurring Budget</strong> allows you to manage expenses that
-        occur on a regular basis, such as monthly subscriptions, utility bills,
-        or rent payments. This feature is designed to provide a structured
-        approach to tracking and controlling predictable expenses.
-      </p>
-      <p className="mb-2">
-        In SpendWise, you can easily set up a recurring budget to ensure that
-        these expenses are accounted for and do not disrupt your overall
-        financial planning.
-      </p>
-      <p className="mb-2">Here are some key features of recurring budgets:</p>
-      <ul className="list-disc pl-5 mb-2">
-        <li>
-          Automatically renews based on the frequency you select (e.g., weekly,
-          monthly).
-        </li>
-        <li>
-          Ensures better control over consistent expenses and reduces the risk
-          of overspending.
-        </li>
-        <li>Allows you to visualize recurring trends in your spending.</li>
-      </ul>
-      <p>
-        <strong>Pro Tip:</strong> Use the SpendWise insights feature to analyze
-        your recurring expenses and identify potential areas for savings.
-      </p>
-    </>
-  ),
+import { formatCurrency } from "@/utils/utilities";
+import { Repeat, Info } from "lucide-react";
+import Link from "next/link";
+import React, { useState } from "react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+const RecurringBudgetInfo = () => {
+  const [open, setOpen] = useState(false);
+
+  const handleMouseEnter = () => setTimeout(() => setOpen(true), 300);
+  const handleMouseLeave = () => setTimeout(() => setOpen(false), 200);
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Info
+          size={18}
+          className="text-white hover:text-gray-700 cursor-pointer"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        />
+      </PopoverTrigger>
+      <PopoverContent
+        side="top"
+        align="center"
+        sideOffset={10}
+        className="bg-white dark:bg-gray-800 text-sm shadow-lg rounded-2xl p-4 border border-gray-200 dark:border-gray-700 transform transition-all duration-500 ease-in-out opacity-0 data-[state=open]:opacity-100 data-[state=open]:scale-100"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <p className="mb-2 text-justify">
+          A <strong>Recurring Budget</strong> allows you to manage expenses that
+          occur on a regular basis, such as monthly subscriptions, utility
+          bills, or rent payments. This feature is designed to provide a
+          structured approach to tracking and controlling predictable expenses.
+        </p>
+        <p className="mb-2 text-justify">
+          In SpendWise, you can easily set up a recurring budget to ensure that
+          these expenses are accounted for and do not disrupt your overall
+          financial planning.
+        </p>
+        <p className="mb-2">Here are some key features of recurring budgets:</p>
+        <ul className="list-disc pl-5 mb-2">
+          <li>
+            Automatically renews based on the frequency you select (e.g.,
+            weekly, monthly).
+          </li>
+          <li>
+            Ensures better control over consistent expenses and reduces the risk
+            of overspending.
+          </li>
+          <li>Allows you to visualize recurring trends in your spending.</li>
+        </ul>
+        <p>
+          <strong>Pro Tip:</strong> Use the SpendWise insights feature to
+          analyze your recurring expenses and identify potential areas for
+          savings.
+        </p>
+      </PopoverContent>
+    </Popover>
+  );
 };
 
 const BudgetCard = ({ isBudget, budget }) => (
@@ -94,7 +122,7 @@ const BudgetCard = ({ isBudget, budget }) => (
               </h2>
               {budget.budgetType === "recurring" && (
                 <h2 className="inline-flex items-center gap-1 mt-2 mb-2  px-3 py-1 rounded-full bg-gradient-to-r from-blue-500 via-cyan-500 to-indigo-500 dark:from-blue-800 dark:via-cyan-800 dark:to-indigo-800 text-white font-medium text-xs sm:text-sm shadow-sm text-center">
-                  <Repeat size={20} /> Recurring Budget <HoverInfo data={data} />
+                  <Repeat size={20} /> Recurring Budget <RecurringBudgetInfo />
                 </h2>
               )}
               {budget.budgetType !== "recurring" && (

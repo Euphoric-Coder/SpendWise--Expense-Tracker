@@ -61,16 +61,16 @@ const DashboardLayout = ({ children }) => {
           setChecking(false);
         }
       } else {
-        setChecking(false);
+      setChecking(false);
       }
     };
 
     user && checkUserBudgets();
   }, [pathname, user, router]);
 
-  if (checking) {
-    return <Loading />;
-  }
+  // if (checking) {
+  //   return <Loading />;
+  // }
 
   return (
     <div className="flex h-screen">

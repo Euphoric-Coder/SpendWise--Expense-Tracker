@@ -26,8 +26,6 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import EditBudget from "@/components/Budgets/EditBudget";
-import { Popover } from "@/components/ui/popover";
-import PopoverExample from "@/components/Popover";
 
 const ExpensesDashboard = ({ params }) => {
   const { user } = useUser();
