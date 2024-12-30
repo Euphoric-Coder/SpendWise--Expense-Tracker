@@ -26,6 +26,8 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import EditBudget from "@/components/Budgets/EditBudget";
+import { Popover } from "@/components/ui/popover";
+import PopoverExample from "@/components/Popover";
 
 const ExpensesDashboard = ({ params }) => {
   const { user } = useUser();
@@ -94,6 +96,7 @@ const ExpensesDashboard = ({ params }) => {
         <h2 className="flex justify-between text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 dark:from-blue-400 dark:via-indigo-400 dark:to-cyan-400 mb-6 animate-gradient-text">
           My Budget Expenses
         </h2>
+
         <div className="flex gap-4 items-center justify-center">
           {/* Edit Budget Button */}
           <EditBudget
@@ -138,7 +141,6 @@ const ExpensesDashboard = ({ params }) => {
           </Link>
         </div>
       </div>
-
       {/* Budget Item and Skeleton Placeholder */}
       <div className="grid grid-cols-1 2xl:grid-cols-2 mt-8 gap-6">
         {budgetInfo ? (
