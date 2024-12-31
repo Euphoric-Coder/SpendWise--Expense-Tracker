@@ -12,7 +12,9 @@ import { Button } from "@/components/ui/button";
 
 const NotificationTab = () => {
   const [notifications, setNotifications] = useState([]);
-  const [unreadCount, setUnreadCount] = useState(0)
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filter, setFilter] = useState("all");
 
   // Fetch notifications on component mount
   useEffect(() => {
@@ -26,11 +28,23 @@ const NotificationTab = () => {
         console.error("Error fetching notifications:", error);
       }
     };
-    
+
     fetchNotifications();
-    
   }, [notifications]);
-  
+
+  // Filtered and searched notifications
+  const filteredNotifications = notifications.filter((notification) => {
+    const matchesSearch = notification.message
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesFilter =
+      filter === "all" ||
+      (filter === "unread" && !notification.read) ||
+      (filter === "read" && notification.read);
+
+    return matchesSearch && matchesFilter;
+  });
+
   // Mark a notification as read
   const markAsRead = async (id) => {
     try {
@@ -63,8 +77,6 @@ const NotificationTab = () => {
     }
   };
 
-
-
   // Clear all notifications
   const clearNotifications = async () => {
     try {
@@ -83,24 +95,26 @@ const NotificationTab = () => {
       >
         <Bell
           className={`text-white dark:text-gray-300 w-8 h-8 ${
-            unreadCount > 0 ? "animate-wiggle transition-all duration-1000" : ""
+            notifications.some((n) => !n.read)
+              ? "animate-wiggle transition-all duration-1000"
+              : ""
           }`}
         />
-        {unreadCount > 0 && (
+        {notifications.some((n) => !n.read) && (
           <div
             className="absolute left-8 top-2 px-3 py-1 rounded-full bg-gradient-to-r from-pink-500 to-red-500 text-white text-sm font-bold shadow-lg"
             aria-live="polite"
           >
-            {unreadCount}
+            {notifications.filter((n) => !n.read).length}
           </div>
         )}
       </PopoverTrigger>
       <PopoverContent
-        align="center"
-        className="w-full max-w-4xl p-8 rounded-3xl bg-gradient-to-br from-white/50 to-gray-100/50 dark:from-gray-900/80 dark:to-gray-800/80 backdrop-blur-md shadow-3xl border border-gray-200 dark:border-gray-700"
+        align="left"
+        className="w-full max-w-sm md:max-w-4xl p-8 rounded-3xl bg-gradient-to-br from-white/50 to-gray-100/50 dark:from-gray-900/80 dark:to-gray-800/80 backdrop-blur-md shadow-3xl border border-gray-200 dark:border-gray-700"
         aria-labelledby="notification-header"
       >
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col md:flex-row justify-center md:justify-between items-center mb-6">
           <h3
             id="notification-header"
             className="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-blue-400 dark:to-purple-400"
@@ -111,9 +125,15 @@ const NotificationTab = () => {
             <input
               type="text"
               placeholder="Search notifications..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white/80 dark:bg-gray-700 text-gray-800 dark:text-gray-200 shadow focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
-            <select className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white/80 dark:bg-gray-700 text-gray-800 dark:text-gray-200 shadow focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <select
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white/80 dark:bg-gray-700 text-gray-800 dark:text-gray-200 shadow focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
               <option value="all">All</option>
               <option value="unread">Unread</option>
               <option value="read">Read</option>
@@ -126,7 +146,7 @@ const NotificationTab = () => {
               Unread Notifications
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {notifications
+              {filteredNotifications
                 .filter((n) => !n.read)
                 .map((notification) => (
                   <div
@@ -155,7 +175,7 @@ const NotificationTab = () => {
               Read Notifications
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {notifications
+              {filteredNotifications
                 .filter((n) => n.read)
                 .map((notification) => (
                   <div
