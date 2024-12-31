@@ -101,6 +101,7 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-blue-100 dark:hover:bg-blue-950">
+              <TableHead className="font-bold">#</TableHead>
               <TableHead className="font-bold">Name</TableHead>
               <TableHead className="font-bold">Amount</TableHead>
               <TableHead className="font-bold">Date</TableHead>
@@ -115,6 +116,7 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
                   key={index}
                   className="hover:bg-blue-100 dark:hover:bg-blue-950"
                 >
+                  <TableCell>{index+1}</TableCell>
                   <TableCell>{row.name}</TableCell>
                   <TableCell>{row.amount}</TableCell>
                   <TableCell>{row.date}</TableCell>

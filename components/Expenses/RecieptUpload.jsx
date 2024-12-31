@@ -15,7 +15,7 @@ const RecieptUpload = ({
   const [imageFile, setImageFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isValidFile, setIsValidFile] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
 
   const fileInputRef = useRef(null); // Reference for the file input element
 
@@ -40,11 +40,19 @@ const RecieptUpload = ({
         setIsLoading(true); // Start loading
         try {
           const recieptData = await processReciept(file);
-          setImageFile(file);
-          setIsValidFile(true);
-          onFileSelect(recieptData);
-          setIsLoading(false); // Stop loading
-          toast.success("Image file processed successfully!");
+          if (Object.keys(recieptData).length === 0) {
+            setIsLoading(false);
+            setReuploadReset(true);
+            resetState();
+            setRecieptData([]);
+            toast.error("Something Went Wrong! Please try again.");
+          } else {
+            setImageFile(file);
+            setIsValidFile(true);
+            onFileSelect(recieptData);
+            setIsLoading(false); // Stop loading
+            toast.success("Image file processed successfully!");
+          }
         } catch (error) {
           setIsLoading(false); // Stop loading on error
           resetState();
@@ -73,17 +81,24 @@ const RecieptUpload = ({
       setIsLoading(true); // Start loading
       try {
         const recieptData = await processReciept(file);
-        setImageFile(file);
-        setIsValidFile(true);
-        onFileSelect(recieptData);
-        setIsLoading(false); // Stop loading
-        toast.success("Image file processed successfully!");
+        if (Object.keys(recieptData).length === 0) {
+          setIsLoading(false);
+          setReuploadReset(true);
+          resetState();
+          setRecieptData([]);
+          toast.error("Something Went Wrong! Please try again.");
+        } else {
+          setImageFile(file);
+          setIsValidFile(true);
+          onFileSelect(recieptData);
+          setIsLoading(false); // Stop loading
+          toast.success("Image file processed successfully!");
+        }
       } catch (error) {
         setIsLoading(false); // Stop loading on error
         resetState();
         toast.error(error.message || "An error occurred.");
       }
-
     } else {
       toast.error("Please upload a valid image file.");
     }
@@ -98,29 +113,28 @@ const RecieptUpload = ({
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 border-2 border-blue-300 rounded-xl bg-gradient-to-br from-cyan-50 to-indigo-100 shadow-md">
-        <FiUploadCloud className="text-blue-600 text-6xl mb-4 animate-bounce transition-all duration-1000" />
-        <p className="text-lg font-semibold text-blue-800 text-center animate-pulse transition-all duration-1000">
+      <div className="flex flex-col items-center justify-center p-8 border-2 border-blue-300 dark:border-blue-600 rounded-xl bg-gradient-to-br from-cyan-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900 shadow-md">
+        <FiUploadCloud className="text-blue-600 dark:text-blue-400 text-6xl mb-4 animate-bounce transition-all duration-1000" />
+        <p className="text-lg font-semibold text-blue-800 dark:text-blue-300 text-center animate-pulse transition-all duration-1000">
           Processing your receipt...
         </p>
-        <p className="text-md text-indigo-500 mt-2 text-center  animate-pulse transition-all duration-1000">
+        <p className="text-md text-indigo-500 dark:text-indigo-300 mt-2 text-center animate-pulse transition-all duration-1000">
           Hang tight! We're analyzing the file and extracting details.
         </p>
       </div>
     );
   }
 
-
   if (isValidFile && reuploadReset !== true) {
     // Reduced View with File Info and Reupload Button
     return (
-      <div className="p-4 border border-gray-300 rounded-lg bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 shadow-md">
+      <div className="p-4 border border-gray-300 dark:border-gray-700 rounded-lg bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-gray-800 dark:via-gray-900 dark:to-gray-950 shadow-md">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-gray-800 font-medium">
+            <p className="text-gray-800 dark:text-gray-200 font-medium">
               <strong>Uploaded File:</strong> {imageFile.name}
             </p>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
               File size: {(imageFile.size / 1024).toFixed(2)} KB
             </p>
           </div>
@@ -157,11 +171,11 @@ const RecieptUpload = ({
         onDragLeave={handleDragLeave}
         className={`relative flex flex-col items-center justify-center p-8 border-2 rounded-xl cursor-pointer transition-all ${
           isDragging
-            ? "border-blue-600 bg-gradient-to-br from-cyan-100 to-indigo-200"
-            : "border-blue-300 bg-gradient-to-br from-cyan-50 to-indigo-100"
-        } shadow-md hover:shadow-lg`}
+            ? "border-blue-600 bg-gradient-to-br from-cyan-100 to-indigo-200 dark:border-blue-500 dark:from-gray-700 dark:to-gray-800"
+    : "border-blue-300 bg-gradient-to-br from-cyan-50 to-indigo-100 dark:border-gray-600 dark:from-gray-800 dark:to-gray-900"
+        } shadow-md hover:shadow-lg hover:shadow-slate-600`}
       >
-        <FiUploadCloud className="text-blue-600 text-6xl mb-4" />
+        <FiUploadCloud className="text-blue-600 dark:text-blue-400 text-6xl mb-4" />
         <div className="text-center">
           {imageFile ? (
             <p className="text-base font-semibold text-blue-900">
@@ -169,13 +183,13 @@ const RecieptUpload = ({
               <span className="text-green-600 font-semibold">(Selected)</span>
             </p>
           ) : (
-            <p className="text-blue-800 text-lg font-semibold">
+            <p className="text-blue-800 dark:text-blue-300 text-lg font-semibold">
               Drag & Drop your Image file here
               <br />
               (all image formats accepted)
             </p>
           )}
-          <p className="text-md text-indigo-500 mt-1">
+          <p className="text-md text-indigo-500 dark:text-indigo-400 mt-1">
             or click to browse files
           </p>
         </div>

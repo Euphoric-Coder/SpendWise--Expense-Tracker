@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button";
 const NotificationTab = () => {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0)
-  const [currentNotification, setCurrentNotification] = useState(null);
 
   // Fetch notifications on component mount
   useEffect(() => {
@@ -78,91 +77,121 @@ const NotificationTab = () => {
 
   return (
     <Popover>
-      <PopoverTrigger className="m-2 relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-gray-300 to-gray-400 dark:from-gray-950 dark:to-gray-950 shadow-xl hover:shadow-2xl transition-transform transform hover:scale-110">
+      <PopoverTrigger
+        className="m-2 relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-gray-300 to-gray-400 dark:from-gray-950 dark:to-gray-950 shadow-xl hover:shadow-2xl transition-transform transform hover:scale-110 focus:outline-none"
+        aria-label="Open notifications"
+      >
         <Bell
           className={`text-white dark:text-gray-300 w-8 h-8 ${
             unreadCount > 0 ? "animate-wiggle transition-all duration-1000" : ""
           }`}
         />
         {unreadCount > 0 && (
-          <div className="absolute left-8 top-2 px-3 py-1 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm font-bold shadow-lg">
+          <div
+            className="absolute left-8 top-2 px-3 py-1 rounded-full bg-gradient-to-r from-pink-500 to-red-500 text-white text-sm font-bold shadow-lg"
+            aria-live="polite"
+          >
             {unreadCount}
           </div>
         )}
       </PopoverTrigger>
       <PopoverContent
-        align="end"
-        className="w-[32rem] p-8 rounded-3xl bg-gradient-to-br from-white to-gray-100 dark:from-gray-900 dark:to-gray-800 shadow-3xl border border-gray-200 dark:border-gray-700"
+        align="center"
+        className="w-full max-w-4xl p-8 rounded-3xl bg-gradient-to-br from-white/50 to-gray-100/50 dark:from-gray-900/80 dark:to-gray-800/80 backdrop-blur-md shadow-3xl border border-gray-200 dark:border-gray-700"
+        aria-labelledby="notification-header"
       >
-        <h3 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 border-b border-gray-300 dark:border-gray-600 pb-4">
-          Notifications
-        </h3>
-        <div className="mt-6 max-h-[28rem] overflow-y-auto space-y-6 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-gray-100 dark:scrollbar-track-gray-800">
-          {notifications.length > 0 ? (
-            notifications.map((notification) => (
-              <div
-                key={notification.id}
-                className={`p-5 rounded-3xl shadow-lg ${
-                  notification.read
-                    ? "bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
-                    : "bg-gradient-to-r from-blue-100 via-purple-100 to-blue-50 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 text-gray-800 dark:text-gray-200"
-                }`}
-              >
-                <p className="text-base">{notification.message}</p>
-                <div className="flex justify-end mt-4">
-                  {!notification.read && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600"
-                      onClick={() => markAsRead(notification.id)}
-                    >
-                      Mark as Read
-                    </Button>
-                  )}
-                  {notification.message.length > 80 && (
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600"
-                          onClick={() => setCurrentNotification(notification)}
-                        >
-                          Show More
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="rounded-xl p-6 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-2xl">
-                        <h4 className="text-xl font-bold mb-3">
-                          Notification Details
-                        </h4>
-                        <p className="text-base">
-                          {currentNotification?.message}
-                        </p>
-                      </DialogContent>
-                    </Dialog>
-                  )}
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-base text-gray-500 dark:text-gray-400 text-center">
-              No new notifications
-            </p>
-          )}
+        <div className="flex justify-between items-center mb-6">
+          <h3
+            id="notification-header"
+            className="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-blue-400 dark:to-purple-400"
+          >
+            Notifications
+          </h3>
+          <div className="flex space-x-4">
+            <input
+              type="text"
+              placeholder="Search notifications..."
+              className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white/80 dark:bg-gray-700 text-gray-800 dark:text-gray-200 shadow focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            <select className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white/80 dark:bg-gray-700 text-gray-800 dark:text-gray-200 shadow focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="all">All</option>
+              <option value="unread">Unread</option>
+              <option value="read">Read</option>
+            </select>
+          </div>
         </div>
-        <div className="flex justify-between mt-8">
-          {notifications.length > 0 && (
+        <div className="space-y-8">
+          <div>
+            <h4 className="text-xl font-bold text-gray-800 dark:text-gray-200">
+              Unread Notifications
+            </h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {notifications
+                .filter((n) => !n.read)
+                .map((notification) => (
+                  <div
+                    key={notification.id}
+                    className="p-6 rounded-3xl bg-gradient-to-br from-blue-50 via-purple-50 to-blue-100 dark:from-gray-700 dark:via-gray-800 dark:to-gray-700 shadow-lg transition-transform transform hover:scale-105"
+                  >
+                    <p className="text-base text-gray-800 dark:text-gray-200">
+                      {notification.message}
+                    </p>
+                    <div className="flex justify-end mt-4 space-x-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600"
+                        onClick={() => markAsRead(notification.id)}
+                      >
+                        Mark as Read
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+          <div>
+            <h4 className="text-xl font-bold text-gray-800 dark:text-gray-200">
+              Read Notifications
+            </h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {notifications
+                .filter((n) => n.read)
+                .map((notification) => (
+                  <div
+                    key={notification.id}
+                    className="p-6 rounded-3xl bg-gray-50 dark:bg-gray-800 shadow-lg transition-transform transform hover:scale-105"
+                  >
+                    <p className="text-base text-gray-600 dark:text-gray-400">
+                      {notification.message}
+                    </p>
+                  </div>
+                ))}
+            </div>
+          </div>
+        </div>
+        {notifications.length > 0 ? (
+          <div className="flex justify-between mt-8">
             <Button
               variant="outline"
               size="md"
-              className="px-8 py-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600"
-              onClick={clearNotifications}
+              className="px-8 py-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-red-500"
+              onClick={() => {
+                if (
+                  confirm("Are you sure you want to clear all notifications?")
+                ) {
+                  clearNotifications();
+                }
+              }}
             >
               Clear All
             </Button>
-          )}
-        </div>
+          </div>
+        ) : (
+          <p className="text-center text-gray-500 dark:text-gray-400 mt-8">
+            You have no notifications.
+          </p>
+        )}
       </PopoverContent>
     </Popover>
   );
