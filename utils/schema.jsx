@@ -76,6 +76,7 @@ export const Notifications = pgTable("notifications", {
   createdFor: varchar("createdFor").notNull(),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
   message: varchar("message").notNull(),
+  title: varchar("title").default("Notification Title"),
   read: boolean("read").notNull().default(false),
 });
 

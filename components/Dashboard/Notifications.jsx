@@ -34,9 +34,12 @@ const NotificationTab = () => {
 
   // Filtered and searched notifications
   const filteredNotifications = notifications.filter((notification) => {
-    const matchesSearch = notification.message
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
+    const queryWords = searchQuery.toLowerCase().split(" "); // Split and clean query words
+    const matchesSearch = queryWords.every(
+      (word) =>
+        notification.message.toLowerCase().includes(word) ||
+        notification.title.toLowerCase().includes(word)
+    );
     const matchesFilter =
       filter === "all" ||
       (filter === "unread" && !notification.read) ||
@@ -44,6 +47,7 @@ const NotificationTab = () => {
 
     return matchesSearch && matchesFilter;
   });
+
 
   // Mark a notification as read
   const markAsRead = async (id) => {
@@ -95,17 +99,15 @@ const NotificationTab = () => {
       >
         <Bell
           className={`text-white dark:text-gray-300 w-8 h-8 ${
-            notifications.some((n) => !n.read)
-              ? "animate-wiggle transition-all duration-1000"
-              : ""
+            unreadCount > 0 ? "animate-wiggle transition-all duration-1000" : ""
           }`}
         />
-        {notifications.some((n) => !n.read) && (
+        {unreadCount > 0 && (
           <div
             className="absolute left-8 top-2 px-3 py-1 rounded-full bg-gradient-to-r from-pink-500 to-red-500 text-white text-sm font-bold shadow-lg"
             aria-live="polite"
           >
-            {notifications.filter((n) => !n.read).length}
+            {unreadCount}
           </div>
         )}
       </PopoverTrigger>
@@ -140,10 +142,16 @@ const NotificationTab = () => {
             </select>
           </div>
         </div>
-        <div className="space-y-8">
+        <div
+          className={`${
+            filteredNotifications.length === 0 && "hidden"
+          } space-y-8`}
+        >
           <div>
-            <h4 className="text-xl font-bold text-gray-800 dark:text-gray-200">
-              Unread Notifications
+            <h4 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">
+              {filteredNotifications.filter((n) => !n.read).length > 0 &&
+                "Unread Notifications"}
+              {/* Unread Notifications */}
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredNotifications
@@ -153,9 +161,15 @@ const NotificationTab = () => {
                     key={notification.id}
                     className="p-6 rounded-3xl bg-gradient-to-br from-blue-50 via-purple-50 to-blue-100 dark:from-gray-700 dark:via-gray-800 dark:to-gray-700 shadow-lg transition-transform transform hover:scale-105"
                   >
-                    <p className="text-base text-gray-800 dark:text-gray-200">
+                    {/* Title */}
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                      {notification.title}
+                    </h3>
+                    {/* Message */}
+                    <p className="mt-2 text-base text-gray-800 dark:text-gray-200">
                       {notification.message}
                     </p>
+                    {/* Actions */}
                     <div className="flex justify-end mt-4 space-x-2">
                       <Button
                         variant="ghost"
@@ -172,7 +186,9 @@ const NotificationTab = () => {
           </div>
           <div>
             <h4 className="text-xl font-bold text-gray-800 dark:text-gray-200">
-              Read Notifications
+              {filteredNotifications.filter((n) => n.read).length > 0 &&
+                "Read Notifications"}
+              {/* Read Notifications */}
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredNotifications
@@ -182,13 +198,27 @@ const NotificationTab = () => {
                     key={notification.id}
                     className="p-6 rounded-3xl bg-gray-50 dark:bg-gray-800 shadow-lg transition-transform transform hover:scale-105"
                   >
-                    <p className="text-base text-gray-600 dark:text-gray-400">
+                    {/* Title */}
+                    <h3 className="text-lg font-bold text-gray-700 dark:text-gray-300">
+                      {notification.title}
+                    </h3>
+                    {/* Message */}
+                    <p className="mt-2 text-base text-gray-600 dark:text-gray-400">
                       {notification.message}
                     </p>
                   </div>
                 ))}
             </div>
           </div>
+        </div>
+        <div
+          className={`${
+            filteredNotifications.length === 0 ? "block" : "hidden"
+          } space-y-8`}
+        >
+          <h4 className="text-xl text-center font-bold text-gray-800 dark:text-gray-200">
+            No Search Results found for "{searchQuery}"
+          </h4>
         </div>
         {notifications.length > 0 ? (
           <div className="flex justify-between mt-8">
