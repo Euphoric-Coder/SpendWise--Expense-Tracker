@@ -15,6 +15,7 @@ const RecieptUpload = ({
   const [imageFile, setImageFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isValidFile, setIsValidFile] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); 
 
   const fileInputRef = useRef(null); // Reference for the file input element
 
@@ -36,15 +37,18 @@ const RecieptUpload = ({
       const file = event.dataTransfer.files[0];
       if (file && file.type.startsWith("image/")) {
         resetState(); // Reset the state before processing
+        setIsLoading(true); // Start loading
         try {
           const recieptData = await processReciept(file);
           setImageFile(file);
           setIsValidFile(true);
           onFileSelect(recieptData);
+          setIsLoading(false); // Stop loading
           toast.success("Image file processed successfully!");
         } catch (error) {
-          resetState(); // Reset state after error
-          toast.error(error);
+          setIsLoading(false); // Stop loading on error
+          resetState();
+          toast.error(error.message || "An error occurred.");
         }
       } else {
         toast.error("Please upload a valid image file.");
@@ -66,27 +70,46 @@ const RecieptUpload = ({
     const file = event.target.files?.[0];
     if (file && file.type.startsWith("image/")) {
       resetState(); // Reset the state before processing
+      setIsLoading(true); // Start loading
       try {
         const recieptData = await processReciept(file);
         setImageFile(file);
         setIsValidFile(true);
         onFileSelect(recieptData);
+        setIsLoading(false); // Stop loading
         toast.success("Image file processed successfully!");
       } catch (error) {
-        resetState(); // Reset state after error
-        toast.error(error);
+        setIsLoading(false); // Stop loading on error
+        resetState();
+        toast.error(error.message || "An error occurred.");
       }
+
     } else {
       toast.error("Please upload a valid image file.");
     }
   };
 
   const resetData = () => {
-      setReuploadReset(true);
-      resetState();
-      setRecieptData([]);
-      toast.success("All Data has been reset successfully!");
-    };
+    setReuploadReset(true);
+    resetState();
+    setRecieptData([]);
+    toast.success("All Data has been reset successfully!");
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center p-8 border-2 border-blue-300 rounded-xl bg-gradient-to-br from-cyan-50 to-indigo-100 shadow-md">
+        <FiUploadCloud className="text-blue-600 text-6xl mb-4 animate-bounce transition-all duration-1000" />
+        <p className="text-lg font-semibold text-blue-800 text-center animate-pulse transition-all duration-1000">
+          Processing your receipt...
+        </p>
+        <p className="text-md text-indigo-500 mt-2 text-center  animate-pulse transition-all duration-1000">
+          Hang tight! We're analyzing the file and extracting details.
+        </p>
+      </div>
+    );
+  }
+
 
   if (isValidFile && reuploadReset !== true) {
     // Reduced View with File Info and Reupload Button

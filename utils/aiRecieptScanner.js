@@ -29,8 +29,8 @@ export async function processReciept(file) {
         "description": "string",
         "name": "string"
       }
-        
-      If its not a recipt, return an empty object
+      If the image is not a reciept, return an empty object. (By a reciept i meant a bill or something used to purchase something)
+      If its not a recipt, return an empty object.
     `;
 
     const result = await model.generateContent([
