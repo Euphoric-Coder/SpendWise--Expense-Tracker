@@ -22,11 +22,17 @@ import { formatDate, getISTDate, isSameDate } from "@/utils/utilities";
 import { format } from "date-fns";
 import RecieptImportButton from "./RecieptImportButton";
 
-const AddExpense = ({ budgetId, refreshData, budgetAmount, isRecurringBudget, frequency }) => {
+const AddExpense = ({
+  budgetId,
+  refreshData,
+  budgetAmount,
+  isRecurringBudget,
+  frequency,
+}) => {
   const { user } = useUser();
   const [name, setname] = useState();
   const [amount, setamount] = useState();
-  const [description, setDescription] = useState()
+  const [description, setDescription] = useState();
   const [overBudget, setOverBudget] = useState(false);
   const [overBudgetAmount, setOverBudgetAmount] = useState(0);
   const [dueDate, setDueDate] = useState(getISTDate());
@@ -80,11 +86,11 @@ const AddExpense = ({ budgetId, refreshData, budgetAmount, isRecurringBudget, fr
         createdAt: formatDate(dueDate),
       })
       .returning({ insertedId: Budgets.id });
-    
-      setname("");
-      setamount("");
-      setDescription("");
-      setDueDate(getISTDate());
+
+    setname("");
+    setamount("");
+    setDescription("");
+    setDueDate(getISTDate());
     if (result) {
       refreshData();
       toast.success("New Expense Added");
@@ -96,7 +102,7 @@ const AddExpense = ({ budgetId, refreshData, budgetAmount, isRecurringBudget, fr
     setamount("");
     setDescription("");
     setDueDate(getISTDate());
-  }
+  };
   return (
     <div className="border-2 border-blue-200 p-8 rounded-3xl bg-gradient-to-b from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 shadow-2xl relative overflow-hidden">
       {/* Background Effects */}
@@ -117,15 +123,17 @@ const AddExpense = ({ budgetId, refreshData, budgetAmount, isRecurringBudget, fr
         <h2 className="font-bold text-3xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-500 dark:from-blue-500 dark:via-indigo-500 dark:to-cyan-400 animate-gradient-text">
           Add Expense
         </h2>
-        <div className="flex gap-3">
+        <div className="flex flex-col md:flex-row gap-3">
           <Button
             onClick={() => clearData()}
             className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 dark:from-blue-500 dark:via-purple-600 dark:to-pink-500 rounded-xl shadow-xl hover:from-blue-500 hover:to-purple-700 dark:hover:from-purple-600 dark:hover:to-pink-600 transition-transform transform hover:scale-110 hover:backdrop-brightness-125 dark:hover:backdrop-brightness-110"
           >
             <Eraser /> Clear Data
           </Button>
-          <CSVImportButton />
-          <RecieptImportButton />
+          <div className="flex gap-3">
+            <CSVImportButton />
+            <RecieptImportButton />
+          </div>
         </div>
       </div>
 

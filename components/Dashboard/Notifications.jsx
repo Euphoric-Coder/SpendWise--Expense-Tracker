@@ -112,33 +112,35 @@ const NotificationTab = () => {
       </PopoverTrigger>
       <PopoverContent
         align="end"
-        className="w-full max-h-[800px] max-w-sm md:max-w-3xl p-8 rounded-3xl bg-gradient-to-br from-white/50 to-gray-100/50 dark:from-gray-900/80 dark:to-gray-800/80 backdrop-blur-md shadow-3xl border border-gray-200 dark:border-gray-700 overflow-y-scroll"
+        className="w-full max-h-[600px] md:max-h-[800px] max-w-sm md:max-w-2xl lg:max-w-3xl xl:max-w-4xl p-8 rounded-3xl bg-gradient-to-br from-white/50 to-gray-100/50 dark:from-gray-900/80 dark:to-gray-800/80 backdrop-blur-md shadow-3xl border border-gray-200 dark:border-gray-700 overflow-y-scroll"
         aria-labelledby="notification-header"
       >
-        <div className="flex flex-col md:flex-row justify-center md:justify-between items-center mb-6">
+        <div className="flex flex-col gap-3 lg:flex-row justify-center lg:justify-between items-center mb-6">
           <h3
             id="notification-header"
             className="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-blue-400 dark:to-purple-400"
           >
             Notifications
           </h3>
-          <div className="flex space-x-4">
-            <input
-              type="text"
-              placeholder="Search notifications..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white/80 dark:bg-gray-700 text-gray-800 dark:text-gray-200 shadow focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-            <select
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-              className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white/80 dark:bg-gray-700 text-gray-800 dark:text-gray-200 shadow focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
-              <option value="all">All</option>
-              <option value="unread">Unread</option>
-              <option value="read">Read</option>
-            </select>
+          <div className="flex flex-col md:flex-row space-x-2 gap-5 md:gap-3">
+            <div className="flex items-center space-x-2">
+              <input
+                type="text"
+                placeholder="Search notifications..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="flex-grow px-4 py-3 text-sm rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+              />
+              <select
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+                className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white/80 dark:bg-gray-700 text-gray-800 dark:text-gray-200 shadow focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="all">All</option>
+                <option value="unread">Unread</option>
+                <option value="read">Read</option>
+              </select>
+            </div>
             <Button
               variant="outline"
               size="md"
@@ -165,7 +167,8 @@ const NotificationTab = () => {
             <h4 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">
               {filteredNotifications.filter((n) => !n.read).length > 0 &&
                 `Unread Notifications (${
-                  filteredNotifications.filter((n) => !n.read).length})`}
+                  filteredNotifications.filter((n) => !n.read).length
+                })`}
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredNotifications
@@ -236,24 +239,7 @@ const NotificationTab = () => {
             No Search Results found for "{searchQuery}"
           </h4>
         </div>
-        {notifications.length > 0 ? (
-          <div className="flex justify-between mt-8">
-            <Button
-              variant="outline"
-              size="md"
-              className="px-8 py-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-red-500"
-              onClick={() => {
-                if (
-                  confirm("Are you sure you want to clear all notifications?")
-                ) {
-                  clearNotifications();
-                }
-              }}
-            >
-              Clear All
-            </Button>
-          </div>
-        ) : (
+        {notifications.length < 0 && (
           <p className="text-center text-gray-500 dark:text-gray-400 mt-8">
             You have no notifications.
           </p>
