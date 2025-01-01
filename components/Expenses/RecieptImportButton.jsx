@@ -365,7 +365,7 @@ const RecieptImportButton = () => {
           }}
         >
           <h2 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-500 dark:from-blue-500 dark:via-indigo-500 dark:to-purple-400 animate-gradient-text mb-4">
-            Upload Your Expense CSV
+            {recieptData?.length > 0 ? "Review & Add New Expenses" : "Upload Your Receipt Image File"}
           </h2>
           <RecieptUpload
             onFileSelect={handleFileSelect}

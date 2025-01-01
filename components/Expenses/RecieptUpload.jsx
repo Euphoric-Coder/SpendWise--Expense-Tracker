@@ -172,23 +172,16 @@ const RecieptUpload = ({
         className={`relative flex flex-col items-center justify-center p-8 border-2 rounded-xl cursor-pointer transition-all ${
           isDragging
             ? "border-blue-600 bg-gradient-to-br from-cyan-100 to-indigo-200 dark:border-blue-500 dark:from-gray-700 dark:to-gray-800"
-    : "border-blue-300 bg-gradient-to-br from-cyan-50 to-indigo-100 dark:border-gray-600 dark:from-gray-800 dark:to-gray-900"
+            : "border-blue-300 bg-gradient-to-br from-cyan-50 to-indigo-100 dark:border-gray-600 dark:from-gray-800 dark:to-gray-900"
         } shadow-md hover:shadow-lg hover:shadow-slate-600`}
       >
         <FiUploadCloud className="text-blue-600 dark:text-blue-400 text-6xl mb-4" />
         <div className="text-center">
-          {imageFile ? (
-            <p className="text-base font-semibold text-blue-900">
-              {imageFile.name}{" "}
-              <span className="text-green-600 font-semibold">(Selected)</span>
-            </p>
-          ) : (
-            <p className="text-blue-800 dark:text-blue-300 text-lg font-semibold">
-              Drag & Drop your Image file here
-              <br />
-              (all image formats accepted)
-            </p>
-          )}
+          <p className="text-blue-800 dark:text-blue-300 text-lg font-semibold">
+            Drag & Drop your Image file here
+            <br />
+            (all image formats accepted)
+          </p>
           <p className="text-md text-indigo-500 dark:text-indigo-400 mt-1">
             or click to browse files
           </p>

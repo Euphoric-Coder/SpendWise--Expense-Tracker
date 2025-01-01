@@ -48,7 +48,6 @@ const NotificationTab = () => {
     return matchesSearch && matchesFilter;
   });
 
-
   // Mark a notification as read
   const markAsRead = async (id) => {
     try {
@@ -112,8 +111,8 @@ const NotificationTab = () => {
         )}
       </PopoverTrigger>
       <PopoverContent
-        align="left"
-        className="w-full max-w-sm md:max-w-4xl p-8 rounded-3xl bg-gradient-to-br from-white/50 to-gray-100/50 dark:from-gray-900/80 dark:to-gray-800/80 backdrop-blur-md shadow-3xl border border-gray-200 dark:border-gray-700"
+        align="end"
+        className="w-full max-h-[800px] max-w-sm md:max-w-3xl p-8 rounded-3xl bg-gradient-to-br from-white/50 to-gray-100/50 dark:from-gray-900/80 dark:to-gray-800/80 backdrop-blur-md shadow-3xl border border-gray-200 dark:border-gray-700 overflow-y-scroll"
         aria-labelledby="notification-header"
       >
         <div className="flex flex-col md:flex-row justify-center md:justify-between items-center mb-6">
@@ -140,6 +139,20 @@ const NotificationTab = () => {
               <option value="unread">Unread</option>
               <option value="read">Read</option>
             </select>
+            <Button
+              variant="outline"
+              size="md"
+              className="px-8 py-2 text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-red-500"
+              onClick={() => {
+                if (
+                  confirm("Are you sure you want to clear all notifications?")
+                ) {
+                  clearNotifications();
+                }
+              }}
+            >
+              Clear All
+            </Button>
           </div>
         </div>
         <div
@@ -148,10 +161,11 @@ const NotificationTab = () => {
           } space-y-8`}
         >
           <div>
+            {/* Unread Notifications */}
             <h4 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">
               {filteredNotifications.filter((n) => !n.read).length > 0 &&
-                "Unread Notifications"}
-              {/* Unread Notifications */}
+                `Unread Notifications (${
+                  filteredNotifications.filter((n) => !n.read).length})`}
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredNotifications
@@ -185,10 +199,12 @@ const NotificationTab = () => {
             </div>
           </div>
           <div>
-            <h4 className="text-xl font-bold text-gray-800 dark:text-gray-200">
+            {/* Read Notifications */}
+            <h4 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">
               {filteredNotifications.filter((n) => n.read).length > 0 &&
-                "Read Notifications"}
-              {/* Read Notifications */}
+                `Read Notifications (${
+                  filteredNotifications.filter((n) => n.read).length
+                })`}
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredNotifications
@@ -196,7 +212,7 @@ const NotificationTab = () => {
                 .map((notification) => (
                   <div
                     key={notification.id}
-                    className="p-6 rounded-3xl bg-gray-50 dark:bg-gray-800 shadow-lg transition-transform transform hover:scale-105"
+                    className="p-6 rounded-3xl bg-gray-100 dark:bg-gray-800 shadow-lg transition-transform transform hover:scale-105"
                   >
                     {/* Title */}
                     <h3 className="text-lg font-bold text-gray-700 dark:text-gray-300">
