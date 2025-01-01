@@ -39,7 +39,7 @@ export const Expenses = pgTable("expenses", {
 });
 
 export const Incomes = pgTable("incomes", {
-  id: varchar("id", { length: 191 }).primaryKey(),
+  id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name").notNull(),
   amount: varchar("amount").notNull(),
   icon: varchar("icon"),
@@ -55,9 +55,9 @@ export const Incomes = pgTable("incomes", {
 });
 
 export const Transactions = pgTable("transactions", {
-  id: varchar("id", { length: 191 }).primaryKey(), 
+  id: uuid("id").defaultRandom().primaryKey(),
   category: varchar("category").notNull(), // 'expense' or 'income'
-  referenceId: varchar("referenceId"),//.notNull(),
+  referenceId: varchar("referenceId"), //.notNull(),
   name: varchar("name").notNull(), // Transaction name
   amount: numeric("amount").notNull(),
   createdBy: varchar("createdBy").notNull(),

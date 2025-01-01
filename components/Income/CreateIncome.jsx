@@ -22,7 +22,6 @@ import { toast } from "sonner";
 import { addOneMonth, getISTDate, getISTDateTime, isSameDate } from "@/utils/utilities";
 
 function CreateIncomes({ refreshData }) {
-  const { v4: uuidv4 } = require("uuid");
   const [emojiIcon, setEmojiIcon] = useState("😀");
   const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
 
@@ -39,7 +38,6 @@ function CreateIncomes({ refreshData }) {
    */
   const onCreateIncomes = async () => {
     const incomeData = {
-      id: uuidv4(),
       name: name,
       amount: amount,
       createdBy: user?.primaryEmailAddress?.emailAddress,
@@ -66,19 +64,18 @@ function CreateIncomes({ refreshData }) {
         .returning({ insertedId: Incomes.id });
       
         const transaction = await db
-        .insert(Transactions)
-        .values({
-          id: uuidv4(),
-          category: "income",
-          referenceId: incomeData.id,
-          name: name,
-          amount: amount,
-          createdBy: incomeData.createdBy,
-          createdAt: incomeData.createdAt,
-        })
-        .returning({ insertedId: Transactions.id });
+          .insert(Transactions)
+          .values({
+            category: "income",
+            referenceId: result[0].insertedId,
+            name: name,
+            amount: amount,
+            createdBy: incomeData.createdBy,
+            createdAt: incomeData.createdAt,
+          })
+          .returning({ insertedId: Transactions.id });
         
-      if (result) {
+      if (result && transaction) {
         refreshData();
         toast.success("New Source of Income has been Created!");
       }
