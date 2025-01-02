@@ -20,8 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { Icons } from "@/components/Icons";
-import { AiFillGoogleCircle } from "react-icons/ai";
+import Image from "next/image";
 
 export default function SignInPage() {
   return (
@@ -46,14 +45,25 @@ export default function SignInPage() {
                           variant="outline"
                           type="button"
                           disabled={isGlobalLoading}
+                          className="rounded-2xl hover:shadow-lg hover:shadow-slate-400 hover:scale-110 transition-all duration-500"
                         >
                           <Clerk.Loading scope="provider:github">
                             {(isLoading) =>
                               isLoading ? (
-                                <Icons.spinner className="size-4 animate-spin" />
+                                <Image
+                                  src={"/loader.svg"}
+                                  width={20}
+                                  height={20}
+                                  className="size-4 animate-spin"
+                                />
                               ) : (
                                 <>
-                                  <Icons.gitHub className="mr-2 size-4" />
+                                  <Image
+                                    src="/github.png"
+                                    alt="GitHub"
+                                    width={20}
+                                    height={20}
+                                  />
                                   GitHub
                                 </>
                               )
@@ -67,14 +77,25 @@ export default function SignInPage() {
                           variant="outline"
                           type="button"
                           disabled={isGlobalLoading}
+                          className="rounded-2xl hover:shadow-lg hover:shadow-slate-400 hover:scale-110 transition-all duration-500"
                         >
                           <Clerk.Loading scope="provider:google">
                             {(isLoading) =>
                               isLoading ? (
-                                <Icons.spinner className="size-4 animate-spin" />
+                                <Image
+                                  src={"/loader.svg"}
+                                  width={20}
+                                  height={20}
+                                  className="size-4 animate-spin"
+                                />
                               ) : (
                                 <>
-                                  <Icons.google className="mr-2 size-4" />
+                                  <Image
+                                    src="/google.png"
+                                    alt="Google"
+                                    width={20}
+                                    height={20}
+                                  />
                                   Google
                                 </>
                               )
@@ -103,7 +124,12 @@ export default function SignInPage() {
                           <Clerk.Loading>
                             {(isLoading) => {
                               return isLoading ? (
-                                <Icons.spinner className="size-4 animate-spin" />
+                                <Image
+                                  src={"/loader.svg"}
+                                  width={20}
+                                  height={20}
+                                  className="size-4 animate-spin"
+                                />
                               ) : (
                                 "Continue"
                               );
@@ -158,7 +184,12 @@ export default function SignInPage() {
                           <Clerk.Loading>
                             {(isLoading) => {
                               return isLoading ? (
-                                <Icons.spinner className="size-4 animate-spin" />
+                                <Image
+                                  src={"/loader.svg"}
+                                  width={20}
+                                  height={20}
+                                  className="size-4 animate-spin"
+                                />
                               ) : (
                                 "Go back"
                               );
@@ -201,7 +232,12 @@ export default function SignInPage() {
                             <Clerk.Loading>
                               {(isLoading) => {
                                 return isLoading ? (
-                                  <Icons.spinner className="size-4 animate-spin" />
+                                  <Image
+                                    src={"/loader.svg"}
+                                    width={20}
+                                    height={20}
+                                    className="size-4 animate-spin"
+                                  />
                                 ) : (
                                   "Continue"
                                 );
@@ -282,7 +318,12 @@ export default function SignInPage() {
                             <Clerk.Loading>
                               {(isLoading) => {
                                 return isLoading ? (
-                                  <Icons.spinner className="size-4 animate-spin" />
+                                  <Image
+                                    src={"/loader.svg"}
+                                    width={20}
+                                    height={20}
+                                    className="size-4 animate-spin"
+                                  />
                                 ) : (
                                   "Continue"
                                 );
