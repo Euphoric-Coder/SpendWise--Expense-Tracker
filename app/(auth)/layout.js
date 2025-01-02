@@ -1,63 +1,36 @@
-// import React from "react";
+"use client";
 
-// const AuthLayout = ({ children }) => {
-//   return (
-//     <section className="bg-white">
-//       <div className="lg:grid lg:min-h-screen lg:grid-cols-12 font-mono">
-//         {/* Left Section with Image and Gradient Overlay */}
-//         <aside className="relative block h-16 lg:order-last lg:col-span-5 lg:h-full xl:col-span-6">
-//           <img
-//             alt="Expense Tracking Background"
-//             src="https://images.unsplash.com/photo-1605106702734-205df224ecce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-//             className="absolute inset-0 h-full w-full object-cover"
-//           />
-//         </aside>
-
-//         {/* Right Section with Sign-In Form */}
-//         <main className="flex items-center justify-center px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6">
-//           <div className="max-w-xl lg:max-w-3xl text-center">
-//             {/* Page Heading with Gradient Filled Text */}
-//             <h1 className="mt-6 text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-500 via-purple-500 to-pink-500 sm:text-5xl md:text-6xl">
-//               Welcome to SpendWise
-//             </h1>
-
-//             {/* Page Subtext with Gradient Highlight */}
-//             <p className="mt-4 leading-relaxed text-gray-700 text-lg font-extrabold">
-//               Take control of your finances with{" "}
-//               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400 font-semibold">
-//                 SpendWise
-//               </span>
-//               . Track your expenses, set savings goals, and gain insights into
-//               your spending habits.
-//             </p>
-
-//             <p className="mt-2 leading-relaxed text-gray-600">
-//               Join today and start your journey to financial freedom with
-//               powerful tools to manage your budget.
-//             </p>
-
-//             {/* Centered SignIn Component with Button Shadow */}
-//             <div className="mt-8 flex justify-center">
-//               <div className="shadow-lg rounded-lg overflow-hidden transition duration-300 transform hover:scale-105">
-//                 {children}
-//               </div>
-//             </div>
-//           </div>
-//         </main>
-//       </div>
-//     </section>
-//   );
-// };
-
-// export default AuthLayout;
-
-'use client';
-
+import { useSignIn } from "@clerk/nextjs";
 import Image from "next/image";
 import React from "react";
+import { toast } from "sonner";
 import Typewriter from "typewriter-effect";
 
-const layout = ({ children }) => {
+const Layout = ({ children }) => {
+  const { signIn } = useSignIn();
+
+  const GuestLogin = async () => {
+    try {
+      const signInAttempt = await signIn.create({
+        identifier: process.env.NEXT_PUBLIC_TEST_USER_EMAIL, // Guest email
+        password: process.env.NEXT_PUBLIC_TEST_USER_PASSWORD, // Guest password
+      });
+
+      if (signInAttempt.status === "complete") {
+        window.location.href = "/dashboard"; // Redirect to a protected page
+        setTimeout(() => {
+          toast.success("Guest login successful");
+          console.log("Guest login successful");
+        }, 3000);
+      } else {
+        console.log("Further steps required");
+      }
+    } catch (err) {
+      console.error("Error logging in as guest:", err);
+      alert("Unable to log in as guest. Please try again.");
+    }
+  };
+
   return (
     <div className="flex min-h-screen">
       {/* Left Section */}
@@ -197,33 +170,53 @@ const layout = ({ children }) => {
         </div>
       </section>
 
-      {/* Right Section with Sign-In Form */}
-      <main className="flex items-center justify-center px-8 py-8 sm:px-12 lg:col-span-7 lg:px-16 lg:py-12 xl:col-span-6">
-        <div className="max-w-xl lg:max-w-3xl text-center">
-          {/* Page Heading with Gradient Filled Text */}
-          <h1 className="mt-6 text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-500 via-purple-500 to-pink-500 sm:text-5xl md:text-6xl">
-            Welcome to SpendWise
-          </h1>
+      {/* Right Section */}
+      <main className="flex flex-1 items-center justify-center px-8 py-12 sm:px-12 lg:px-16 xl:px-20 bg-gray-50 dark:bg-gray-900">
+        <div className="relative w-full max-w-lg">
+          {/* Glassmorphism Card */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-md rounded-lg shadow-2xl"></div>
+          <div className="relative p-8 space-y-8 bg-white rounded-lg shadow-lg dark:bg-gray-800">
+            {/* Page Heading */}
+            <div className="text-center">
+              <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-500 via-purple-500 to-pink-500">
+                Welcome Back!
+              </h1>
+              <p className="mt-4 text-lg leading-relaxed text-gray-700 dark:text-gray-300">
+                Take charge of your finances with{" "}
+                <span className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400">
+                  SpendWise
+                </span>
+                . Your journey to financial freedom starts here.
+              </p>
+              <button
+                type="button"
+                className="mt-4 w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-3xl text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+                onClick={GuestLogin}
+              >
+                Login as Guest
+              </button>
+            </div>
 
-          {/* Page Subtext with Gradient Highlight */}
-          <p className="mt-4 leading-relaxed text-gray-700 text-lg font-extrabold">
-            Take control of your finances with{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400 font-semibold">
-              SpendWise
-            </span>
-            . Track your expenses, set savings goals, and gain insights into
-            your spending habits.
-          </p>
+            <div className="flex items-center justify-center">
+              <div className="w-full h-px bg-gray-300 dark:bg-gray-700"></div>
+              <span className="px-2 text-gray-500 dark:text-gray-400">or</span>
+              <div className="w-full h-px bg-gray-300 dark:bg-gray-700"></div>
+            </div>
 
-          <p className="mt-2 leading-relaxed text-gray-600">
-            Join today and start your journey to financial freedom with powerful
-            tools to manage your budget.
-          </p>
+            {/* Login Form */}
+            <div className="flex justify-center">{children}</div>
 
-          {/* Centered SignIn Component with Button Shadow */}
-          <div className="mt-8 flex justify-center">
-            <div className="shadow-lg rounded-lg overflow-hidden transition duration-300 transform hover:scale-105">
-              {children}
+            {/* Footer Section */}
+            <div className="text-center">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Don't want to use personal credentials?{" "}
+                <a
+                  onClick={GuestLogin}
+                  className="font-medium text-teal-500 hover:underline cursor-pointer"
+                >
+                  Use Guest Account
+                </a>
+              </p>
             </div>
           </div>
         </div>
@@ -232,5 +225,4 @@ const layout = ({ children }) => {
   );
 };
 
-export default layout;
-
+export default Layout;
