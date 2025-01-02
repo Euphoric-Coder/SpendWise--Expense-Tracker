@@ -48,15 +48,18 @@ const Layout = ({ children }) => {
               "radial-gradient(circle at top left, rgba(193, 223, 255, 0.3), transparent 70%), radial-gradient(circle at bottom right, rgba(233, 211, 255, 0.3), transparent 80%)",
           }}
         ></div>
+
+        {/* Content */}
         <div className="p-2 z-10 flex max-h-[800px] max-w-[450px] flex-col items-center justify-center space-y-12">
           {/* Logo */}
           <Image
-            src="/StorEase.png"
-            alt="logo"
-            width={522}
-            height={200}
+            src="/favicon.png"
+            alt="SpendWise Logo"
+            width={100}
+            height={50}
             className="transition-all duration-500 hover:scale-110 drop-shadow-lg"
           />
+
           {/* Gradient Text with Typewriter Effect */}
           <div className="text-center">
             <h1
@@ -71,9 +74,9 @@ const Layout = ({ children }) => {
               <Typewriter
                 options={{
                   strings: [
-                    "Store, Manage, and Share Files Effortlessly",
-                    "Secure Your Files with Advanced Encryption",
-                    "Experience Seamless File Organization",
+                    "Track, Analyze, and Optimize Your Expenses",
+                    "Achieve Your Financial Goals Effortlessly",
+                    "Master Your Budget with SpendWise",
                   ],
                   autoStart: true,
                   loop: true,
@@ -82,6 +85,8 @@ const Layout = ({ children }) => {
               />
             </h1>
           </div>
+
+          {/* Subtext */}
           <p
             className="text-lg font-medium leading-relaxed text-gray-700"
             style={{
@@ -91,8 +96,8 @@ const Layout = ({ children }) => {
               WebkitTextFillColor: "transparent",
             }}
           >
-            Your one-stop solution to securely organize, access, and share files
-            anytime, anywhere.
+            Take control of your finances with real-time tracking, insightful
+            analytics, and smart budgeting tools.
           </p>
 
           {/* Features Section */}
@@ -114,7 +119,7 @@ const Layout = ({ children }) => {
                   WebkitTextFillColor: "transparent",
                 }}
               >
-                Super-fast uploads with no lag
+                Real-time expense tracking
               </p>
             </div>
             <div className="flex items-center space-x-3">
@@ -134,7 +139,7 @@ const Layout = ({ children }) => {
                   WebkitTextFillColor: "transparent",
                 }}
               >
-                End-to-end encrypted file storage
+                Personalized financial insights
               </p>
             </div>
             <div className="flex items-center space-x-3">
@@ -154,17 +159,17 @@ const Layout = ({ children }) => {
                   WebkitTextFillColor: "transparent",
                 }}
               >
-                Real-time file sharing with teams
+                Set and achieve savings goals
               </p>
             </div>
           </div>
 
-          {/* File Image */}
+          {/* Illustration */}
           <Image
-            src="/files.png"
-            alt="File Image"
-            width={342}
-            height={342}
+            src="/login-banner.png"
+            alt="Finance Management Illustration"
+            width={350}
+            height={350}
             className="transition-all duration-500 hover:rotate-2 hover:scale-110 drop-shadow-md hover:shadow-lg"
           />
         </div>
