@@ -1,15 +1,18 @@
 import { NextResponse } from "next/server";
 import { db } from "@/utils/dbConfig";
+import { currentUser } from "@clerk/nextjs/server";
 import { Notifications } from "@/utils/schema";
 import { desc, eq } from "drizzle-orm";
 
 // GET: Fetch all notifications
 export async function GET() {
-  
   try {
+    const user = await currentUser();
+
     const notifications = await db
       .select()
       .from(Notifications)
+      .where(eq(Notifications.createdFor, user?.emailAddresses[0].emailAddress))
       .orderBy(desc(Notifications.createdAt));
     return NextResponse.json(notifications);
   } catch (error) {

@@ -23,6 +23,7 @@ const NotificationTab = () => {
         const response = await fetch("/api/notifications");
         const data = await response.json();
         setNotifications(data);
+        console.log(notifications.length);
         setUnreadCount(notifications?.filter((n) => !n.read).length);
       } catch (error) {
         console.error("Error fetching notifications:", error);
@@ -232,14 +233,17 @@ const NotificationTab = () => {
         </div>
         <div
           className={`${
-            filteredNotifications.length === 0 ? "block" : "hidden"
+            filteredNotifications.length === 0 && notifications.length !== 0
+              ? "block"
+              : "hidden"
           } space-y-8`}
         >
           <h4 className="text-xl text-center font-bold text-gray-800 dark:text-gray-200">
             No Search Results found for "{searchQuery}"
+            {filteredNotifications.length}
           </h4>
         </div>
-        {notifications.length < 0 && (
+        {notifications.length === 0 && (
           <p className="text-center text-gray-500 dark:text-gray-400 mt-8">
             You have no notifications.
           </p>
