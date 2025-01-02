@@ -12,7 +12,8 @@
     "db:studio": "npx drizzle-kit studio"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.3.0",
+    "@clerk/elements": "^0.22.5",
+    "@clerk/nextjs": "^6.9.6",
     "@google/generative-ai": "^0.21.0",
     "@langchain/core": "^0.3.18",
     "@langchain/groq": "^0.1.2",
