@@ -1,15 +1,17 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { useSignIn } from "@clerk/nextjs";
 import Image from "next/image";
-import React from "react";
-import { toast } from "sonner";
+import React, { useState } from "react";
 import Typewriter from "typewriter-effect";
 
 const Layout = ({ children }) => {
   const { signIn } = useSignIn();
+  const [disableGuestLogin, setdisableGuestLogin] = useState(false)
 
   const GuestLogin = async () => {
+    setdisableGuestLogin(true)
     try {
       const signInAttempt = await signIn.create({
         identifier: process.env.NEXT_PUBLIC_TEST_USER_EMAIL, // Guest email
@@ -18,10 +20,6 @@ const Layout = ({ children }) => {
 
       if (signInAttempt.status === "complete") {
         window.location.href = "/dashboard"; // Redirect to a protected page
-        setTimeout(() => {
-          toast.success("Guest login successful");
-          console.log("Guest login successful");
-        }, 3000);
       } else {
         console.log("Further steps required");
       }
@@ -50,7 +48,7 @@ const Layout = ({ children }) => {
         ></div>
 
         {/* Content */}
-        <div className="p-2 z-10 flex max-h-[800px] max-w-[450px] flex-col items-center justify-center space-y-12">
+        <div className="p-2 mx-4 z-10 flex max-h-[800px] max-w-[650px] flex-col items-center justify-center space-y-12">
           {/* Logo */}
           <Image
             src="/favicon.png"
@@ -193,13 +191,13 @@ const Layout = ({ children }) => {
                 </span>
                 . Your journey to financial freedom starts here.
               </p>
-              <button
-                type="button"
+              <Button
                 className="mt-4 w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-3xl text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+                disabled={disableGuestLogin}
                 onClick={GuestLogin}
               >
                 Login as Guest
-              </button>
+              </Button>
             </div>
 
             <div className="flex items-center justify-center">
