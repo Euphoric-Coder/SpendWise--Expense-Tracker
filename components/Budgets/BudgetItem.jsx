@@ -1,38 +1,44 @@
-"use client";
+// "use client";
 
 import { formatCurrency } from "@/utils/utilities";
 import { Repeat, Info } from "lucide-react";
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const RecurringBudgetInfo = () => {
-  const [open, setOpen] = useState(false);
-
-  const handleMouseEnter = () => setTimeout(() => setOpen(true), 300);
-  const handleMouseLeave = () => setTimeout(() => setOpen(false), 200);
-
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Info
-          size={18}
-          className="text-white hover:text-gray-700 cursor-pointer"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        />
+    <Popover>
+      <PopoverTrigger>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Info
+                size={18}
+                className="text-white hover:text-gray-700 cursor-pointer"
+              />
+            </TooltipTrigger>
+            <TooltipContent className="rounded-full font-bold">
+              <p>Recurring Budget Info</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </PopoverTrigger>
       <PopoverContent
         side="top"
         align="center"
         sideOffset={10}
-        className="bg-white dark:bg-gray-800 text-sm shadow-lg rounded-2xl p-4 border border-gray-200 dark:border-gray-700 transform transition-all duration-500 ease-in-out opacity-0 data-[state=open]:opacity-100 data-[state=open]:scale-100"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        className="bg-white dark:bg-gray-800 text-sm shadow-lg rounded-2xl p-4 border border-gray-200 dark:border-gray-700 transform transition-all duration-500 ease-in-out"
       >
         <p className="mb-2 text-justify">
           A <strong>Recurring Budget</strong> allows you to manage expenses that
