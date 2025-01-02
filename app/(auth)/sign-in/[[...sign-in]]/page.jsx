@@ -5,207 +5,304 @@
 // }
 
 "use client";
-
 import * as Clerk from "@clerk/elements/common";
 import * as SignIn from "@clerk/elements/sign-in";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
+import { Icons } from "@/components/Icons";
+import { AiFillGoogleCircle } from "react-icons/ai";
 
 export default function SignInPage() {
   return (
-    <div className="grid w-full flex-grow items-center bg-white px-4 sm:justify-center">
+    <div className="grid w-full grow items-center px-4 sm:justify-center">
       <SignIn.Root>
-        <SignIn.Step
-          name="start"
-          className="w-full space-y-6 rounded-2xl px-4 py-10 sm:w-96 sm:px-8"
-        >
-          <header className="text-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 40 40"
-              className="mx-auto size-10"
-            >
-              <mask
-                id="a"
-                width="40"
-                height="40"
-                x="0"
-                y="0"
-                maskUnits="userSpaceOnUse"
-              >
-                <circle cx="20" cy="20" r="20" fill="#D9D9D9" />
-              </mask>
-              <g fill="#0A0A0A" mask="url(#a)">
-                <path d="M43.5 3a.5.5 0 0 0 0-1v1Zm0-1h-46v1h46V2ZM43.5 8a.5.5 0 0 0 0-1v1Zm0-1h-46v1h46V7ZM43.5 13a.5.5 0 0 0 0-1v1Zm0-1h-46v1h46v-1ZM43.5 18a.5.5 0 0 0 0-1v1Zm0-1h-46v1h46v-1ZM43.5 23a.5.5 0 0 0 0-1v1Zm0-1h-46v1h46v-1ZM43.5 28a.5.5 0 0 0 0-1v1Zm0-1h-46v1h46v-1ZM43.5 33a.5.5 0 0 0 0-1v1Zm0-1h-46v1h46v-1ZM43.5 38a.5.5 0 0 0 0-1v1Zm0-1h-46v1h46v-1Z" />
-                <path d="M27 3.5a1 1 0 1 0 0-2v2Zm0-2h-46v2h46v-2ZM25 8.5a1 1 0 1 0 0-2v2Zm0-2h-46v2h46v-2ZM23 13.5a1 1 0 1 0 0-2v2Zm0-2h-46v2h46v-2ZM21.5 18.5a1 1 0 1 0 0-2v2Zm0-2h-46v2h46v-2ZM20.5 23.5a1 1 0 1 0 0-2v2Zm0-2h-46v2h46v-2ZM22.5 28.5a1 1 0 1 0 0-2v2Zm0-2h-46v2h46v-2ZM25 33.5a1 1 0 1 0 0-2v2Zm0-2h-46v2h46v-2ZM27 38.5a1 1 0 1 0 0-2v2Zm0-2h-46v2h46v-2Z" />
-              </g>
-            </svg>
-            <h1 className="mt-4 text-xl font-medium tracking-tight text-neutral-950">
-              Sign in to Clover
-            </h1>
-          </header>
-          <Clerk.GlobalError className="block text-sm text-red-600" />
-          <Clerk.Field name="identifier">
-            <Clerk.Label className="sr-only">Email</Clerk.Label>
-            <Clerk.Input
-              type="email"
-              required
-              placeholder="Email"
-              className="w-full border-b border-neutral-200 bg-white pb-2 text-sm/6 text-neutral-950 outline-none placeholder:text-neutral-400 hover:border-neutral-300 focus:border-neutral-600 data-[invalid]:border-red-600 data-[invalid]:text-red-600"
-            />
-            <Clerk.FieldError className="mt-2 block text-xs text-red-600" />
-          </Clerk.Field>
-          <SignIn.Action
-            submit
-            className="relative w-full rounded-md bg-neutral-600 bg-gradient-to-b from-neutral-500 to-neutral-600 py-1.5 text-sm font-medium text-white shadow-[0_1px_1px_0_theme(colors.white/10%)_inset,0_1px_2.5px_0_theme(colors.black/36%)] outline-none ring-1 ring-inset ring-neutral-600 before:absolute before:inset-0 before:rounded-md before:bg-white/10 before:opacity-0 hover:before:opacity-100 focus-visible:outline-offset-2 focus-visible:outline-neutral-600 active:bg-neutral-600 active:text-white/60 active:before:opacity-0"
-          >
-            Sign In
-          </SignIn.Action>
-          <div className="rounded-xl bg-neutral-100 p-5">
-            <p className="mb-4 text-center text-sm/5 text-neutral-500">
-              Alternatively, sign in with these platforms
-            </p>
-            <div className="space-y-2">
-              <Clerk.Connection
-                name="google"
-                className="flex w-full items-center justify-center gap-x-3 rounded-md bg-gradient-to-b from-white to-neutral-50 px-2 py-1.5 text-sm font-medium text-neutral-950 shadow outline-none ring-1 ring-black/5 hover:to-neutral-100 focus-visible:outline-offset-2 focus-visible:outline-neutral-600 active:text-neutral-950/60"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 16 16"
-                  aria-hidden
-                  className="size-4"
-                >
-                  <g clipPath="url(#a)">
-                    <path
-                      fill="currentColor"
-                      d="M8.32 7.28v2.187h5.227c-.16 1.226-.57 2.124-1.192 2.755-.764.765-1.955 1.6-4.035 1.6-3.218 0-5.733-2.595-5.733-5.813 0-3.218 2.515-5.814 5.733-5.814 1.733 0 3.005.685 3.938 1.565l1.538-1.538C12.498.96 10.756 0 8.32 0 3.91 0 .205 3.591.205 8s3.706 8 8.115 8c2.382 0 4.178-.782 5.582-2.24 1.44-1.44 1.893-3.475 1.893-5.111 0-.507-.035-.978-.115-1.369H8.32Z"
-                    />
-                  </g>
-                  <defs>
-                    <clipPath id="a">
-                      <path fill="#fff" d="M0 0h16v16H0z" />
-                    </clipPath>
-                  </defs>
-                </svg>
-                Login with Google
-              </Clerk.Connection>
-            </div>
-          </div>
-          <p className="text-center text-sm text-neutral-500">
-            Don&apos;t have an account?{" "}
-            <Clerk.Link
-              navigate="sign-up"
-              className="rounded px-1 py-0.5 text-neutral-700 outline-none hover:bg-neutral-100 focus-visible:bg-neutral-100"
-            >
-              Sign up
-            </Clerk.Link>
-          </p>
-        </SignIn.Step>
-        <SignIn.Step
-          name="verifications"
-          className="w-full space-y-6 rounded-2xl px-4 py-10 sm:w-96 sm:px-8"
-        >
-          <SignIn.Strategy name="email_code">
-            <header className="text-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 40 40"
-                className="mx-auto size-10"
-              >
-                <mask
-                  id="a"
-                  width="40"
-                  height="40"
-                  x="0"
-                  y="0"
-                  maskUnits="userSpaceOnUse"
-                >
-                  <circle cx="20" cy="20" r="20" fill="#D9D9D9" />
-                </mask>
-                <g fill="#0A0A0A" mask="url(#a)">
-                  <path d="M43.5 3a.5.5 0 0 0 0-1v1Zm0-1h-46v1h46V2ZM43.5 8a.5.5 0 0 0 0-1v1Zm0-1h-46v1h46V7ZM43.5 13a.5.5 0 0 0 0-1v1Zm0-1h-46v1h46v-1ZM43.5 18a.5.5 0 0 0 0-1v1Zm0-1h-46v1h46v-1ZM43.5 23a.5.5 0 0 0 0-1v1Zm0-1h-46v1h46v-1ZM43.5 28a.5.5 0 0 0 0-1v1Zm0-1h-46v1h46v-1ZM43.5 33a.5.5 0 0 0 0-1v1Zm0-1h-46v1h46v-1ZM43.5 38a.5.5 0 0 0 0-1v1Zm0-1h-46v1h46v-1Z" />
-                  <path d="M27 3.5a1 1 0 1 0 0-2v2Zm0-2h-46v2h46v-2ZM25 8.5a1 1 0 1 0 0-2v2Zm0-2h-46v2h46v-2ZM23 13.5a1 1 0 1 0 0-2v2Zm0-2h-46v2h46v-2ZM21.5 18.5a1 1 0 1 0 0-2v2Zm0-2h-46v2h46v-2ZM20.5 23.5a1 1 0 1 0 0-2v2Zm0-2h-46v2h46v-2ZM22.5 28.5a1 1 0 1 0 0-2v2Zm0-2h-46v2h46v-2ZM25 33.5a1 1 0 1 0 0-2v2Zm0-2h-46v2h46v-2ZM27 38.5a1 1 0 1 0 0-2v2Zm0-2h-46v2h46v-2Z" />
-                </g>
-              </svg>
-              <h1 className="mt-4 text-xl font-medium tracking-tight text-neutral-950">
-                Verify email code
-              </h1>
-            </header>
-            <Clerk.GlobalError className="block text-sm text-red-600" />
-            <Clerk.Field name="code">
-              <Clerk.Label className="sr-only">Email code</Clerk.Label>
-              <Clerk.Input
-                type="otp"
-                required
-                placeholder="Email code"
-                className="w-full border-b border-neutral-200 bg-white pb-2 text-sm/6 text-neutral-950 outline-none placeholder:text-neutral-400 hover:border-neutral-300 focus:border-neutral-600 data-[invalid]:border-red-600 data-[invalid]:text-red-600"
-              />
-              <Clerk.FieldError className="mt-2 block text-xs text-red-600" />
-            </Clerk.Field>
-            <SignIn.Action
-              submit
-              className="relative w-full rounded-md bg-neutral-600 bg-gradient-to-b from-neutral-500 to-neutral-600 py-1.5 text-sm text-white shadow-[0_1px_1px_0_theme(colors.white/10%)_inset,0_1px_2.5px_0_theme(colors.black/36%)] outline-none ring-1 ring-inset ring-neutral-600 before:absolute before:inset-0 before:rounded-md before:bg-white/10 before:opacity-0 hover:before:opacity-100 focus-visible:outline-offset-2 focus-visible:outline-neutral-600 active:bg-neutral-600 active:text-white/60 active:before:opacity-0"
-            >
-              Continue
-            </SignIn.Action>
-          </SignIn.Strategy>
-          <SignIn.Strategy name="phone_code">
-            <header className="text-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 40 40"
-                className="mx-auto size-10"
-              >
-                <mask
-                  id="a"
-                  width="40"
-                  height="40"
-                  x="0"
-                  y="0"
-                  maskUnits="userSpaceOnUse"
-                >
-                  <circle cx="20" cy="20" r="20" fill="#D9D9D9" />
-                </mask>
-                <g fill="#0A0A0A" mask="url(#a)">
-                  <path d="M43.5 3a.5.5 0 0 0 0-1v1Zm0-1h-46v1h46V2ZM43.5 8a.5.5 0 0 0 0-1v1Zm0-1h-46v1h46V7ZM43.5 13a.5.5 0 0 0 0-1v1Zm0-1h-46v1h46v-1ZM43.5 18a.5.5 0 0 0 0-1v1Zm0-1h-46v1h46v-1ZM43.5 23a.5.5 0 0 0 0-1v1Zm0-1h-46v1h46v-1ZM43.5 28a.5.5 0 0 0 0-1v1Zm0-1h-46v1h46v-1ZM43.5 33a.5.5 0 0 0 0-1v1Zm0-1h-46v1h46v-1ZM43.5 38a.5.5 0 0 0 0-1v1Zm0-1h-46v1h46v-1Z" />
-                  <path d="M27 3.5a1 1 0 1 0 0-2v2Zm0-2h-46v2h46v-2ZM25 8.5a1 1 0 1 0 0-2v2Zm0-2h-46v2h46v-2ZM23 13.5a1 1 0 1 0 0-2v2Zm0-2h-46v2h46v-2ZM21.5 18.5a1 1 0 1 0 0-2v2Zm0-2h-46v2h46v-2ZM20.5 23.5a1 1 0 1 0 0-2v2Zm0-2h-46v2h46v-2ZM22.5 28.5a1 1 0 1 0 0-2v2Zm0-2h-46v2h46v-2ZM25 33.5a1 1 0 1 0 0-2v2Zm0-2h-46v2h46v-2ZM27 38.5a1 1 0 1 0 0-2v2Zm0-2h-46v2h46v-2Z" />
-                </g>
-              </svg>
-              <h1 className="mt-4 text-xl font-medium tracking-tight text-neutral-950">
-                Verify phone code
-              </h1>
-            </header>
-            <Clerk.GlobalError className="block text-sm text-red-600" />
-            <Clerk.Field name="code">
-              <Clerk.Label className="sr-only">Phone code</Clerk.Label>
-              <Clerk.Input
-                type="otp"
-                required
-                placeholder="Phone code"
-                className="w-full border-b border-neutral-200 bg-white pb-2 text-sm/6 text-neutral-950 outline-none placeholder:text-neutral-400 hover:border-neutral-300 focus:border-neutral-600 data-[invalid]:border-red-600 data-[invalid]:text-red-600"
-              />
-              <Clerk.FieldError className="mt-2 block text-xs text-red-600" />
-            </Clerk.Field>
-            <SignIn.Action
-              submit
-              className="relative w-full rounded-md bg-neutral-600 bg-gradient-to-b from-neutral-500 to-neutral-600 py-1.5 text-sm text-white shadow-[0_1px_1px_0_theme(colors.white/10%)_inset,0_1px_2.5px_0_theme(colors.black/36%)] outline-none ring-1 ring-inset ring-neutral-600 before:absolute before:inset-0 before:rounded-md before:bg-white/10 before:opacity-0 hover:before:opacity-100 focus-visible:outline-offset-2 focus-visible:outline-neutral-600 active:bg-neutral-600 active:text-white/60 active:before:opacity-0"
-            >
-              Login
-            </SignIn.Action>
-          </SignIn.Strategy>
-          <p className="text-center text-sm text-neutral-500">
-            Don&apos;t have an account?{" "}
-            <Clerk.Link
-              navigate="sign-up"
-              className="rounded px-1 py-0.5 text-neutral-700 outline-none hover:bg-neutral-100 focus-visible:bg-neutral-100"
-            >
-              Sign up
-            </Clerk.Link>
-          </p>
-        </SignIn.Step>
+        <Clerk.Loading>
+          {(isGlobalLoading) => (
+            <>
+              <SignIn.Step name="start">
+                <Card className="w-full sm:w-96">
+                  <CardHeader>
+                    <CardTitle>Sign in to Acme Co</CardTitle>
+                    <CardDescription>
+                      Welcome back! Please sign in to continue
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="grid gap-y-4">
+                    <div className="grid grid-cols-2 gap-x-4">
+                      <Clerk.Connection name="github" asChild>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          type="button"
+                          disabled={isGlobalLoading}
+                        >
+                          <Clerk.Loading scope="provider:github">
+                            {(isLoading) =>
+                              isLoading ? (
+                                <Icons.spinner className="size-4 animate-spin" />
+                              ) : (
+                                <>
+                                  <Icons.gitHub className="mr-2 size-4" />
+                                  GitHub
+                                </>
+                              )
+                            }
+                          </Clerk.Loading>
+                        </Button>
+                      </Clerk.Connection>
+                      <Clerk.Connection name="google" asChild>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          type="button"
+                          disabled={isGlobalLoading}
+                        >
+                          <Clerk.Loading scope="provider:google">
+                            {(isLoading) =>
+                              isLoading ? (
+                                <Icons.spinner className="size-4 animate-spin" />
+                              ) : (
+                                <>
+                                  <Icons.google className="mr-2 size-4" />
+                                  Google
+                                </>
+                              )
+                            }
+                          </Clerk.Loading>
+                        </Button>
+                      </Clerk.Connection>
+                    </div>
+                    <p className="flex items-center gap-x-3 text-sm text-muted-foreground before:h-px before:flex-1 before:bg-border after:h-px after:flex-1 after:bg-border">
+                      or
+                    </p>
+                    <Clerk.Field name="identifier" className="space-y-2">
+                      <Clerk.Label asChild>
+                        <Label>Email address</Label>
+                      </Clerk.Label>
+                      <Clerk.Input type="email" required asChild>
+                        <Input />
+                      </Clerk.Input>
+                      <Clerk.FieldError className="block text-sm text-destructive" />
+                    </Clerk.Field>
+                  </CardContent>
+                  <CardFooter>
+                    <div className="grid w-full gap-y-4">
+                      <SignIn.Action submit asChild>
+                        <Button disabled={isGlobalLoading}>
+                          <Clerk.Loading>
+                            {(isLoading) => {
+                              return isLoading ? (
+                                <Icons.spinner className="size-4 animate-spin" />
+                              ) : (
+                                "Continue"
+                              );
+                            }}
+                          </Clerk.Loading>
+                        </Button>
+                      </SignIn.Action>
+
+                      <Button variant="link" size="sm" asChild>
+                        <Link href="/sign-up">
+                          Don&apos;t have an account? Sign up
+                        </Link>
+                      </Button>
+                    </div>
+                  </CardFooter>
+                </Card>
+              </SignIn.Step>
+
+              <SignIn.Step name="choose-strategy">
+                <Card className="w-full sm:w-96">
+                  <CardHeader>
+                    <CardTitle>Use another method</CardTitle>
+                    <CardDescription>
+                      Facing issues? You can use any of these methods to sign
+                      in.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="grid gap-y-4">
+                    <SignIn.SupportedStrategy name="email_code" asChild>
+                      <Button
+                        type="button"
+                        variant="link"
+                        disabled={isGlobalLoading}
+                      >
+                        Email code
+                      </Button>
+                    </SignIn.SupportedStrategy>
+                    <SignIn.SupportedStrategy name="password" asChild>
+                      <Button
+                        type="button"
+                        variant="link"
+                        disabled={isGlobalLoading}
+                      >
+                        Password
+                      </Button>
+                    </SignIn.SupportedStrategy>
+                  </CardContent>
+                  <CardFooter>
+                    <div className="grid w-full gap-y-4">
+                      <SignIn.Action navigate="previous" asChild>
+                        <Button disabled={isGlobalLoading}>
+                          <Clerk.Loading>
+                            {(isLoading) => {
+                              return isLoading ? (
+                                <Icons.spinner className="size-4 animate-spin" />
+                              ) : (
+                                "Go back"
+                              );
+                            }}
+                          </Clerk.Loading>
+                        </Button>
+                      </SignIn.Action>
+                    </div>
+                  </CardFooter>
+                </Card>
+              </SignIn.Step>
+
+              <SignIn.Step name="verifications">
+                <SignIn.Strategy name="password">
+                  <Card className="w-full sm:w-96">
+                    <CardHeader>
+                      <CardTitle>Check your email</CardTitle>
+                      <CardDescription>
+                        Enter the verification code sent to your email
+                      </CardDescription>
+                      <p className="text-sm text-muted-foreground">
+                        Welcome back <SignIn.SafeIdentifier />
+                      </p>
+                    </CardHeader>
+                    <CardContent className="grid gap-y-4">
+                      <Clerk.Field name="password" className="space-y-2">
+                        <Clerk.Label asChild>
+                          <Label>Password</Label>
+                        </Clerk.Label>
+                        <Clerk.Input type="password" asChild>
+                          <Input />
+                        </Clerk.Input>
+                        <Clerk.FieldError className="block text-sm text-destructive" />
+                      </Clerk.Field>
+                    </CardContent>
+                    <CardFooter>
+                      <div className="grid w-full gap-y-4">
+                        <SignIn.Action submit asChild>
+                          <Button disabled={isGlobalLoading}>
+                            <Clerk.Loading>
+                              {(isLoading) => {
+                                return isLoading ? (
+                                  <Icons.spinner className="size-4 animate-spin" />
+                                ) : (
+                                  "Continue"
+                                );
+                              }}
+                            </Clerk.Loading>
+                          </Button>
+                        </SignIn.Action>
+                        <SignIn.Action navigate="choose-strategy" asChild>
+                          <Button type="button" size="sm" variant="link">
+                            Use another method
+                          </Button>
+                        </SignIn.Action>
+                      </div>
+                    </CardFooter>
+                  </Card>
+                </SignIn.Strategy>
+
+                <SignIn.Strategy name="email_code">
+                  <Card className="w-full sm:w-96">
+                    <CardHeader>
+                      <CardTitle>Check your email</CardTitle>
+                      <CardDescription>
+                        Enter the verification code sent to your email
+                      </CardDescription>
+                      <p className="text-sm text-muted-foreground">
+                        Welcome back <SignIn.SafeIdentifier />
+                      </p>
+                    </CardHeader>
+                    <CardContent className="grid gap-y-4">
+                      <Clerk.Field name="code">
+                        <Clerk.Label className="sr-only">
+                          Email verification code
+                        </Clerk.Label>
+                        <div className="grid items-center justify-center gap-y-2">
+                          <div className="flex justify-center text-center">
+                            <Clerk.Input
+                              type="otp"
+                              autoSubmit
+                              className="flex justify-center has-[:disabled]:opacity-50"
+                              render={({ value, status }) => {
+                                return (
+                                  <div
+                                    data-status={status}
+                                    className="relative flex h-9 w-9 items-center justify-center border-y border-r border-input text-sm shadow-sm transition-all first:rounded-l-md first:border-l last:rounded-r-md data-[status=cursor]:ring-1 data-[status=selected]:ring-1 data-[status=cursor]:ring-ring data-[status=selected]:ring-ring"
+                                  >
+                                    {value}
+                                  </div>
+                                );
+                              }}
+                            />
+                          </div>
+                          <Clerk.FieldError className="block text-center text-sm text-destructive" />
+                          <SignIn.Action
+                            asChild
+                            resend
+                            className="text-muted-foreground"
+                            fallback={({ resendableAfter }) => (
+                              <Button variant="link" size="sm" disabled>
+                                Didn&apos;t recieve a code? Resend (
+                                <span className="tabular-nums">
+                                  {resendableAfter}
+                                </span>
+                                )
+                              </Button>
+                            )}
+                          >
+                            <Button variant="link" size="sm">
+                              Didn&apos;t recieve a code? Resend
+                            </Button>
+                          </SignIn.Action>
+                        </div>
+                      </Clerk.Field>
+                    </CardContent>
+                    <CardFooter>
+                      <div className="grid w-full gap-y-4">
+                        <SignIn.Action submit asChild>
+                          <Button disabled={isGlobalLoading}>
+                            <Clerk.Loading>
+                              {(isLoading) => {
+                                return isLoading ? (
+                                  <Icons.spinner className="size-4 animate-spin" />
+                                ) : (
+                                  "Continue"
+                                );
+                              }}
+                            </Clerk.Loading>
+                          </Button>
+                        </SignIn.Action>
+                        <SignIn.Action navigate="choose-strategy" asChild>
+                          <Button size="sm" variant="link">
+                            Use another method
+                          </Button>
+                        </SignIn.Action>
+                      </div>
+                    </CardFooter>
+                  </Card>
+                </SignIn.Strategy>
+              </SignIn.Step>
+            </>
+          )}
+        </Clerk.Loading>
       </SignIn.Root>
     </div>
   );
