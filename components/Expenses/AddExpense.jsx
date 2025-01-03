@@ -126,7 +126,7 @@ const AddExpense = ({
         <div className="flex flex-col md:flex-row gap-3">
           <Button
             onClick={() => clearData()}
-            className="individual-expense-btn1"
+            className="individual-expense-btn1 rounded-full"
           >
             <Eraser /> Clear Data
           </Button>

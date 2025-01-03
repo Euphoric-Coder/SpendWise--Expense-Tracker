@@ -34,7 +34,7 @@ const NotificationTab = () => {
   }, [notifications]);
 
   // Filtered and searched notifications
-  const filteredNotifications = notifications.filter((notification) => {
+  const filteredNotifications = notifications?.filter((notification) => {
     const queryWords = searchQuery.toLowerCase().split(" "); // Split and clean query words
     const matchesSearch = queryWords.every(
       (word) =>

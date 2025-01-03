@@ -253,7 +253,7 @@ const CSVImportButton = () => {
 
   return (
     <div>
-      <Button className="individual-expense-btn1" onClick={handleImportClick}>
+      <Button className="individual-expense-btn1 rounded-3xl" onClick={handleImportClick}>
         <Upload className="mr-1 w-9 h-9" /> Import CSV
       </Button>
 
@@ -367,7 +367,7 @@ const CSVImportButton = () => {
           )}
           <DialogClose asChild>
             <Button
-              className="mt-4 px-4 py-2 font-semibold text-white bg-gradient-to-r from-purple-400 to-indigo-500 dark:from-purple-500 dark:to-indigo-600 rounded-lg shadow hover:from-purple-500 hover:to-indigo-600"
+              className="individual-expense-btn2 rounded-2xl mt-6"
               onClick={() => setShowUploadDialog(false)}
             >
               Close

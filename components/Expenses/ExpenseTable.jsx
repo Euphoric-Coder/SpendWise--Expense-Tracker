@@ -284,10 +284,10 @@ const ExpenseTable = ({
                             />
 
                             {/* Save Button */}
-                            <DialogClose asChild>
+                            <DialogClose>
                               <button
                                 onClick={saveEditedExpense}
-                                className="mt-4 text-md w-full bg-gradient-to-r from-fuchsia-500 via-blue-600 to-teal-500 text-white font-bold p-2 rounded-3xl shadow-xl hover:shadow-2xl transition-transform transform hover:scale-105 duration-300 disabled:opacity-50 disabled:cursor-not-allowed dark:from-pink-600 dark:via-purple-700 dark:to-blue-600 dark:text-gray-200 hover:from-purple-600 hover:via-blue-500 hover:to-teal-400 dark:hover:from-pink-700 dark:hover:via-purple-800 dark:hover:to-blue-700 active:scale-95 active:shadow-md"
+                                className="individual-expense-btn2 rounded-full py-1 mt-4"
                               >
                                 Update Expense
                               </button>

@@ -63,7 +63,7 @@ function EditBudget({ budgetInfo, refreshData }) {
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <Button className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 dark:from-blue-500 dark:via-purple-600 dark:to-pink-500 rounded-xl shadow-xl hover:from-blue-500 hover:to-purple-700 dark:hover:from-purple-600 dark:hover:to-pink-600 transition-transform transform hover:scale-110 hover:backdrop-brightness-125 dark:hover:backdrop-brightness-110">
+          <Button className="individual-expense-btn1 rounded-2xl">
             <PenBox /> Edit
           </Button>
         </DialogTrigger>
@@ -172,7 +172,7 @@ function EditBudget({ budgetInfo, refreshData }) {
               <Button
                 disabled={!(name && amount)}
                 onClick={() => onUpdateBudget()}
-                className="text-md w-full bg-gradient-to-r from-fuchsia-500 via-blue-600 to-teal-500 text-white font-bold py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-transform transform hover:scale-105 duration-300 disabled:opacity-50 disabled:cursor-not-allowed dark:from-pink-600 dark:via-purple-700 dark:to-blue-600 dark:text-gray-200 hover:from-purple-600 hover:via-blue-500 hover:to-teal-400 dark:hover:from-pink-700 dark:hover:via-purple-800 dark:hover:to-blue-700 active:scale-95 active:shadow-md"
+                className="individual-expense-btn2 rounded-full"
               >
                 Update Budget
               </Button>

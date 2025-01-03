@@ -102,10 +102,10 @@ const CsvUpload = ({
             </p>
           </div>
           <div className="flex gap-2">
-            <Button onClick={resetState} className="individual-expense-btn1">
+            <Button onClick={resetState} className="individual-expense-btn1 rounded-2xl">
               Reupload
             </Button>
-            <Button onClick={resetData} className="individual-expense-btn1">
+            <Button onClick={resetData} className="individual-expense-btn1 rounded-2xl">
               Reset Data
             </Button>
           </div>

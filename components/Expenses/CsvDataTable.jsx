@@ -89,7 +89,7 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
           </span>
         </div>
         {csvData.length > 0 && (
-          <Button onClick={addAllToExpense} className="individual-expense-btn1">
+          <Button onClick={addAllToExpense} className="individual-expense-btn1 rounded-2xl">
             Add All to Expense
           </Button>
         )}

@@ -107,7 +107,7 @@ const ExpensesDashboard = ({ params }) => {
             <AlertDialogTrigger asChild>
               <Button
                 variant="destructive"
-                className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 dark:from-blue-500 dark:via-purple-600 dark:to-pink-500 rounded-xl shadow-xl hover:from-blue-500 hover:to-purple-700 dark:hover:from-purple-600 dark:hover:to-pink-600 transition-transform transform hover:scale-110 hover:backdrop-brightness-125 dark:hover:backdrop-brightness-110"
+                className="individual-expense-btn1 rounded-2xl"
               >
                 <Trash2 />
                 Delete
@@ -133,7 +133,7 @@ const ExpensesDashboard = ({ params }) => {
 
           {/* Go to Budgets Button */}
           <Link href={"/dashboard/budgets"}>
-            <Button className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 dark:from-blue-500 dark:via-purple-600 dark:to-pink-500 rounded-xl shadow-xl hover:from-blue-500 hover:to-purple-700 dark:hover:from-purple-600 dark:hover:to-pink-600 transition-transform transform hover:scale-110 hover:backdrop-brightness-125 dark:hover:backdrop-brightness-110">
+            <Button className="individual-expense-btn1 rounded-2xl">
               Go to Budgets
             </Button>
           </Link>
