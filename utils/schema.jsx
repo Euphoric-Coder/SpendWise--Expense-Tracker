@@ -9,6 +9,7 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
+import next from "next";
 
 const { v4: uuidv4 } = require("uuid");
 
@@ -45,6 +46,7 @@ export const Incomes = pgTable("incomes", {
   icon: varchar("icon"),
   incomeType: varchar("incomeType"),
   frequency: varchar("frequency"), // 'daily', 'weekly', 'monthly', 'yearly'
+  category: varchar("category").notNull().default("salary"), // Category of either expenses or incomes
   status: varchar("status"), // 'upcoming', 'current'
   startDate: date("startDate"),
   endDate: date("endDate"), // Nullable for indefinite recurring transactions
@@ -56,7 +58,15 @@ export const Incomes = pgTable("incomes", {
 
 export const Transactions = pgTable("transactions", {
   id: uuid("id").defaultRandom().primaryKey(),
-  category: varchar("category").notNull(), // 'expense' or 'income'
+  type: varchar("type").notNull(), // 'expense' or 'income'
+  category: varchar("category").notNull(), // Category of either expenses or incomes
+  isRecurring: boolean("isRecurring").notNull().default(false),
+  frequency: varchar("frequency"), // 'daily', 'weekly', 'monthly', 'yearly'
+  nextRecurringDate: varchar("nextRecurringDate"),
+  lastProcessed: varchar("lastProcessed"),
+  lastUpdated: varchar("lastUpdated"),
+  status: varchar("status"), // 'active', 'deleted', 'expired', 'upcoming'
+  deletionRemark: varchar("deletionRemark"),
   referenceId: varchar("referenceId"), //.notNull(),
   name: varchar("name").notNull(), // Transaction name
   amount: numeric("amount").notNull(),

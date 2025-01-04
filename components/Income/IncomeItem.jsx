@@ -395,13 +395,14 @@ function IncomeItem({ income, refreshData }) {
                     Frequency
                   </h2>
                   <Select
-                    defaultValue={income.frequency}
+                    // defaultValue={income.frequency}
+                    value={frequency}
                     onValueChange={(e) => setFrequency(e)}
                     // className="block w-full p-2 mb-2 border border-gray-300 rounded-full"
                   >
                     <SelectTrigger className="w-full p-4 border rounded-lg shadow-md text-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200">
                       <SelectValue
-                      // placeholder={frequency}
+                      placeholder={frequency}
                       // className="text-lg font-bold"
                       />
                     </SelectTrigger>
@@ -505,7 +506,7 @@ function IncomeItem({ income, refreshData }) {
         <TooltipProvider>
           <Tooltip>
             <AlertDialog>
-              <AlertDialogTrigger asChild>
+              <AlertDialogTrigger>
                 <TooltipTrigger asChild>
                   <Trash className="cursor-pointer text-red-500 hover:text-red-600 hover:scale-110 active:scale-95 transition-transform duration-500" />
                 </TooltipTrigger>
