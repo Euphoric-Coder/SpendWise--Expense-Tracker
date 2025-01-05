@@ -314,7 +314,6 @@
 //   );
 // }
 
-
 "use client";
 
 import React, { useEffect } from "react";
@@ -350,8 +349,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-// import { createIncome } from "@/actions/income"; 
+// import { createIncome } from "@/actions/income";
 import { transactionSchema } from "@/lib/zodSchema";
+import { incomeCategories } from "@/data/categories";
 
 export default function CreateIncomeDialog({ refreshData }) {
   const {
@@ -384,7 +384,7 @@ export default function CreateIncomeDialog({ refreshData }) {
       //   reset();
       //   refreshData();
       // }
-      console.log(data)
+      console.log(data);
     } catch (error) {
       toast.error("Failed to create income. Please try again.");
       console.error("Error creating income:", error);
@@ -395,7 +395,7 @@ export default function CreateIncomeDialog({ refreshData }) {
   const date = watch("date");
 
   return (
-    <Dialog>
+    <Dialog onOpenChange={() => reset()}>
       <DialogTrigger asChild>
         <Button>Create Income Source</Button>
       </DialogTrigger>
@@ -404,7 +404,6 @@ export default function CreateIncomeDialog({ refreshData }) {
           <DialogTitle>Create New Income</DialogTitle>
           <DialogDescription>Fill in the details below.</DialogDescription>
         </DialogHeader>
-
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Income Name */}
           <div className="space-y-2">
@@ -444,9 +443,11 @@ export default function CreateIncomeDialog({ refreshData }) {
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="salary">Salary</SelectItem>
-                <SelectItem value="freelance">Freelance</SelectItem>
-                <SelectItem value="investment">Investment</SelectItem>
+                {incomeCategories.map((category, index) => (
+                  <SelectItem key={index} value={category.id}>
+                    {category.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             {errors.category && (
@@ -515,10 +516,10 @@ export default function CreateIncomeDialog({ refreshData }) {
 
           {/* Submit Button */}
           <DialogFooter>
-            <Button type="submit">
-              {/* <Loader2 className="mr-2 h-4 w-4 animate-spin" /> */}
-              Create Income
-            </Button>
+              <Button type="submit">
+                {/* <Loader2 className="mr-2 h-4 w-4 animate-spin" /> */}
+                Create Income
+              </Button>
           </DialogFooter>
         </form>
       </DialogContent>
