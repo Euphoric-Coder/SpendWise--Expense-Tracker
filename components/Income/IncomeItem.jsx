@@ -8,6 +8,7 @@ import {
   formatDate,
   getISTCustomDate,
   getISTDate,
+  getISTDateTime,
   isSameDate,
 } from "@/utils/utilities";
 import {
@@ -59,18 +60,21 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Calendar } from "../ui/calendar";
+import { incomeCategories } from "@/data/categories";
 
 function IncomeItem({ income, refreshData }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [openEmojiPicker, setopenEmojiPicker] = useState(false);
   const [frequency, setFrequency] = useState("monthly");
   const [editedName, setEditedName] = useState("");
+  const [editedCategory, setEditedCategory] = useState("salary");
   const [editedAmount, setEditedAmount] = useState("");
   const [editedIcon, setEditedIcon] = useState();
   const [isRecurring, setIsRecurring] = useState(false);
   const [editedStartDate, setEditedStartDate] = useState(null);
   const [editedEndDate, setEditedEndDate] = useState(null);
 
+  console.log(getISTDateTime())
   const nonrecurringProgress = calculateNonRecurringProgress(
     getISTCustomDate(income.createdAt),
     income.endDate
@@ -88,6 +92,7 @@ function IncomeItem({ income, refreshData }) {
   const startEditing = (income) => {
     setEditedName(income.name);
     setEditedAmount(income.amount);
+    setEditedCategory(income.category);
     setIsRecurring(income.incomeType === "recurring");
     setEditedStartDate(income.startDate ? parseISO(income.startDate) : null);
     setEditedEndDate(income.endDate ? parseISO(income.endDate) : null);
@@ -99,11 +104,12 @@ function IncomeItem({ income, refreshData }) {
     const defaultEndDate = new Date(
       new Date().setMonth(new Date().getMonth() + 1)
     )
-    .toISOString()
-    .split("T")[0];
+      .toISOString()
+      .split("T")[0];
     const updatedValues = {
       name: editedName,
       amount: editedAmount,
+      category: editedCategory,
       icon: editedIcon,
       incomeType: isRecurring ? "recurring" : "non-recurring",
       frequency: isRecurring ? frequency : null,
@@ -123,8 +129,29 @@ function IncomeItem({ income, refreshData }) {
       .where(eq(Incomes.id, income.id))
       .returning();
 
-    if (result) {
-      toast(`Income "${editedName}" has been updated!`);
+    const transactionResult = await db
+      .update(Transactions)
+      .set({
+        name: editedName,
+        amount: editedAmount,
+        category: editedCategory,
+        isRecurring: isRecurring,
+        frequency: isRecurring ? frequency : null,
+        nextRecurringDate: isRecurring
+          ? nextRecurringDate(editedStartDate, frequency)
+          : null,
+        status: isRecurring
+          ? isSameDate(startDate ? startDate : getISTDate(), getISTDate())
+            ? "active"
+            : "upcoming"
+          : "active",
+        lastUpdated: getISTDateTime(),
+      })
+      .where(eq(Transactions.referenceId, income.id))
+      .returning();
+
+    if (result && transactionResult) {
+      toast.success(`Income "${editedName}" has been updated!`);
       setIsDialogOpen(false); // Close the dialog
       // setFrequency("monthly")
 
@@ -135,7 +162,16 @@ function IncomeItem({ income, refreshData }) {
   const deleteIncome = async () => {
     const name = income.name;
     try {
-      await db.delete(Transactions).where(eq(Transactions.referenceId, income.id)).returning();
+      await db
+        .update(Transactions)
+        .set({
+          isDeleted: true,
+          lastUpdated: getISTDate(),
+          status: "deleted",
+          deletionRemark: `Income deleted by user at ${getISTDateTime()}`,
+        })
+        .where(eq(Transactions.referenceId, income.id))
+        .returning();
       await db.delete(Incomes).where(eq(Incomes.id, income.id)).returning();
       refreshData(); // Refresh data
       toast.success(`Income "${name}" has been deleted!`);
@@ -373,6 +409,36 @@ function IncomeItem({ income, refreshData }) {
                 />
               </div>
 
+              {/* Category */}
+              <div className="mt-4">
+                <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                  Category
+                </h2>
+                <Select
+                  value={editedCategory}
+                  onValueChange={(e) => setEditedCategory(e)}
+                  // className="block w-full p-2 mb-2 border border-gray-300 rounded-full"
+                >
+                  <SelectTrigger className="w-full p-4 border rounded-lg shadow-md text-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200">
+                    <SelectValue
+                    // placeholder={category}
+                    // className="text-lg font-bold"
+                    />
+                  </SelectTrigger>
+                  <SelectContent className="w-full p-4 border rounded-lg shadow-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200">
+                    {incomeCategories.map((category, index) => (
+                      <SelectItem
+                        key={index}
+                        value={category.id}
+                        className="text-lg rounded-xl bg-gradient-to-r hover:from-cyan-100 hover:to-blue-100 dark:hover:from-gray-700 dark:hover:to-gray-600"
+                      >
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               {/* Recurring Checkbox */}
               <div className="flex items-center space-x-2">
                 <Checkbox
@@ -402,8 +468,8 @@ function IncomeItem({ income, refreshData }) {
                   >
                     <SelectTrigger className="w-full p-4 border rounded-lg shadow-md text-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200">
                       <SelectValue
-                      placeholder={frequency}
-                      // className="text-lg font-bold"
+                        placeholder={frequency}
+                        // className="text-lg font-bold"
                       />
                     </SelectTrigger>
                     <SelectContent className="w-full p-4 border rounded-lg shadow-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200">
