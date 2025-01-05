@@ -369,7 +369,7 @@ export default function CreateIncomeDialog({ refreshData }) {
       category: "salary",
       date: new Date(),
       isRecurring: false,
-      recurringInterval: null,
+      frequency: null,
     },
   });
 
@@ -396,7 +396,7 @@ export default function CreateIncomeDialog({ refreshData }) {
 
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button>Create Income Source</Button>
       </DialogTrigger>
       <DialogContent>
@@ -457,7 +457,7 @@ export default function CreateIncomeDialog({ refreshData }) {
           {/* Date */}
           <div className="space-y-2">
             <label className="text-sm font-medium">Date</label>
-            <Popover>
+            <Popover modal>
               <PopoverTrigger asChild>
                 <Button variant="outline" className="w-full text-left">
                   {date ? format(date, "PPP") : "Pick a date"}
@@ -492,7 +492,7 @@ export default function CreateIncomeDialog({ refreshData }) {
             <div className="space-y-2">
               <label className="text-sm font-medium">Recurring Interval</label>
               <Select
-                onValueChange={(value) => setValue("recurringInterval", value)}
+                onValueChange={(value) => setValue("frequency", value)}
                 defaultValue="MONTHLY"
               >
                 <SelectTrigger>
@@ -505,9 +505,9 @@ export default function CreateIncomeDialog({ refreshData }) {
                   <SelectItem value="YEARLY">Yearly</SelectItem>
                 </SelectContent>
               </Select>
-              {errors.recurringInterval && (
+              {errors.frequency && (
                 <p className="text-sm text-red-500">
-                  {errors.recurringInterval.message}
+                  {errors.frequency.message}
                 </p>
               )}
             </div>
