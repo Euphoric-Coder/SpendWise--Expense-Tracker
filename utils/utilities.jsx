@@ -14,7 +14,7 @@ const formatCurrency = (amount) => {
     formattedAmount = `${(amount / 1_000).toFixed(2)}K`;
   } else {
     // Less than 1,000
-    formattedAmount = amount.toFixed(2);
+    formattedAmount = amount;
   }
   
 

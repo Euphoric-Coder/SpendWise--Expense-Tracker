@@ -46,14 +46,38 @@ export default function CreateIncomes({ refreshData }) {
   const [frequency, setFrequency] = useState("monthly"); // Default frequency
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState(""); // Optional end date for non-recurring
+
+  const [errors, setErrors] = useState({});
   const { user } = useUser();
 
   // console.log(incomeCategories.filter((item) => item.id === "salary"));
 
   /**
+   * Validate Form Data
+   */
+  const validateForm = () => {
+    const validationErrors = {};
+    if (!name) validationErrors.name = "Income source name is required.";
+    if (!amount || isNaN(amount) || amount <= 0)
+      validationErrors.amount = "Please enter a valid amount greater than 0.";
+    if (isRecurring && !startDate)
+      validationErrors.startDate =
+        "Start date is required for recurring income.";
+    if (!isRecurring && endDate && new Date(endDate) < new Date())
+      validationErrors.endDate = "End date cannot be in the past.";
+
+    setErrors(validationErrors);
+    return Object.keys(validationErrors).length === 0;
+  };
+
+  /**
    * To Create New Source of Income
    */
   const onCreateIncomes = async () => {
+    if (!validateForm()) {
+      toast.error("Please fix the errors before proceeding.");
+      return;
+    }
     const incomeData = {
       name: name,
       amount: amount,
@@ -303,7 +327,7 @@ export default function CreateIncomes({ refreshData }) {
             <Button
               className="w-full py-4 rounded-2xl bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 dark:from-blue-600 dark:via-cyan-500 dark:to-teal-500 text-white font-bold shadow-lg hover:shadow-[0_0_30px_rgba(0,100,255,0.5)] transition-transform transform hover:scale-105 disabled:opacity-50"
               onClick={() => onCreateIncomes()}
-              disabled={!(name && amount)}
+              // disabled={!(name && amount)}
             >
               Create Income Source
             </Button>
