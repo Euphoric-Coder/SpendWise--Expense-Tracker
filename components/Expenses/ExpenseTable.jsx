@@ -246,7 +246,7 @@ const ExpenseTable = ({
                               value={editedName}
                               onChange={(e) => setEditedName(e.target.value)}
                               placeholder="Name"
-                              className="w-full border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-2 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-105 duration-200"
+                              className="exp-input-field"
                             />
 
                             {/* Amount Input */}
@@ -262,7 +262,7 @@ const ExpenseTable = ({
                               value={editedAmount}
                               onChange={(e) => setEditedAmount(e.target.value)}
                               placeholder="Amount"
-                              className="w-full border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-2 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-105 duration-200"
+                              className="exp-input-field"
                             />
 
                             {/* Amount Input */}
@@ -280,7 +280,7 @@ const ExpenseTable = ({
                                 setEditedDescription(e.target.value)
                               }
                               placeholder="Description"
-                              className="w-full border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-2 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-105 duration-200"
+                              className="exp-input-field"
                             />
 
                             {/* Save Button */}

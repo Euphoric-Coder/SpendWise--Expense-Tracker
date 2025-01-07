@@ -89,7 +89,10 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
           </span>
         </div>
         {csvData.length > 0 && (
-          <Button onClick={addAllToExpense} className="individual-expense-btn1 rounded-2xl">
+          <Button
+            onClick={addAllToExpense}
+            className="individual-expense-btn1 rounded-2xl"
+          >
             Add All to Expense
           </Button>
         )}
@@ -153,7 +156,7 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
                               })
                             }
                             placeholder="Name"
-                            className="border p-2 rounded-md"
+                            className="exp-input-field"
                           />
                           <input
                             type="number"
@@ -165,7 +168,7 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
                               })
                             }
                             placeholder="Amount"
-                            className="border p-2 rounded-md"
+                            className="exp-input-field"
                           />
                           <input
                             type="text"
@@ -177,7 +180,7 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
                               })
                             }
                             placeholder="Description"
-                            className="border p-2 rounded-md"
+                            className="exp-input-field"
                           />
                           <input
                             type="date"
@@ -189,12 +192,12 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
                               })
                             }
                             placeholder="Date"
-                            className="border p-2 rounded-md"
+                            className="exp-input-field"
                           />
                           <DialogClose>
                             <button
                               onClick={saveEditedRow}
-                              className="w-full bg-blue-500 text-white p-2 rounded-md"
+                              className="individual-expense-btn2 rounded-3xl p-2 mt-2"
                             >
                               Save
                             </button>
