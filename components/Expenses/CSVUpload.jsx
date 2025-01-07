@@ -91,21 +91,27 @@ const CsvUpload = ({
   if (isValidFile && reuploadReset !== true) {
     // Reduced View with File Info and Reupload Button
     return (
-      <div className="p-4 border border-gray-300 rounded-lg bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 shadow-md">
+      <div className="p-4 border border-gray-300 dark:border-gray-700 rounded-lg bg-gradient-to-br from-gray-50 via-gray-100 to-gray-200 dark:from-gray-800 dark:via-gray-900 dark:to-gray-950 shadow-md">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-gray-800 font-medium">
+            <p className="text-gray-800 dark:text-gray-200 font-medium">
               <strong>Uploaded File:</strong> {csvFile.name}
             </p>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
               File size: {(csvFile.size / 1024).toFixed(2)} KB
             </p>
           </div>
-          <div className="flex gap-2">
-            <Button onClick={resetState} className="individual-expense-btn1 rounded-2xl">
+          <div className="flex gap-4">
+            <Button
+              onClick={resetState}
+              className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 dark:from-blue-500 dark:via-purple-600 dark:to-pink-500 rounded-xl shadow-xl hover:from-blue-500 hover:to-purple-700 dark:hover:from-purple-600 dark:hover:to-pink-600 transition-transform transform hover:scale-110 hover:backdrop-brightness-125 dark:hover:backdrop-brightness-110"
+            >
               Reupload
             </Button>
-            <Button onClick={resetData} className="individual-expense-btn1 rounded-2xl">
+            <Button
+              onClick={resetData}
+              className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 dark:from-blue-500 dark:via-purple-600 dark:to-pink-500 rounded-xl shadow-xl hover:from-blue-500 hover:to-purple-700 dark:hover:from-purple-600 dark:hover:to-pink-600 transition-transform transform hover:scale-110 hover:backdrop-brightness-125 dark:hover:backdrop-brightness-110"
+            >
               Reset Data
             </Button>
           </div>

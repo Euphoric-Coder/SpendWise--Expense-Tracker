@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/table";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -26,6 +27,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { Input } from "../ui/input";
 
 const RecieptDataTable = ({ recieptData = [], setRecieptData }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -107,14 +109,14 @@ const RecieptDataTable = ({ recieptData = [], setRecieptData }) => {
                   <TableCell>{row.createdAt}</TableCell>
                   <TableCell>{row.description}</TableCell>
                   <TableCell className="flex items-center space-x-2">
-                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                    <Dialog>
                       <DialogTrigger asChild>
                         <Edit
                           className="text-blue-600 cursor-pointer mr-2 hover:text-purple-800 hover:scale-110 active:scale-90 transition-all duration-500"
                           onClick={() => startEditing(row, index)}
                         />
                       </DialogTrigger>
-                      <DialogContent>
+                      <DialogContent className="border-2 border-blue-200 p-8 bg-gradient-to-b from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 shadow-2xl overflow-auto">
                         <DialogHeader>
                           <DialogTitle>Edit Row</DialogTitle>
                           <DialogDescription>
@@ -122,7 +124,7 @@ const RecieptDataTable = ({ recieptData = [], setRecieptData }) => {
                           </DialogDescription>
                         </DialogHeader>
                         <div className="flex flex-col gap-4 mt-4">
-                          <input
+                          <Input
                             type="text"
                             value={editedRow.name}
                             onChange={(e) =>
@@ -132,9 +134,9 @@ const RecieptDataTable = ({ recieptData = [], setRecieptData }) => {
                               })
                             }
                             placeholder="Name"
-                            className="border p-2 rounded-md"
+                            className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500"
                           />
-                          <input
+                          <Input
                             type="number"
                             value={editedRow.amount}
                             onChange={(e) =>
@@ -144,9 +146,9 @@ const RecieptDataTable = ({ recieptData = [], setRecieptData }) => {
                               })
                             }
                             placeholder="Amount"
-                            className="border p-2 rounded-md"
+                            className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500"
                           />
-                          <input
+                          <Input
                             type="text"
                             value={editedRow.description}
                             onChange={(e) =>
@@ -156,9 +158,9 @@ const RecieptDataTable = ({ recieptData = [], setRecieptData }) => {
                               })
                             }
                             placeholder="Description"
-                            className="border p-2 rounded-md"
+                            className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500"
                           />
-                          <input
+                          <Input
                             type="date"
                             value={editedRow.createdAt}
                             onChange={(e) =>
@@ -168,14 +170,16 @@ const RecieptDataTable = ({ recieptData = [], setRecieptData }) => {
                               })
                             }
                             placeholder="Date"
-                            className="border p-2 rounded-md"
+                            className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500"
                           />
-                          <button
-                            onClick={saveEditedRow}
-                            className="bg-blue-500 text-white p-2 rounded-md"
-                          >
-                            Save
-                          </button>
+                          <DialogClose asChild>
+                            <Button
+                              onClick={saveEditedRow}
+                              className="individual-expense-btn2 rounded-3xl p-2 mt-2"
+                            >
+                              Update Data
+                            </Button>
+                          </DialogClose>
                         </div>
                       </DialogContent>
                     </Dialog>
