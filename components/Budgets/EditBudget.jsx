@@ -115,7 +115,7 @@ function EditBudget({ budgetInfo, refreshData }) {
                 placeholder="e.g. Home Decor"
                 defaultValue={budgetInfo?.name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-4 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-105 duration-200"
+                className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500"
               />
             </div>
 
@@ -129,7 +129,7 @@ function EditBudget({ budgetInfo, refreshData }) {
                 defaultValue={budgetInfo?.amount}
                 placeholder="e.g. 5000₹"
                 onChange={(e) => setAmount(e.target.value)}
-                className="w-full border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-4 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-105 duration-200"
+                className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500"
               />
             </div>
 
@@ -150,12 +150,12 @@ function EditBudget({ budgetInfo, refreshData }) {
             {isRecurring && (
               <div className="mt-4">
                 <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                  Frequency
+                  Recurring Interval
                 </h2>
                 <select
                   value={frequency}
                   onChange={(e) => setFrequency(e.target.value)}
-                  className="w-full border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-2 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-105 duration-200"
+                  className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500"
                 >
                   <option value="daily">Daily</option>
                   <option value="weekly">Weekly</option>
