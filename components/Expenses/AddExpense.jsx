@@ -164,7 +164,7 @@ const AddExpense = ({
         <Input
           type="text"
           placeholder="e.g. Home Decor"
-          className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500"
+          className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500 ring-1"
           value={name}
           onChange={(e) => setname(e.target.value)}
         />
@@ -178,7 +178,7 @@ const AddExpense = ({
         <Input
           type="number"
           placeholder="e.g. Rs.5000"
-          className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500"
+          className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500 ring-1"
           value={amount}
           onChange={(e) => setamount(e.target.value)}
         />
@@ -192,7 +192,7 @@ const AddExpense = ({
         <Input
           type="text"
           placeholder="e.g. For decorating the living room"
-          className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500"
+          className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500 ring-1"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
@@ -203,12 +203,12 @@ const AddExpense = ({
           <h3 className="text-blue-700 dark:text-blue-300 font-medium mb-2">
             Due Date (Optional)
           </h3>
-          <Popover>
+          <Popover modal>
             <PopoverTrigger asChild>
               <Button
-                variant={"outline"}
+                // variant={"outline"}
                 className={cn(
-                  "w-full border justify-start border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-4 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-[1.03] duration-200",
+                  "exp-input-field justify-start focus-visible:ring-blue-400 dark:focus:ring-blue-500 ring-1",
                   isSameDate(dueDate, getISTDate()) && "text-muted-foreground"
                 )}
               >

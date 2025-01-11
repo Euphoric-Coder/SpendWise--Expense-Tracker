@@ -31,6 +31,7 @@ import { eq } from "drizzle-orm";
 import { toast } from "sonner";
 import { expenseDateFormat, nextRecurringDate } from "@/utils/utilities";
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
 const ExpenseTable = ({
   expenseList = [],
@@ -82,9 +83,9 @@ const ExpenseTable = ({
 
   return (
     <div>
-       <div className="w-full block md:hidden mx-auto px-4 sm:px-6 lg:px-8">
-         <div className="grid grid-cols-1 gap-10">
-           {expenseList?.length > 0 ? (
+      <div className="w-full block md:hidden mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-10">
+          {expenseList?.length > 0 ? (
             expenseList.map((expense, index) => (
               <Card
                 key={index}
@@ -240,13 +241,13 @@ const ExpenseTable = ({
                             >
                               Name
                             </label>
-                            <input
+                            <Input
                               id="name"
                               type="text"
                               value={editedName}
                               onChange={(e) => setEditedName(e.target.value)}
                               placeholder="Name"
-                              className="exp-input-field"
+                              className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500 ring-1"
                             />
 
                             {/* Amount Input */}
@@ -256,13 +257,13 @@ const ExpenseTable = ({
                             >
                               Amount
                             </label>
-                            <input
+                            <Input
                               id="amount"
                               type="number"
                               value={editedAmount}
                               onChange={(e) => setEditedAmount(e.target.value)}
                               placeholder="Amount"
-                              className="exp-input-field"
+                              className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500 ring-1"
                             />
 
                             {/* Amount Input */}
@@ -272,7 +273,7 @@ const ExpenseTable = ({
                             >
                               Description
                             </label>
-                            <input
+                            <Input
                               id="description"
                               type="text"
                               value={editedDescription}
@@ -280,7 +281,7 @@ const ExpenseTable = ({
                                 setEditedDescription(e.target.value)
                               }
                               placeholder="Description"
-                              className="exp-input-field"
+                              className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500 ring-1"
                             />
 
                             {/* Save Button */}
@@ -326,7 +327,6 @@ const ExpenseTable = ({
           </table>
         </div>
       </div>
-      
     </div>
   );
 };
