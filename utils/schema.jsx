@@ -39,6 +39,21 @@ export const Expenses = pgTable("expenses", {
   createdAt: varchar("createdAt").notNull(),
 });
 
+/**
+ * Planning for expense que 
+ * Implementation of expense que by creating a table expenseQue
+ * 
+ */
+
+export const ExpenseQue = pgTable("expenseQue", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: varchar("name"),
+  amount: numeric("amount"),
+  description: varchar("description"),
+  budgetId: integer("budgetId").references(() => Budgets.id),
+  initiatedOn: varchar("initiatedOn"),
+})
+
 export const Incomes = pgTable("incomes", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name").notNull(),

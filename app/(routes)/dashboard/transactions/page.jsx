@@ -2,6 +2,14 @@
 
 import React, { useState, useMemo } from "react";
 import { Search, Filter, Download } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const transactions = [
   {
@@ -11,6 +19,7 @@ const transactions = [
     date: "2024-03-15",
     category: "Food",
     status: "completed",
+    type: "Expense",
   },
   {
     id: 2,
@@ -19,6 +28,7 @@ const transactions = [
     date: "2024-03-14",
     category: "Income",
     status: "completed",
+    type: "Income",
   },
   {
     id: 3,
@@ -27,6 +37,7 @@ const transactions = [
     date: "2024-03-13",
     category: "Bills",
     status: "pending",
+    type: "Expense",
   },
   {
     id: 4,
@@ -35,6 +46,7 @@ const transactions = [
     date: "2024-03-12",
     category: "Income",
     status: "completed",
+    type: "Income",
   },
   {
     id: 5,
@@ -43,6 +55,7 @@ const transactions = [
     date: "2024-03-11",
     category: "Food",
     status: "completed",
+    type: "Expense",
   },
   {
     id: 6,
@@ -51,9 +64,11 @@ const transactions = [
     date: "2024-03-10",
     category: "Travel",
     status: "completed",
+    type: "Expense",
   },
 ];
 
+// const transactions = [];
 const categories = ["All Categories", "Food", "Bills", "Income", "Travel"];
 const statuses = ["All Statuses", "completed", "pending"];
 
@@ -117,7 +132,7 @@ export default function Transactions() {
                 : "bg-purple-100 text-purple-700 hover:bg-purple-200"
             }`}
           >
-            <Filter size={20} />
+            <Filter size={32} />
             Filter
           </button>
           <button
@@ -176,7 +191,55 @@ export default function Transactions() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-gray-100 uppercase">
+                <TableHead className="w-[100px]">Name</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead className="text-right">Type</TableHead>
+                <TableHead className="text-right">Category</TableHead>
+                <TableHead className="text-right">Amount</TableHead>
+                <TableHead className="text-right">Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredTransactions.map((tx) => (
+                <TableRow key={tx.id}>
+                  <TableCell className="font-medium">INV001</TableCell>
+                  <TableCell>{tx.desc}</TableCell>
+                  <TableCell>{tx.date}</TableCell>
+                  <TableCell className="text-right">{tx.type}</TableCell>
+                  <TableCell className="text-right">
+                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                      {tx.category}
+                    </span>
+                  </TableCell>
+                  <TableCell
+                    className={`text-right px-6 py-4 whitespace-nowrap text-sm font-medium ${
+                      tx.amount > 0 ? "text-green-600" : "text-red-600"
+                    }`}
+                  >
+                    {tx.amount > 0 ? "+" : ""}
+                    {tx.amount}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <span
+                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        tx.status === "completed"
+                          ? "bg-green-100 text-green-800"
+                          : "bg-yellow-100 text-yellow-800"
+                      }`}
+                    >
+                      {tx.status}
+                    </span>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+
+          {/* <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -232,13 +295,20 @@ export default function Transactions() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table> */}
 
-          {filteredTransactions.length === 0 && (
+          {filteredTransactions.length === 0 && transactions.length > 0 && (
             <div className="text-center py-8 text-gray-500">
-              No transactions found matching your criteria
+              No transactions found for the selected filters.
             </div>
           )}
+
+          {filteredTransactions.length === 0 && transactions.length === 0 && (
+            <div className="text-center py-8 text-gray-500">
+              No transactions found.
+            </div>
+          )}
+
         </div>
       </div>
     </div>

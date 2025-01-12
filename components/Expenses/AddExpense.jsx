@@ -38,6 +38,14 @@ const AddExpense = ({
   const [dueDate, setDueDate] = useState(getISTDate());
   const alertTimeoutRef = useRef(null);
 
+
+  /**PLAN TO MAINTAIN A QUEING SYSTEM FOR EXPENSES
+   * 
+   * @todo Add a Queing System for unfinished expense data 
+   * @todo After Adding the expense delete it from the que
+   * @todo If remained unfinished, prompt the user to either cancel or edit it
+   * 
+   */
   // Function to fetch the total expenses for the specified budget
   const fetchTotalExpenses = async () => {
     const result = await db
@@ -107,10 +115,10 @@ const AddExpense = ({
     <div className="border-2 border-blue-200 p-8 rounded-3xl bg-gradient-to-b from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 shadow-2xl relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Radial Glows */}
+        {/* Radial Glows Effect */}
         <div className="absolute -top-10 -left-10 w-40 h-40 bg-gradient-to-r from-cyan-400 via-blue-300 to-indigo-400 dark:from-gray-700 dark:via-gray-800 dark:to-gray-900 opacity-25 blur-3xl animate-spin-slow"></div>
         <div className="absolute bottom-10 right-10 w-60 h-60 bg-gradient-to-br from-blue-400 via-indigo-300 to-cyan-400 dark:from-gray-700 dark:via-gray-800 dark:to-gray-900 opacity-20 blur-[120px]"></div>
-        {/* Floating Particles */}
+        {/* Floating Particles Effect */}
         <div className="absolute inset-0 flex space-x-4 animate-float">
           <div className="w-3 h-3 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full blur-lg"></div>
           <div className="w-2 h-2 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-full blur-lg"></div>
