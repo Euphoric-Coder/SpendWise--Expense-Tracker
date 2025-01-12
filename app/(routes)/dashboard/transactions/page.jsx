@@ -5,11 +5,59 @@ import { Search, Filter, Download } from "lucide-react";
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
+  TableFooter
 } from "@/components/ui/table";
+import { incomeCategories } from "@/data/categories";
+
+const invoices = [
+  {
+    invoice: "INV001",
+    paymentStatus: "Paid",
+    totalAmount: "$250.00",
+    paymentMethod: "Credit Card",
+  },
+  {
+    invoice: "INV002",
+    paymentStatus: "Pending",
+    totalAmount: "$150.00",
+    paymentMethod: "PayPal",
+  },
+  {
+    invoice: "INV003",
+    paymentStatus: "Unpaid",
+    totalAmount: "$350.00",
+    paymentMethod: "Bank Transfer",
+  },
+  {
+    invoice: "INV004",
+    paymentStatus: "Paid",
+    totalAmount: "$450.00",
+    paymentMethod: "Credit Card",
+  },
+  {
+    invoice: "INV005",
+    paymentStatus: "Paid",
+    totalAmount: "$550.00",
+    paymentMethod: "PayPal",
+  },
+  {
+    invoice: "INV006",
+    paymentStatus: "Pending",
+    totalAmount: "$200.00",
+    paymentMethod: "Bank Transfer",
+  },
+  {
+    invoice: "INV007",
+    paymentStatus: "Unpaid",
+    totalAmount: "$300.00",
+    paymentMethod: "Credit Card",
+  },
+];
 
 const transactions = [
   {
@@ -26,7 +74,7 @@ const transactions = [
     desc: "Salary Deposit",
     amount: 3500,
     date: "2024-03-14",
-    category: "Income",
+    category: "salary",
     status: "completed",
     type: "Income",
   },
@@ -83,7 +131,8 @@ export default function Transactions() {
       const matchesSearch =
         tx.desc.toLowerCase().includes(searchTerm.toLowerCase()) ||
         tx.amount.toString().includes(searchTerm) ||
-        tx.date.includes(searchTerm);
+        tx.date.includes(searchTerm) || tx.category.includes(searchTerm) ||
+        tx.status.includes(searchTerm);
       const matchesCategory =
         selectedCategory === "All Categories" ||
         tx.category === selectedCategory;
@@ -120,8 +169,8 @@ export default function Transactions() {
   };
 
   return (
-    <div className="p-8">
-      <div className="flex justify-between items-center mb-6">
+    <div className="md:p-8">
+      <div className="flex flex-col md:flex-row justify-center md:justify-between gap-2 items-center mb-6">
         <h1 className="text-2xl font-bold">Transactions</h1>
         <div className="flex gap-3">
           <button
@@ -139,7 +188,7 @@ export default function Transactions() {
             onClick={exportTransactions}
             className="flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200"
           >
-            <Download size={20} />
+            <Download size={32} />
             Export
           </button>
         </div>
@@ -195,9 +244,9 @@ export default function Transactions() {
             <TableHeader>
               <TableRow className="bg-gray-100 uppercase">
                 <TableHead className="w-[100px]">Name</TableHead>
-                <TableHead>Description</TableHead>
+                <TableHead className="hidden md:table-cell">Description</TableHead>
                 <TableHead>Date</TableHead>
-                <TableHead className="text-right">Type</TableHead>
+                <TableHead className="text-right hidden md:table-cell">Type</TableHead>
                 <TableHead className="text-right">Category</TableHead>
                 <TableHead className="text-right">Amount</TableHead>
                 <TableHead className="text-right">Status</TableHead>
@@ -206,13 +255,23 @@ export default function Transactions() {
             <TableBody>
               {filteredTransactions.map((tx) => (
                 <TableRow key={tx.id}>
-                  <TableCell className="font-medium">INV001</TableCell>
-                  <TableCell>{tx.desc}</TableCell>
+                  <TableCell className="font-medium">INV001 <span className="md:hidden table-cell">({tx.type})</span></TableCell>
+                  <TableCell className="hidden md:table-cell">{tx.desc}</TableCell>
                   <TableCell>{tx.date}</TableCell>
-                  <TableCell className="text-right">{tx.type}</TableCell>
+                  <TableCell className="text-right hidden md:table-cell">{tx.type}</TableCell>
                   <TableCell className="text-right">
-                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
-                      {tx.category}
+                    <span className="">
+                      {tx.type === "Income" && (() => {
+                        const category = incomeCategories.find((c) => c.id === tx.category);
+                        return category ? (
+                          <>
+                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800 items-center gap-2">
+                              <category.icon size={18} />
+                              {category.name}
+                            </span>
+                          </>
+                        ) : null;
+                      })()}
                     </span>
                   </TableCell>
                   <TableCell
@@ -239,7 +298,39 @@ export default function Transactions() {
             </TableBody>
           </Table>
 
-          {/* <table className="w-full">
+          {/* <Table>
+            <TableCaption>A list of your recent invoices.</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[100px]">Invoice</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Method</TableHead>
+                <TableHead className="text-right">Amount</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {invoices.map((invoice) => (
+                <TableRow key={invoice.invoice}>
+                  <TableCell className="font-medium">
+                    {invoice.invoice}
+                  </TableCell>
+                  <TableCell>{invoice.paymentStatus}</TableCell>
+                  <TableCell>{invoice.paymentMethod}</TableCell>
+                  <TableCell className="text-right">
+                    {invoice.totalAmount}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TableCell colSpan={3}>Total</TableCell>
+                <TableCell className="text-right">$2,500.00</TableCell>
+              </TableRow>
+            </TableFooter>
+          </Table> */}
+
+          {/* <table className="overflow-y-auto">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -308,7 +399,6 @@ export default function Transactions() {
               No transactions found.
             </div>
           )}
-
         </div>
       </div>
     </div>

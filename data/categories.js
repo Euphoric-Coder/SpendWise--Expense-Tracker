@@ -1,44 +1,40 @@
+import { Wallet } from "lucide-react";
+
 export const incomeCategories = [
   // Income Categories
   {
     id: "salary",
     name: "Salary",
-    type: "INCOME",
     color: "#22c55e", // green-500
-    icon: "Wallet",
+    icon: Wallet,
   },
   {
     id: "freelance",
     name: "Freelance",
-    type: "INCOME",
     color: "#06b6d4", // cyan-500
     icon: "Laptop",
   },
   {
     id: "investments",
     name: "Investments",
-    type: "INCOME",
     color: "#6366f1", // indigo-500
     icon: "TrendingUp",
   },
   {
     id: "business",
     name: "Business",
-    type: "INCOME",
     color: "#ec4899", // pink-500
     icon: "Building",
   },
   {
     id: "rental",
     name: "Rental",
-    type: "INCOME",
     color: "#f59e0b", // amber-500
     icon: "Home",
   },
   {
     id: "other-income",
     name: "Other Income",
-    type: "INCOME",
     color: "#64748b", // slate-500
     icon: "Plus",
   },
