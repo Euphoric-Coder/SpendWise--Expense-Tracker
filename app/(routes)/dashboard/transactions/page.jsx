@@ -9,22 +9,11 @@ import {
   TrendingUp,
   TrendingDown,
   TimerReset,
-  TicketIcon,
   CircleCheck,
 } from "lucide-react";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-  TableFooter,
-} from "@/components/ui/table";
 import { expenseCategories, incomeCategories } from "@/data/categories";
-import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
+import { Button } from "@/components/ui/button";
 
 const transactions = [
   {
@@ -110,6 +99,15 @@ export default function Transactions() {
   const [selectedCategory, setSelectedCategory] = useState("All Categories");
   const [selectedStatus, setSelectedStatus] = useState("All Statuses");
   const [showFilters, setShowFilters] = useState(false);
+  const [expandedIndex, setExpandedIndex] = useState(null);
+
+  const toggleDescription = (currentIndex) => {
+    if (expandedIndex === currentIndex) {
+      setExpandedIndex(null); // Collapse if already expanded
+    } else {
+      setExpandedIndex(currentIndex); // Expand the current index
+    }
+  };
 
   const filteredTransactions = useMemo(() => {
     return transactions.filter((tx) => {
@@ -121,7 +119,7 @@ export default function Transactions() {
         tx.status.includes(searchTerm);
       const matchesCategory =
         selectedCategory === "All Categories" ||
-        tx.category === selectedCategory;
+        tx.category === selectedCategory.toLowerCase();
       const matchesStatus =
         selectedStatus === "All Statuses" || tx.status === selectedStatus;
 
@@ -133,8 +131,9 @@ export default function Transactions() {
 
   const exportTransactions = () => {
     const csvContent = [
-      ["Date", "Description", "Category", "Amount", "Status"],
+      ["Name", "Date", "Description", "Category", "Amount", "Status"],
       ...filteredTransactions.map((tx) => [
+        tx.name,
         tx.date,
         tx.desc,
         tx.category,
@@ -161,24 +160,25 @@ export default function Transactions() {
       <div className="flex flex-col md:flex-row justify-center md:justify-between gap-2 items-center mb-6">
         <h1 className="text-2xl font-bold">Transactions</h1>
         <div className="flex gap-3">
-          <button
+          <Button
             onClick={() => setShowFilters(!showFilters)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+            className={`[&_svg]:size-7 flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 ${
               showFilters
-                ? "bg-purple-600 text-white hover:bg-purple-700"
-                : "bg-purple-100 text-purple-700 hover:bg-purple-200"
-            }`}
+                ? "bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 text-white hover:from-purple-600 hover:via-purple-700 hover:to-purple-800"
+                : "bg-gradient-to-r from-purple-100 via-purple-200 to-purple-300 text-purple-700 hover:from-purple-200 hover:via-purple-300 hover:to-purple-400"
+            } shadow-md`}
           >
-            <Filter size={32} />
+            <Filter size={24} />
             Filter
-          </button>
-          <button
+          </Button>
+
+          <Button
             onClick={exportTransactions}
-            className="flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-white bg-gradient-to-r from-blue-500 via-cyan-600 to-teal-500 hover:from-blue-600 hover:via-cyan-700 hover:to-teal-600 transition-all duration-300 shadow-md"
           >
-            <Download size={32} />
+            <Download size={24} />
             Export
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -199,7 +199,19 @@ export default function Transactions() {
           </div>
 
           {showFilters && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              >
+                {categories.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
@@ -374,7 +386,7 @@ export default function Transactions() {
 
             {/* Table Body */}
             <tbody>
-              {filteredTransactions.map((tx) => {
+              {filteredTransactions.map((tx, index) => {
                 const category =
                   tx.type === "Income"
                     ? incomeCategories.find((c) => c.id === tx.category)
@@ -383,7 +395,7 @@ export default function Transactions() {
                 return (
                   <tr
                     key={tx.id}
-                    className="hover:bg-gradient-to-br hover:from-blue-200 hover:via-blue-100 hover:to-indigo-200 transition-all duration-300 even:bg-gradient-to-br even:from-white even:via-blue-100 even:to-blue-50"
+                    className="hover:bg-gradient-to-br hover:from-blue-200 hover:via-blue-100 hover:to-indigo-200 transition-all duration-300 even:bg-blue-50"
                   >
                     {/* Name Column */}
                     <td className="py-4 px-6 font-medium text-gray-700 flex gap-2 items-center">
@@ -401,7 +413,25 @@ export default function Transactions() {
 
                     {/* Description Column */}
                     <td className="py-4 px-6 hidden md:table-cell text-gray-600">
-                      {tx.desc || "No description"}
+                      {tx.desc && tx.desc.length > 10 ? (
+                        <div>
+                          <span>
+                            {expandedIndex === index
+                              ? tx.desc
+                              : `${tx.desc.substring(0, 10)}...`}
+                          </span>
+                          <button
+                            onClick={() => toggleDescription(index)}
+                            className="ml-2 text-blue-600 hover:underline text-sm"
+                          >
+                            {expandedIndex === index
+                              ? "Show Less"
+                              : "Show More"}
+                          </button>
+                        </div>
+                      ) : (
+                        tx.desc || "No description"
+                      )}
                     </td>
 
                     {/* Date Column */}
@@ -413,7 +443,7 @@ export default function Transactions() {
                     <td className="py-4 px-6">
                       {category && (
                         <span
-                          className="px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-2"
+                          className="inline-flex px-3 py-1 rounded-full text-xs font-semibold items-center gap-2"
                           style={{
                             background: `linear-gradient(90deg, ${category.color} 0%, ${category.color} 100%)`,
                             color: category.textColor || "white",
