@@ -1,7 +1,17 @@
-'use client';
+"use client";
 
 import React, { useState, useMemo } from "react";
-import { Search, Filter, Download, Timer, TrendingUp, TrendingDown, TimerReset, TicketIcon, CircleCheck } from "lucide-react";
+import {
+  Search,
+  Filter,
+  Download,
+  Timer,
+  TrendingUp,
+  TrendingDown,
+  TimerReset,
+  TicketIcon,
+  CircleCheck,
+} from "lucide-react";
 import {
   Table,
   TableBody,
@@ -10,7 +20,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-  TableFooter
+  TableFooter,
 } from "@/components/ui/table";
 import { expenseCategories, incomeCategories } from "@/data/categories";
 import { Badge } from "@/components/ui/badge";
@@ -27,6 +37,7 @@ const transactions = [
     type: "Expense",
     recurring: false,
     frequency: null,
+    deletionRemark: null,
   },
   {
     id: 2,
@@ -38,6 +49,7 @@ const transactions = [
     type: "Income",
     recurring: true,
     frequency: "monthly",
+    deletionRemark: null,
   },
   {
     id: 3,
@@ -49,6 +61,7 @@ const transactions = [
     type: "Expense",
     recurring: true,
     frequency: "weekly",
+    deletionRemark: null,
   },
   {
     id: 4,
@@ -60,6 +73,7 @@ const transactions = [
     type: "Income",
     recurring: true,
     frequency: "monthly",
+    deletionRemark: null,
   },
   {
     id: 5,
@@ -71,6 +85,7 @@ const transactions = [
     type: "Expense",
     recurring: false,
     frequency: null,
+    deletionRemark: null,
   },
   {
     id: 6,
@@ -82,7 +97,8 @@ const transactions = [
     type: "Expense",
     recurring: false,
     frequency: null,
-    },
+    deletionRemark: null,
+  },
 ];
 
 // const transactions = [];
@@ -100,7 +116,8 @@ export default function Transactions() {
       const matchesSearch =
         tx.desc.toLowerCase().includes(searchTerm.toLowerCase()) ||
         tx.amount.toString().includes(searchTerm) ||
-        tx.date.includes(searchTerm) || tx.category.includes(searchTerm) ||
+        tx.date.includes(searchTerm) ||
+        tx.category.includes(searchTerm) ||
         tx.status.includes(searchTerm);
       const matchesCategory =
         selectedCategory === "All Categories" ||
@@ -112,18 +129,17 @@ export default function Transactions() {
     });
   }, [searchTerm, selectedCategory, selectedStatus]);
 
-  console.log(filteredTransactions)
+  console.log(filteredTransactions);
 
   const exportTransactions = () => {
     const csvContent = [
-      ["Date", "Description", "Category", "Amount", "Status", ],
+      ["Date", "Description", "Category", "Amount", "Status"],
       ...filteredTransactions.map((tx) => [
         tx.date,
         tx.desc,
         tx.category,
         tx.amount,
         tx.status,
-
       ]),
     ]
       .map((row) => row.join(","))
@@ -212,7 +228,7 @@ export default function Transactions() {
         </div>
 
         <div className="hidden md:block">
-          <Table>
+          {/* <Table>
             <TableHeader>
               <TableRow className="bg-gray-100 uppercase">
                 <TableHead className="w-[100px]">Name</TableHead>
@@ -247,7 +263,7 @@ export default function Transactions() {
                   <TableCell className="hidden md:table-cell">
                     {tx.desc}
                   </TableCell>
-                  <TableCell>{format(tx.date, 'PPP')}</TableCell>
+                  <TableCell>{format(tx.date, "PPP")}</TableCell>
 
                   <TableCell className="">
                     <span className="">
@@ -303,7 +319,7 @@ export default function Transactions() {
                   </TableCell>
                   <TableCell>
                     <Badge
-                      className={`inline-flex items-center gap-1 rounded-full text-xs sm:text-sm font-medium text-center transition duration-200 ease-in-out shadow-sm cursor-pointer ${
+                      className={`inline-flex items-center gap-1 rounded-full text-sm font-medium text-center transition duration-200 ease-in-out shadow-sm cursor-pointer ${
                         tx.recurring
                           ? "bg-blue-100 text-blue-700 hover:bg-blue-200 hover:text-blue-900" // Very light blue with hover effect for recurring
                           : "bg-cyan-100 text-cyan-700 hover:bg-cyan-200 hover:text-cyan-900" // Very light cyan with hover effect for non-recurring
@@ -338,7 +354,128 @@ export default function Transactions() {
                 </TableRow>
               ))}
             </TableBody>
-          </Table>
+          </Table> */}
+
+          <table className="w-full border-collapse text-base rounded-3xl shadow-lg overflow-hidden">
+            {/* Table Header */}
+            <thead className="bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-500 text-white uppercase">
+              <tr>
+                <th className="py-4 px-6 font-bold text-left">Name</th>
+                <th className="py-4 px-6 font-bold text-left hidden md:table-cell">
+                  Description
+                </th>
+                <th className="py-4 px-6 font-bold text-left">Date</th>
+                <th className="py-4 px-6 font-bold text-left">Category</th>
+                <th className="py-4 px-6 font-bold text-right">Amount</th>
+                <th className="py-4 px-6 font-bold text-left">Recurring</th>
+                <th className="py-4 px-6 font-bold text-left">Status</th>
+              </tr>
+            </thead>
+
+            {/* Table Body */}
+            <tbody>
+              {filteredTransactions.map((tx) => {
+                const category =
+                  tx.type === "Income"
+                    ? incomeCategories.find((c) => c.id === tx.category)
+                    : expenseCategories.find((c) => c.id === tx.category);
+
+                return (
+                  <tr
+                    key={tx.id}
+                    className="hover:bg-gradient-to-br hover:from-blue-200 hover:via-blue-100 hover:to-indigo-200 transition-all duration-300 even:bg-gradient-to-br even:from-white even:via-blue-100 even:to-blue-50"
+                  >
+                    {/* Name Column */}
+                    <td className="py-4 px-6 font-medium text-gray-700 flex gap-2 items-center">
+                      INV001
+                      {tx.type === "Income" ? (
+                        <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-semibold hover:bg-green-200">
+                          Income
+                        </span>
+                      ) : (
+                        <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-semibold hover:bg-red-200">
+                          Expense
+                        </span>
+                      )}
+                    </td>
+
+                    {/* Description Column */}
+                    <td className="py-4 px-6 hidden md:table-cell text-gray-600">
+                      {tx.desc || "No description"}
+                    </td>
+
+                    {/* Date Column */}
+                    <td className="py-4 px-6 text-gray-600">
+                      {format(tx.date, "PPP")}
+                    </td>
+
+                    {/* Category Column */}
+                    <td className="py-4 px-6">
+                      {category && (
+                        <span
+                          className="px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-2"
+                          style={{
+                            background: `linear-gradient(90deg, ${category.color} 0%, ${category.color} 100%)`,
+                            color: category.textColor || "white",
+                          }}
+                        >
+                          {category.icon && <category.icon size={16} />}
+                          {category.name}
+                        </span>
+                      )}
+                    </td>
+
+                    {/* Amount Column */}
+                    <td
+                      className={`py-4 px-6 text-right font-medium ${
+                        tx.amount > 0 ? "text-green-600" : "text-red-600"
+                      } flex gap-1 items-center`}
+                    >
+                      {tx.amount > 0 ? <TrendingUp /> : <TrendingDown />}
+                      {tx.amount}
+                    </td>
+
+                    {/* Recurring Column */}
+                    <td className="py-4 px-6">
+                      <span
+                        className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+                          tx.recurring
+                            ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
+                            : "bg-cyan-100 text-cyan-700 hover:bg-cyan-200"
+                        }`}
+                      >
+                        {tx.recurring ? (
+                          <>
+                            <TimerReset size={16} />
+                            {tx.frequency.toUpperCase()}
+                          </>
+                        ) : (
+                          <>
+                            <Timer size={16} />
+                            One-Time
+                          </>
+                        )}
+                      </span>
+                    </td>
+
+                    {/* Status Column */}
+                    <td className="py-4 px-6">
+                      <span
+                        className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+                          tx.status === "completed"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-yellow-100 text-yellow-800"
+                        }`}
+                      >
+                        <CircleCheck size={16} />
+                        {tx.status}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
 
           {filteredTransactions.length === 0 && transactions.length > 0 && (
             <div className="text-center py-8 text-gray-500">
