@@ -14,7 +14,10 @@ export async function GET() {
       .from(Notifications)
       .where(eq(Notifications.createdFor, user?.emailAddresses[0].emailAddress))
       .orderBy(desc(Notifications.createdAt));
-    return NextResponse.json(notifications);
+
+    
+    return NextResponse.json(notifications || []);
+
   } catch (error) {
     console.error("Error fetching notifications:", error);
     return NextResponse.json(

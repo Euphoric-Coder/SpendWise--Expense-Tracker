@@ -6,12 +6,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const NotificationTab = () => {
-  const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState([]); // Ensure it's an array
   const [unreadCount, setUnreadCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState("all");
@@ -21,21 +20,30 @@ const NotificationTab = () => {
     const fetchNotifications = async () => {
       try {
         const response = await fetch("/api/notifications");
+        if (!response.ok) {
+          console.error("Failed to fetch notifications:", response.status);
+          setNotifications([]);
+          return;
+        }
         const data = await response.json();
-        setNotifications(data);
-        console.log(notifications.length);
-        setUnreadCount(notifications?.filter((n) => !n.read).length);
+        setNotifications(Array.isArray(data) ? data : []);
+        setUnreadCount(data.filter((n) => !n.read).length);
       } catch (error) {
         console.error("Error fetching notifications:", error);
+        setNotifications([]);
       }
     };
 
     fetchNotifications();
-  }, [notifications]);
+    const intervalId = setInterval(fetchNotifications, 5000); // Fetch every 5 seconds
+
+    return () => clearInterval(intervalId); // Cleanup interval on unmount
+  }, []);
+
 
   // Filtered and searched notifications
-  const filteredNotifications = notifications?.filter((notification) => {
-    const queryWords = searchQuery.toLowerCase().split(" "); // Split and clean query words
+  const filteredNotifications = notifications.filter((notification) => {
+    const queryWords = searchQuery.toLowerCase().split(" ");
     const matchesSearch = queryWords.every(
       (word) =>
         notification.message.toLowerCase().includes(word) ||

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from "react";
-import { Search, Filter, Download } from "lucide-react";
+import { Search, Filter, Download, Timer, TrendingUp, TrendingDown, TimerReset, TicketIcon, CircleCheck } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -12,52 +12,9 @@ import {
   TableRow,
   TableFooter
 } from "@/components/ui/table";
-import { incomeCategories } from "@/data/categories";
-
-const invoices = [
-  {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
-  },
-];
+import { expenseCategories, incomeCategories } from "@/data/categories";
+import { Badge } from "@/components/ui/badge";
+import { format } from "date-fns";
 
 const transactions = [
   {
@@ -65,9 +22,11 @@ const transactions = [
     desc: "Grocery Shopping",
     amount: -120,
     date: "2024-03-15",
-    category: "Food",
+    category: "groceries",
     status: "completed",
     type: "Expense",
+    recurring: false,
+    frequency: null,
   },
   {
     id: 2,
@@ -77,43 +36,53 @@ const transactions = [
     category: "salary",
     status: "completed",
     type: "Income",
+    recurring: true,
+    frequency: "monthly",
   },
   {
     id: 3,
     desc: "Utility Bills",
     amount: -250,
     date: "2024-03-13",
-    category: "Bills",
+    category: "utilities",
     status: "pending",
     type: "Expense",
+    recurring: true,
+    frequency: "weekly",
   },
   {
     id: 4,
     desc: "Freelance Work",
     amount: 800,
     date: "2024-03-12",
-    category: "Income",
+    category: "freelance",
     status: "completed",
     type: "Income",
+    recurring: true,
+    frequency: "monthly",
   },
   {
     id: 5,
     desc: "Restaurant",
     amount: -85,
     date: "2024-03-11",
-    category: "Food",
+    category: "food",
     status: "completed",
     type: "Expense",
+    recurring: false,
+    frequency: null,
   },
   {
     id: 6,
     desc: "Transport",
     amount: -30,
     date: "2024-03-10",
-    category: "Travel",
+    category: "travel",
     status: "completed",
     type: "Expense",
-  },
+    recurring: false,
+    frequency: null,
+    },
 ];
 
 // const transactions = [];
@@ -143,15 +112,18 @@ export default function Transactions() {
     });
   }, [searchTerm, selectedCategory, selectedStatus]);
 
+  console.log(filteredTransactions)
+
   const exportTransactions = () => {
     const csvContent = [
-      ["Date", "Description", "Category", "Amount", "Status"],
+      ["Date", "Description", "Category", "Amount", "Status", ],
       ...filteredTransactions.map((tx) => [
         tx.date,
         tx.desc,
         tx.category,
         tx.amount,
         tx.status,
+
       ]),
     ]
       .map((row) => row.join(","))
@@ -239,57 +211,127 @@ export default function Transactions() {
           )}
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="hidden md:block">
           <Table>
             <TableHeader>
               <TableRow className="bg-gray-100 uppercase">
                 <TableHead className="w-[100px]">Name</TableHead>
-                <TableHead className="hidden md:table-cell">Description</TableHead>
+                <TableHead className="hidden md:table-cell">
+                  Description
+                </TableHead>
                 <TableHead>Date</TableHead>
-                <TableHead className="text-right hidden md:table-cell">Type</TableHead>
-                <TableHead className="text-right">Category</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
-                <TableHead className="text-right">Status</TableHead>
+                <TableHead className="">Category</TableHead>
+                <TableHead className="">Amount</TableHead>
+                <TableHead className="">Recurring</TableHead>
+                <TableHead className="">Status</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredTransactions.map((tx) => (
                 <TableRow key={tx.id}>
-                  <TableCell className="font-medium">INV001 <span className="md:hidden table-cell">({tx.type})</span></TableCell>
-                  <TableCell className="hidden md:table-cell">{tx.desc}</TableCell>
-                  <TableCell>{tx.date}</TableCell>
-                  <TableCell className="text-right hidden md:table-cell">{tx.type}</TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="flex gap-1 font-medium">
+                    INV001{" "}
+                    <span>
+                      {tx.type === "Income" ? (
+                        <Badge className="bg-green-100 text-green-800 hover:bg-green-300 hover:scale-105 cursor-pointer transition-all duration-500">
+                          Income
+                        </Badge>
+                      ) : (
+                        <Badge className="bg-red-100 text-red-800 hover:bg-red-300 hover:scale-105 cursor-pointer transition-all duration-500">
+                          Expense
+                        </Badge>
+                      )}
+                    </span>
+                    <span className="md:hidden table-cell">({tx.type})</span>
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    {tx.desc}
+                  </TableCell>
+                  <TableCell>{format(tx.date, 'PPP')}</TableCell>
+
+                  <TableCell className="">
                     <span className="">
-                      {tx.type === "Income" && (() => {
-                        const category = incomeCategories.find((c) => c.id === tx.category);
-                        return category ? (
-                          <>
-                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800 items-center gap-2">
-                              <category.icon size={18} />
-                              {category.name}
-                            </span>
-                          </>
-                        ) : null;
-                      })()}
+                      {tx.type === "Income" &&
+                        (() => {
+                          const category = incomeCategories.find(
+                            (c) => c.id === tx.category
+                          );
+                          return category ? (
+                            <>
+                              <span
+                                className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full items-center gap-2"
+                                style={{
+                                  background: `linear-gradient(90deg, ${category.color} 0%, ${category.color} 100%)`,
+                                  color: category.textColor || "white", // Ensure text is readable
+                                }}
+                              >
+                                {category.icon && <category.icon size={18} />}
+                                {category.name}
+                              </span>
+                            </>
+                          ) : null;
+                        })()}
+                      {tx.type === "Expense" &&
+                        (() => {
+                          const category = expenseCategories.find(
+                            (c) => c.id === tx.category
+                          );
+                          return category ? (
+                            <>
+                              <span
+                                className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full items-center gap-2"
+                                style={{
+                                  background: `linear-gradient(90deg, ${category.color} 0%, ${category.color} 100%)`,
+                                  color: category.textColor || "white", // Ensure text is readable
+                                }}
+                              >
+                                {category.icon && <category.icon size={18} />}
+                                {category.name}
+                              </span>
+                            </>
+                          ) : null;
+                        })()}
                     </span>
                   </TableCell>
                   <TableCell
-                    className={`text-right px-6 py-4 whitespace-nowrap text-sm font-medium ${
+                    className={`flex gap-1 px-6 py-4 whitespace-nowrap text-md font-semibold ${
                       tx.amount > 0 ? "text-green-600" : "text-red-600"
                     }`}
                   >
-                    {tx.amount > 0 ? "+" : ""}
+                    {tx.amount > 0 ? <TrendingUp /> : <TrendingDown />}
                     {tx.amount}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell>
+                    <Badge
+                      className={`inline-flex items-center gap-1 rounded-full text-xs sm:text-sm font-medium text-center transition duration-200 ease-in-out shadow-sm cursor-pointer ${
+                        tx.recurring
+                          ? "bg-blue-100 text-blue-700 hover:bg-blue-200 hover:text-blue-900" // Very light blue with hover effect for recurring
+                          : "bg-cyan-100 text-cyan-700 hover:bg-cyan-200 hover:text-cyan-900" // Very light cyan with hover effect for non-recurring
+                      }`}
+                    >
+                      {tx.recurring ? (
+                        <>
+                          <TimerReset className="text-blue-700" size={18} />
+                          {tx.frequency.toUpperCase()}
+                        </>
+                      ) : (
+                        <>
+                          <Timer className="text-cyan-700" size={18} />
+                          One-Time
+                        </>
+                      )}
+                    </Badge>
+                  </TableCell>
+
+                  <TableCell className="">
                     <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                      className={`px-2 inline-flex gap-1 text-xs leading-5 font-semibold rounded-full ${
                         tx.status === "completed"
                           ? "bg-green-100 text-green-800"
                           : "bg-yellow-100 text-yellow-800"
                       }`}
                     >
+                      <CircleCheck size={20} />
                       {tx.status}
                     </span>
                   </TableCell>
@@ -297,96 +339,6 @@ export default function Transactions() {
               ))}
             </TableBody>
           </Table>
-
-          {/* <Table>
-            <TableCaption>A list of your recent invoices.</TableCaption>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[100px]">Invoice</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Method</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {invoices.map((invoice) => (
-                <TableRow key={invoice.invoice}>
-                  <TableCell className="font-medium">
-                    {invoice.invoice}
-                  </TableCell>
-                  <TableCell>{invoice.paymentStatus}</TableCell>
-                  <TableCell>{invoice.paymentMethod}</TableCell>
-                  <TableCell className="text-right">
-                    {invoice.totalAmount}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TableCell colSpan={3}>Total</TableCell>
-                <TableCell className="text-right">$2,500.00</TableCell>
-              </TableRow>
-            </TableFooter>
-          </Table> */}
-
-          {/* <table className="overflow-y-auto">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Description
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Category
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Amount
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {filteredTransactions.map((tx) => (
-                <tr key={tx.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {tx.date}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {tx.desc}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
-                      {tx.category}
-                    </span>
-                  </td>
-                  <td
-                    className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${
-                      tx.amount > 0 ? "text-green-600" : "text-red-600"
-                    }`}
-                  >
-                    {tx.amount > 0 ? "+" : ""}
-                    {tx.amount}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        tx.status === "completed"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-yellow-100 text-yellow-800"
-                      }`}
-                    >
-                      {tx.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table> */}
 
           {filteredTransactions.length === 0 && transactions.length > 0 && (
             <div className="text-center py-8 text-gray-500">
@@ -399,6 +351,13 @@ export default function Transactions() {
               No transactions found.
             </div>
           )}
+        </div>
+
+        <div className="block md:hidden">
+          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veritatis
+          culpa quos eveniet, officia nostrum, voluptate dolores nemo amet
+          maxime voluptatibus reiciendis similique error blanditiis soluta natus
+          vitae hic? Rerum temporibus at enim cum?
         </div>
       </div>
     </div>
