@@ -10,16 +10,27 @@ import {
   TrendingDown,
   TimerReset,
   CircleCheck,
+  Calendar,
 } from "lucide-react";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogClose,
+} from "@/components/ui/dialog";
 import { expenseCategories, incomeCategories } from "@/data/categories";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
 
 const transactions = [
   {
     id: 1,
     desc: "Grocery Shopping",
-    amount: -120,
+    amount: 120,
     date: "2024-03-15",
     category: "groceries",
     status: "completed",
@@ -43,7 +54,7 @@ const transactions = [
   {
     id: 3,
     desc: "Utility Bills",
-    amount: -250,
+    amount: 250,
     date: "2024-03-13",
     category: "utilities",
     status: "pending",
@@ -67,7 +78,7 @@ const transactions = [
   {
     id: 5,
     desc: "Restaurant",
-    amount: -85,
+    amount: 85,
     date: "2024-03-11",
     category: "food",
     status: "completed",
@@ -79,7 +90,7 @@ const transactions = [
   {
     id: 6,
     desc: "Transport",
-    amount: -30,
+    amount: 30,
     date: "2024-03-10",
     category: "travel",
     status: "completed",
@@ -91,15 +102,151 @@ const transactions = [
 ];
 
 // const transactions = [];
-const categories = ["All Categories", "Food", "Bills", "Income", "Travel"];
+const categories = ["All Categories", "food", "bills", "income", "travel"];
 const statuses = ["All Statuses", "completed", "pending"];
 
 export default function Transactions() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All Categories");
-  const [selectedStatus, setSelectedStatus] = useState("All Statuses");
-  const [showFilters, setShowFilters] = useState(false);
   const [expandedIndex, setExpandedIndex] = useState(null);
+  const [tempFilters, setTempFilters] = useState({
+    categories: [],
+    statuses: [],
+    dateRange: { start: "", end: "" },
+    amountRange: { min: "", max: "" },
+  });
+  const [appliedFilters, setAppliedFilters] = useState({ ...tempFilters });
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const isSearchActive = searchTerm !== ""; // Check if there is text in the search bar
+
+  const filterCount = useMemo(() => {
+    let count = 0;
+    count += tempFilters.categories.length;
+    count += tempFilters.statuses.length;
+    if (tempFilters.dateRange.start) count += 1;
+    if (tempFilters.dateRange.end) count += 1;
+    if (tempFilters.amountRange.min) count += 1;
+    if (tempFilters.amountRange.max) count += 1;
+    return count;
+  }, [tempFilters]);
+
+  const filteredTransactions = useMemo(() => {
+    return transactions.filter((tx) => {
+      const filtersToApply = appliedFilters;
+
+      const matchesSearch =
+        tx.desc.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        tx.amount.toString().includes(searchTerm) ||
+        tx.date.includes(searchTerm);
+
+      const matchesCategory =
+        filtersToApply.categories.length === 0 ||
+        filtersToApply.categories.includes(tx.category);
+
+      const matchesStatus =
+        filtersToApply.statuses.length === 0 ||
+        filtersToApply.statuses.includes(tx.status);
+
+      const matchesDateRange =
+        (!filtersToApply.dateRange.start ||
+          tx.date >= filtersToApply.dateRange.start) &&
+        (!filtersToApply.dateRange.end ||
+          tx.date <= filtersToApply.dateRange.end);
+
+      const matchesAmountRange =
+        (!filtersToApply.amountRange.min ||
+          tx.amount >= Number(filtersToApply.amountRange.min)) &&
+        (!filtersToApply.amountRange.max ||
+          tx.amount <= Number(filtersToApply.amountRange.max));
+
+      return (
+        matchesSearch &&
+        matchesCategory &&
+        matchesStatus &&
+        matchesDateRange &&
+        matchesAmountRange
+      );
+    });
+  }, [searchTerm, appliedFilters]);
+
+  const previewedTransactions = useMemo(() => {
+    return transactions.filter((tx) => {
+      const matchesCategory =
+        tempFilters.categories.length === 0 ||
+        tempFilters.categories.includes(tx.category);
+
+      const matchesStatus =
+        tempFilters.statuses.length === 0 ||
+        tempFilters.statuses.includes(tx.status);
+
+      const matchesDateRange =
+        (!tempFilters.dateRange.start ||
+          tx.date >= tempFilters.dateRange.start) &&
+        (!tempFilters.dateRange.end || tx.date <= tempFilters.dateRange.end);
+
+      const matchesAmountRange =
+        (!tempFilters.amountRange.min ||
+          tx.amount >= Number(tempFilters.amountRange.min)) &&
+        (!tempFilters.amountRange.max ||
+          tx.amount <= Number(tempFilters.amountRange.max));
+
+      return (
+        matchesCategory &&
+        matchesStatus &&
+        matchesDateRange &&
+        matchesAmountRange
+      );
+    });
+  }, [tempFilters]);
+
+  const applyFilters = () => {
+    setAppliedFilters({ ...tempFilters });
+    setIsDialogOpen(false); // Close the dialog
+  };
+
+  const clearFilters = () => {
+    setTempFilters(appliedFilters);
+  };
+
+  const resetFilters = () => {
+    setAppliedFilters({
+      categories: [],
+      statuses: [],
+      dateRange: { start: "", end: "" },
+      amountRange: { min: "", max: "" },
+    });
+    setTempFilters({
+      categories: [],
+      statuses: [],
+      dateRange: { start: "", end: "" },
+      amountRange: { min: "", max: "" },
+    });
+
+    toast.success("Filters have been successfully reset to default!");
+  };
+
+  const handleDialogClose = (isOpen) => {
+    if (!isOpen) {
+      setTempFilters({ ...appliedFilters }); // Reset temp filters to applied filters when dialog is closed
+    }
+    setIsDialogOpen(isOpen); // Track dialog state
+  };
+
+  const displayedTransactions = isDialogOpen
+    ? previewedTransactions
+    : filteredTransactions;
+
+  const hasActiveFilters =
+    appliedFilters.categories.length > 0 ||
+    appliedFilters.statuses.length > 0 ||
+    (appliedFilters.dateRange.start &&
+      appliedFilters.dateRange.start.trim() !== "") ||
+    (appliedFilters.dateRange.end &&
+      appliedFilters.dateRange.end.trim() !== "") ||
+    (appliedFilters.amountRange.min &&
+      appliedFilters.amountRange.min.trim() !== "") ||
+    (appliedFilters.amountRange.max &&
+      appliedFilters.amountRange.max.trim() !== "");
 
   const toggleDescription = (currentIndex) => {
     if (expandedIndex === currentIndex) {
@@ -108,27 +255,6 @@ export default function Transactions() {
       setExpandedIndex(currentIndex); // Expand the current index
     }
   };
-
-  const filteredTransactions = useMemo(() => {
-    return transactions.filter((tx) => {
-      const matchesSearch =
-        tx.desc.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        tx.amount.toString().includes(searchTerm) ||
-        tx.date.includes(searchTerm) ||
-        tx.category.includes(searchTerm) ||
-        tx.status.includes(searchTerm);
-      const matchesCategory =
-        selectedCategory === "All Categories" ||
-        tx.category === selectedCategory.toLowerCase();
-      const matchesStatus =
-        selectedStatus === "All Statuses" || tx.status === selectedStatus;
-
-      return matchesSearch && matchesCategory && matchesStatus;
-    });
-  }, [searchTerm, selectedCategory, selectedStatus]);
-
-  console.log(filteredTransactions);
-
   const exportTransactions = () => {
     const csvContent = [
       ["Name", "Date", "Description", "Category", "Amount", "Status"],
@@ -159,84 +285,222 @@ export default function Transactions() {
     <div className="md:p-8">
       <div className="flex flex-col md:flex-row justify-center md:justify-between gap-2 items-center mb-6">
         <h1 className="text-2xl font-bold">Transactions</h1>
-        <div className="flex gap-3">
-          <Button
-            onClick={() => setShowFilters(!showFilters)}
-            className={`[&_svg]:size-7 flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 ${
-              showFilters
-                ? "bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 text-white hover:from-purple-600 hover:via-purple-700 hover:to-purple-800"
-                : "bg-gradient-to-r from-purple-100 via-purple-200 to-purple-300 text-purple-700 hover:from-purple-200 hover:via-purple-300 hover:to-purple-400"
-            } shadow-md`}
-          >
-            <Filter size={24} />
-            Filter
-          </Button>
-
-          <Button
-            onClick={exportTransactions}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-white bg-gradient-to-r from-blue-500 via-cyan-600 to-teal-500 hover:from-blue-600 hover:via-cyan-700 hover:to-teal-600 transition-all duration-300 shadow-md"
-          >
-            <Download size={24} />
-            Export
-          </Button>
-        </div>
       </div>
 
       <div className="bg-white rounded-xl shadow-lg p-6">
-        <div className="space-y-4 mb-6">
-          <div className="relative">
-            <Search
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-              size={20}
-            />
-            <input
+        <div className="w-full flex items-center justify-between gap-4 mb-6">
+          <div className="relative flex-1 max-w-full">
+            <Input
               type="text"
+              placeholder="Search transactions by name, description, or category..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search transactions..."
-              className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-6 py-4 rounded-full shadow-lg border transition-all duration-300 bg-white dark:bg-gray-900 dark:text-white text-gray-800 border-gray-300 dark:border-gray-600 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-500 dark:focus:ring-purple-600"
             />
+
+            {/* Clear Button Inside Search Bar */}
+            {isSearchActive && (
+              <button
+                onClick={() => setSearchTerm("")}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white px-3 py-1 rounded-full shadow-md text-sm xs:text-base transition-transform duration-300 bg-gradient-to-r from-blue-500 to-teal-500 dark:from-pink-400 dark:to-yellow-400 hover:scale-110 active:scale-95"
+              >
+                Clear
+              </button>
+            )}
           </div>
-
-          {showFilters && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+          <div className="flex gap-3">
+            <Dialog onOpenChange={handleDialogClose}>
+              <DialogTrigger asChild>
+                <button
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                    filterCount > 0
+                      ? "bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 text-white hover:from-purple-600 hover:via-purple-700 hover:to-purple-800"
+                      : "bg-gradient-to-r from-purple-100 via-purple-200 to-purple-300 text-purple-700 hover:from-purple-200 hover:via-purple-300 hover:to-purple-400"
+                  }`}
+                >
+                  <Filter size={20} />
+                  {filterCount > 0 ? `Filters (${filterCount})` : "Filter"}
+                </button>
+              </DialogTrigger>
+              <DialogContent className="p-6 bg-white rounded-lg shadow-xl w-full max-w-lg">
+                <DialogHeader>
+                  <DialogTitle className="text-lg font-semibold">
+                    Filter Transactions
+                  </DialogTitle>
+                </DialogHeader>
+                <div className="space-y-6">
+                  {/* Categories */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Categories
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {categories.slice(1).map((category) => (
+                        <button
+                          key={category}
+                          onClick={() => {
+                            setTempFilters((prev) => ({
+                              ...prev,
+                              categories: prev.categories.includes(category)
+                                ? prev.categories.filter((c) => c !== category)
+                                : [...prev.categories, category],
+                            }));
+                          }}
+                          className={`px-3 py-1 rounded-full text-sm ${
+                            tempFilters.categories.includes(category)
+                              ? "bg-purple-600 text-white"
+                              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                          }`}
+                        >
+                          {category}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Status */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Status
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {statuses.slice(1).map((status) => (
+                        <button
+                          key={status}
+                          onClick={() => {
+                            setTempFilters((prev) => ({
+                              ...prev,
+                              statuses: prev.statuses.includes(status)
+                                ? prev.statuses.filter((s) => s !== status)
+                                : [...prev.statuses, status],
+                            }));
+                          }}
+                          className={`px-3 py-1 rounded-full text-sm ${
+                            tempFilters.statuses.includes(status)
+                              ? "bg-purple-600 text-white"
+                              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                          }`}
+                        >
+                          {status}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Date Range */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Date Range
+                    </label>
+                    <div className="grid grid-cols-2 gap-4">
+                      <input
+                        type="date"
+                        value={tempFilters.dateRange.start}
+                        onChange={(e) =>
+                          setTempFilters((prev) => ({
+                            ...prev,
+                            dateRange: {
+                              ...prev.dateRange,
+                              start: e.target.value,
+                            },
+                          }))
+                        }
+                        className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      />
+                      <input
+                        type="date"
+                        value={tempFilters.dateRange.end}
+                        onChange={(e) =>
+                          setTempFilters((prev) => ({
+                            ...prev,
+                            dateRange: {
+                              ...prev.dateRange,
+                              end: e.target.value,
+                            },
+                          }))
+                        }
+                        className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      />
+                    </div>
+                  </div>
+                  {/* Amount Range */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Amount Range
+                    </label>
+                    <div className="grid grid-cols-2 gap-4">
+                      <input
+                        type="number"
+                        placeholder="Min"
+                        value={tempFilters.amountRange.min}
+                        onChange={(e) =>
+                          setTempFilters((prev) => ({
+                            ...prev,
+                            amountRange: {
+                              ...prev.amountRange,
+                              min: e.target.value,
+                            },
+                          }))
+                        }
+                        className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      />
+                      <input
+                        type="number"
+                        placeholder="Max"
+                        value={tempFilters.amountRange.max}
+                        onChange={(e) =>
+                          setTempFilters((prev) => ({
+                            ...prev,
+                            amountRange: {
+                              ...prev.amountRange,
+                              max: e.target.value,
+                            },
+                          }))
+                        }
+                        className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      />
+                    </div>
+                  </div>
+                  {/* Buttons */}
+                  <div className="flex justify-end space-x-4">
+                    <button
+                      onClick={clearFilters}
+                      className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200"
+                    >
+                      Clear Filters
+                    </button>
+                    {hasActiveFilters && (
+                      <button
+                        onClick={resetFilters}
+                        className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200"
+                      >
+                        Reset Filters
+                      </button>
+                    )}
+                    <DialogClose
+                      onClick={applyFilters}
+                      className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+                    >
+                      Apply Filters
+                    </DialogClose>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+            {hasActiveFilters && (
+              <button
+                onClick={resetFilters}
+                className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200"
               >
-                {categories.map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
-
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-              >
-                {categories.map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
-
-              <select
-                value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value)}
-                className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-              >
-                {statuses.map((status) => (
-                  <option key={status} value={status}>
-                    {status.charAt(0).toUpperCase() + status.slice(1)}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
+                Reset Filters
+              </button>
+            )}
+            <Button
+              onClick={exportTransactions}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-white bg-gradient-to-r from-blue-500 via-cyan-600 to-teal-500 hover:from-blue-600 hover:via-cyan-700 hover:to-teal-600 transition-all duration-300 shadow-md"
+            >
+              <Download size={24} />
+              Export
+            </Button>
+          </div>
         </div>
 
         <div className="hidden md:block">
@@ -376,9 +640,9 @@ export default function Transactions() {
                 <th className="py-4 px-6 font-bold text-left hidden md:table-cell">
                   Description
                 </th>
-                <th className="py-4 px-6 font-bold text-left">Date</th>
+                <th className="py-4 px-6 font-bold text-center">Date</th>
                 <th className="py-4 px-6 font-bold text-left">Category</th>
-                <th className="py-4 px-6 font-bold text-right">Amount</th>
+                <th className="py-4 px-6 font-bold text-left">Amount</th>
                 <th className="py-4 px-6 font-bold text-left">Recurring</th>
                 <th className="py-4 px-6 font-bold text-left">Status</th>
               </tr>
@@ -386,7 +650,7 @@ export default function Transactions() {
 
             {/* Table Body */}
             <tbody>
-              {filteredTransactions.map((tx, index) => {
+              {displayedTransactions.map((tx, index) => {
                 const category =
                   tx.type === "Income"
                     ? incomeCategories.find((c) => c.id === tx.category)
@@ -435,8 +699,8 @@ export default function Transactions() {
                     </td>
 
                     {/* Date Column */}
-                    <td className="py-4 px-6 text-gray-600">
-                      {format(tx.date, "PPP")}
+                    <td className="flex gap-1 items-center py-4 px-6 text-gray-600">
+                      <Calendar size={18} /> {format(tx.date, "PPP")}
                     </td>
 
                     {/* Category Column */}
@@ -458,10 +722,10 @@ export default function Transactions() {
                     {/* Amount Column */}
                     <td
                       className={`py-4 px-6 text-right font-medium ${
-                        tx.amount > 0 ? "text-green-600" : "text-red-600"
+                        tx.type === "Income" ? "text-green-600" : "text-red-600"
                       } flex gap-1 items-center`}
                     >
-                      {tx.amount > 0 ? <TrendingUp /> : <TrendingDown />}
+                      {tx.type === "Income" ? <TrendingUp /> : <TrendingDown />}
                       {tx.amount}
                     </td>
 
@@ -507,13 +771,13 @@ export default function Transactions() {
             </tbody>
           </table>
 
-          {filteredTransactions.length === 0 && transactions.length > 0 && (
+          {displayedTransactions.length === 0 && transactions.length > 0 && (
             <div className="text-center py-8 text-gray-500">
               No transactions found for the selected filters.
             </div>
           )}
 
-          {filteredTransactions.length === 0 && transactions.length === 0 && (
+          {displayedTransactions.length === 0 && transactions.length === 0 && (
             <div className="text-center py-8 text-gray-500">
               No transactions found.
             </div>
