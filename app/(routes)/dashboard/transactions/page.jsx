@@ -257,13 +257,14 @@ export default function Transactions() {
   };
   const exportTransactions = () => {
     const csvContent = [
-      ["Name", "Date", "Description", "Category", "Amount", "Status"],
+      ["Name", "Date", "Description", "Category", "Amount", "Recurring", "Status"],
       ...filteredTransactions.map((tx) => [
         tx.name,
         tx.date,
         tx.desc,
         tx.category,
         tx.amount,
+        (tx.frequency? tx.frequency : "One-Time"),
         tx.status,
       ]),
     ]

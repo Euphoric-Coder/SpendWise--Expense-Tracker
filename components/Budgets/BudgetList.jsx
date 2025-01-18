@@ -17,6 +17,7 @@ const BudgetList = () => {
     try {
       const response = await fetch("/api/budgets");
       const data = await response.json();
+      
       setBudgetList(data);
     } catch (error) {
       console.error("Error fetching budgets:", error);
