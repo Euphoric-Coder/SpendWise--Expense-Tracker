@@ -38,12 +38,8 @@ function IncomeList() {
   }, [user]);
 
   const getIncomelist = async () => {
-    const result = await db
-      .select()
-      .from(Incomes)
-      .where(eq(Incomes.createdBy, user?.primaryEmailAddress?.emailAddress))
-      .groupBy(Incomes.id)
-      .orderBy(desc(Incomes.createdAt));
+    const response = await fetch("/api/incomes");
+    const result = await response.json();
 
     // Separate items into "upcoming" and "current" arrays
     const upcomingItems = result.filter((item) => item.status === "upcoming");
