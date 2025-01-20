@@ -9,6 +9,8 @@ import { formatCurrencyDashboard } from "@/utils/utilities";
 import ExpenseDialog from "@/components/Expenses/ExpenseDialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import ExpenseCard from "@/components/Expenses/ExpenseCard";
+import { Button } from "@/components/ui/button";
+import CreateBudget from "@/components/Budgets/CreateBudget";
 
 const ExpenseDashboard = () => {
   const [budgetList, setBudgetList] = useState([]);
@@ -72,6 +74,10 @@ const ExpenseDashboard = () => {
     };
   };
 
+  const refreshData = () => {
+    fetchBudgetsAndExpenses();
+  };
+
   const { totalBudgets, totalExpenses, remaining } = calculateStats();
 
   return (
@@ -83,9 +89,13 @@ const ExpenseDashboard = () => {
       </div>
 
       {/* Header */}
-      <h1 className="text-5xl font-extrabold text-center bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 bg-clip-text text-transparent mb-12">
-        Expense Dashboard
-      </h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-5xl font-extrabold bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 bg-clip-text text-transparent mb-12">
+          Expense Dashboard
+        </h1>
+        <Button onClick={refreshData}>Refresh</Button>
+      </div>
+      <CreateBudget refreshData={() => refreshData()} />
 
       {/* Statistics Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
@@ -150,7 +160,6 @@ const ExpenseDashboard = () => {
       )}
     </div>
   );
-
 };
 
 export default ExpenseDashboard;

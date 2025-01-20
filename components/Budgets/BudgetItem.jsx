@@ -202,7 +202,7 @@ const BudgetItem = ({ budget, isBudget }) => {
   return (
     <>
       {isBudget ? (
-        <Link href={`/dashboard/expenses/${budget?.id}`}>
+        <Link href={`/dashboard/budgets/${budget?.id}`}>
           <div>
             <BudgetCard isBudget={isBudget} budget={budget} />
           </div>
