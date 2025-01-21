@@ -133,9 +133,6 @@ const BudgetCard = ({ isBudget, budget }) => (
                   Recurring Budget
                   <RecurringBudgetInfo />
                 </Badge>
-                // <h2 className="inline-flex items-center gap-1 mt-2 mb-2  px-3 py-1 rounded-full bg-gradient-to-r from-blue-500 via-cyan-500 to-indigo-500 dark:from-blue-800 dark:via-cyan-800 dark:to-indigo-800 text-white font-medium text-xs sm:text-sm shadow-sm text-center">
-                //   <Repeat size={20} /> Recurring Budget <RecurringBudgetInfo />
-                // </h2>
               )}
               {budget.budgetType !== "recurring" && (
                 <h2 className="text-sm text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-indigo-400 to-pink-400 dark:from-purple-400 dark:via-indigo-400 dark:to-pink-400">
@@ -169,7 +166,7 @@ const BudgetCard = ({ isBudget, budget }) => (
               </h2>
             </div>
           )}
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex flex-col justify-center md:flex-row md:justify-between items-center mb-2">
             <h2 className="text-sm text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-indigo-400 to-pink-400 dark:from-purple-400 dark:via-indigo-400 dark:to-pink-400">
               {formatCurrency(budget.totalSpend ? budget.totalSpend : 0)} Spent
             </h2>

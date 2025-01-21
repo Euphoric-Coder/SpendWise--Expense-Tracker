@@ -1,6 +1,6 @@
 // utils/budget.js
 import { db } from "@/utils/dbConfig";
-import { desc, eq, getTableColumns, sql } from "drizzle-orm";
+import { asc, desc, eq, getTableColumns, sql } from "drizzle-orm";
 import { Budgets, Expenses, Incomes } from "@/utils/schema";
 
 export const getBudgetInfo = async (createdBy) => {
@@ -32,16 +32,31 @@ export const getIncomeInfo = async (createdBy) => {
 
 export const getExpensesInfo = async (createdBy) => {
   const expenses = await db
-    .select({
-      id: Expenses.id,
-      name: Expenses.name,
-      amount: Expenses.amount,
-      createdAt: Expenses.createdAt,
-    })
-    .from(Budgets)
-    .rightJoin(Expenses, eq(Budgets.id, Expenses.budgetId))
-    .where(eq(Budgets.createdBy, createdBy))
-    .orderBy(desc(Expenses.id));
+        .select({
+          id: Expenses.id,
+          name: Expenses.name,
+          amount: Expenses.amount,
+          description: Expenses.description,
+          createdAt: Expenses.createdAt,
+          budgetId: Expenses.budgetId,
+          budgetName: Budgets.name,
+        })
+        .from(Expenses)
+        .innerJoin(Budgets, eq(Budgets.id, Expenses.budgetId))
+        .where(eq(Budgets.createdBy, createdBy))
+        .orderBy(asc(Expenses.createdAt));
+        
+  // await db
+  //   .select({
+  //     id: Expenses.id,
+  //     name: Expenses.name,
+  //     amount: Expenses.amount,
+  //     createdAt: Expenses.createdAt,
+  //   })
+  //   .from(Budgets)
+  //   .rightJoin(Expenses, eq(Budgets.id, Expenses.budgetId))
+  //   .where(eq(Budgets.createdBy, createdBy))
+  //   .orderBy(desc(Expenses.id));
 
   return expenses;
 };
