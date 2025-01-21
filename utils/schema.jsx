@@ -20,10 +20,11 @@ export const Users = pgTable("users", {
 });
 
 export const Budgets = pgTable("budgets", {
-  id: serial("id").primaryKey(),
+  id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name").notNull(),
   amount: numeric("amount").notNull(),
   icon: varchar("icon"),
+  category: varchar("category").notNull().default("travel"), // Category of either expenses or incomes
   budgetType: varchar("budgetType"),
   frequency: varchar("frequency"), // 'daily', 'weekly', 'monthly', 'yearly'
   createdBy: varchar("createdBy").notNull(),
@@ -31,10 +32,10 @@ export const Budgets = pgTable("budgets", {
 });
 
 export const Expenses = pgTable("expenses", {
-  id: serial("id").primaryKey(),
+  id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name").notNull(),
   amount: numeric("amount").notNull().default(0),
-  budgetId: integer("budgetId").references(() => Budgets.id),
+  budgetId: uuid("budgetId").references(() => Budgets.id),
   description: varchar("description"), //.notNull(),
   createdAt: varchar("createdAt").notNull(),
 });
@@ -50,7 +51,7 @@ export const ExpenseQue = pgTable("expenseQue", {
   name: varchar("name"),
   amount: numeric("amount"),
   description: varchar("description"),
-  budgetId: integer("budgetId").references(() => Budgets.id),
+  budgetId: uuid("budgetId").references(() => Budgets.id),
   initiatedOn: varchar("initiatedOn"),
 })
 

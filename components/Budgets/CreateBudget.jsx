@@ -47,7 +47,7 @@ const CreateBudget = ({ refreshData }) => {
       .returning({ insertedId: Budgets.id });
     if (result) {
       refreshData();
-      toast("New Budget Created!");
+      toast.success(`New Budget:"${name}" Created!`);
     }
   };
   return (

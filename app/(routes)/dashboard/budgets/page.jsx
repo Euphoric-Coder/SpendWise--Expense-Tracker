@@ -26,7 +26,7 @@ const ExpenseDashboard = () => {
     const exp_response = await fetch(`/api/expenses`);
     const expenses = await exp_response.json();
 
-    const groupedExpenses = expenses.reduce((acc, expense) => {
+    const groupedExpenses = expenses?.reduce((acc, expense) => {
       acc[expense.budgetId] = acc[expense.budgetId] || [];
       acc[expense.budgetId].push(expense);
       return acc;
