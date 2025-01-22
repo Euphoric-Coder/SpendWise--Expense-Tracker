@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { Input } from "../ui/input";
 
 const CsvDataTable = ({ csvData = [], setCsvData }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -91,7 +92,7 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
         {csvData.length > 0 && (
           <Button
             onClick={addAllToExpense}
-            className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 dark:from-blue-500 dark:via-purple-600 dark:to-pink-500 rounded-lg shadow-xl hover:from-blue-500 hover:to-purple-700 dark:hover:from-purple-600 dark:hover:to-pink-600 transition-transform transform hover:scale-110 hover:backdrop-brightness-125 dark:hover:backdrop-brightness-110"
+            className="individual-expense-btn1 rounded-2xl"
           >
             Add All to Expense
           </Button>
@@ -116,7 +117,7 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
                   key={index}
                   className="hover:bg-blue-100 dark:hover:bg-blue-950"
                 >
-                  <TableCell>{index+1}</TableCell>
+                  <TableCell>{index + 1}</TableCell>
                   <TableCell>{row.name}</TableCell>
                   <TableCell>{row.amount}</TableCell>
                   <TableCell>{row.date}</TableCell>
@@ -138,7 +139,7 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
                           </Tooltip>
                         </TooltipProvider>
                       </DialogTrigger>
-                      <DialogContent className="border-2 border-blue-200 p-8 bg-gradient-to-b from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 shadow-2xl overflow-auto z-50">
+                      <DialogContent className="border-2 border-blue-200 p-8 bg-gradient-to-b from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 shadow-2xl overflow-auto">
                         <DialogHeader>
                           <DialogTitle>Edit Row</DialogTitle>
                           <DialogDescription>
@@ -146,7 +147,7 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
                           </DialogDescription>
                         </DialogHeader>
                         <div className="flex flex-col gap-4 mt-4">
-                          <input
+                          <Input
                             type="text"
                             value={editedRow.name}
                             onChange={(e) =>
@@ -156,9 +157,9 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
                               })
                             }
                             placeholder="Name"
-                            className="border p-2 rounded-md"
+                            className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500"
                           />
-                          <input
+                          <Input
                             type="number"
                             value={editedRow.amount}
                             onChange={(e) =>
@@ -168,9 +169,9 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
                               })
                             }
                             placeholder="Amount"
-                            className="border p-2 rounded-md"
+                            className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500"
                           />
-                          <input
+                          <Input
                             type="text"
                             value={editedRow.description}
                             onChange={(e) =>
@@ -180,9 +181,9 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
                               })
                             }
                             placeholder="Description"
-                            className="border p-2 rounded-md"
+                            className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500"
                           />
-                          <input
+                          <Input
                             type="date"
                             value={editedRow.date}
                             onChange={(e) =>
@@ -192,15 +193,15 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
                               })
                             }
                             placeholder="Date"
-                            className="border p-2 rounded-md"
+                            className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500"
                           />
                           <DialogClose>
-                            <button
+                            <Button
                               onClick={saveEditedRow}
-                              className="w-full bg-blue-500 text-white p-2 rounded-md"
+                              className="individual-expense-btn2 rounded-3xl p-2 mt-2"
                             >
-                              Save
-                            </button>
+                              Update Data
+                            </Button>
                           </DialogClose>
                         </div>
                       </DialogContent>

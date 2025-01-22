@@ -61,7 +61,7 @@ const page = () => {
   };
 
   /**
-   * Used to get All expenses belong to users
+   * Used to get All expenses belonging to users
    */
   const getAllExpenses = async () => {
     const result = await db
@@ -78,17 +78,6 @@ const page = () => {
     setExpensesList(result);
   };
 
-  const getGreeting = () => {
-    const currentHour = new Date().getHours();
-
-    if (currentHour > 5 && currentHour < 12) {
-      return "Good Morning";
-    } else if (currentHour < 18 && currentHour > 12) {
-      return "Good Afternoon";
-    } else {
-      return "Good Evening";
-    }
-  };
   return (
     <div className="p-8 space-y-8">
       

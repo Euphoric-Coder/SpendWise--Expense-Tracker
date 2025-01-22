@@ -73,17 +73,29 @@ export const getISTDateTime = () => {
   // Create a new Date object
   const now = new Date();
 
-  // Convert to Indian Standard Time (UTC+5:30)
-  const istOffset = 5.5 * 60; // IST is 5 hours 30 minutes ahead of UTC
-  const utcTimestamp = now.getTime() + now.getTimezoneOffset() * 60 * 1000; // Adjust to UTC
-  const istTimestamp = utcTimestamp + istOffset * 60 * 1000; // Add IST offset
-  const istDate = new Date(istTimestamp);
+  // Use Intl.DateTimeFormat to format the date and time in IST
+  const options = {
+    timeZone: "Asia/Kolkata",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false, // Use 24-hour format
+  };
 
-  // Extract date in YYYY-MM-DD format
-  const date = istDate.toISOString().split("T")[0];
+  // Format the date and time in IST
+  const formatter = new Intl.DateTimeFormat("en-GB", options);
+  const parts = formatter.formatToParts(now);
 
-  // Extract time in HH:mm:ss format
-  const time = istDate.toTimeString().split(" ")[0];
+  // Extract individual parts
+  const date = `${parts.find((p) => p.type === "year").value}-${
+    parts.find((p) => p.type === "month").value
+  }-${parts.find((p) => p.type === "day").value}`;
+  const time = `${parts.find((p) => p.type === "hour").value}:${
+    parts.find((p) => p.type === "minute").value
+  }:${parts.find((p) => p.type === "second").value}`;
 
   return `${date} ${time}`; // Return date and time in "YYYY-MM-DD HH:mm:ss" format
 };

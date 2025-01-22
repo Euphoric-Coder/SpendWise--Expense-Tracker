@@ -1,10 +1,5 @@
 import { formatCurrencyDashboard } from "@/utils/utilities";
-import {
-  PiggyBank,
-  ReceiptText,
-  Wallet,
-  CircleDollarSign,
-} from "lucide-react";
+import { PiggyBank, ReceiptText, Wallet, CircleDollarSign } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import AIBudgetAdvisor from "./AIBudgetAdvisor";
 
@@ -21,10 +16,14 @@ function DashboardCard({ budgetList, incomeList, expenseList }) {
   const [incomeSavedPercentage, setIncomeSavedPercentage] = useState(0);
   const [financialAdvice, setFinancialAdvice] = useState("");
   useEffect(() => {
-    if (budgetList.length > 0 || incomeList.length > 0 || expenseList.length > 0) {
+    if (
+      budgetList.length > 0 ||
+      incomeList.length > 0 ||
+      expenseList.length > 0
+    ) {
       CalculateCardInfo();
     }
-  }, [budgetList,incomeList, expenseList]);
+  }, [budgetList, incomeList, expenseList]);
 
   const CalculateCardInfo = () => {
     let totalBudget_ = 0;
@@ -78,7 +77,6 @@ function DashboardCard({ budgetList, incomeList, expenseList }) {
     setSavings(savings_);
     setIncomeSavedPercentage(incomeSavedPercentage_);
   };
-
 
   return (
     <div>
@@ -208,8 +206,53 @@ const DetailedCard = ({ title, details, icon }) => (
   </div>
 );
 
+const DashboardStats = ({
+  title,
+  amount,
+  trend,
+  icon: Icon,
+  alert,
+  className = "",
+}) => (
+  <div className={`bg-white rounded-xl p-6 shadow-lg ${className}`}>
+    <div className="flex justify-between items-start">
+      <div>
+        <p className="text-gray-500 text-sm">{title}</p>
+        <h3 className="text-2xl font-bold mt-1">{amount}</h3>
+        {trend && (
+          <p
+            className={`flex gap-1 items-center text-sm mt-2 ${
+              trend > 0 ? "text-green-500" : "text-red-500"
+            }`}
+          >
+            {trend > 0 ? <TrendingUp /> : <TrendingDown />}
+            {trend}% from last month
+          </p>
+        )}
+        {alert && (
+          <p
+            className={`text-sm mt-2 ${
+              alert.type === "warning" ? "text-red-500" : "text-yellow-500"
+            }`}
+          >
+            {alert.message}
+          </p>
+        )}
+      </div>
+      <div
+        className={`p-3 rounded-lg ${
+          alert?.type === "warning" ? "bg-red-100" : "bg-purple-100"
+        }`}
+      >
+        <Icon
+          className={
+            alert?.type === "warning" ? "text-red-600" : "text-purple-600"
+          }
+          size={24}
+        />
+      </div>
+    </div>
+  </div>
+);
+
 export default DashboardCard;
-
-
-
-

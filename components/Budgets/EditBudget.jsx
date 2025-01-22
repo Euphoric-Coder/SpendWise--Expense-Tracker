@@ -63,7 +63,7 @@ function EditBudget({ budgetInfo, refreshData }) {
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <Button className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 dark:from-blue-500 dark:via-purple-600 dark:to-pink-500 rounded-xl shadow-xl hover:from-blue-500 hover:to-purple-700 dark:hover:from-purple-600 dark:hover:to-pink-600 transition-transform transform hover:scale-110 hover:backdrop-brightness-125 dark:hover:backdrop-brightness-110">
+          <Button className="individual-expense-btn1 rounded-2xl">
             <PenBox /> Edit
           </Button>
         </DialogTrigger>
@@ -115,7 +115,7 @@ function EditBudget({ budgetInfo, refreshData }) {
                 placeholder="e.g. Home Decor"
                 defaultValue={budgetInfo?.name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-4 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-105 duration-200"
+                className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500 ring-1"
               />
             </div>
 
@@ -129,7 +129,7 @@ function EditBudget({ budgetInfo, refreshData }) {
                 defaultValue={budgetInfo?.amount}
                 placeholder="e.g. 5000₹"
                 onChange={(e) => setAmount(e.target.value)}
-                className="w-full border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-4 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-105 duration-200"
+                className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500 ring-1"
               />
             </div>
 
@@ -150,12 +150,12 @@ function EditBudget({ budgetInfo, refreshData }) {
             {isRecurring && (
               <div className="mt-4">
                 <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                  Frequency
+                  Recurring Interval
                 </h2>
                 <select
                   value={frequency}
                   onChange={(e) => setFrequency(e.target.value)}
-                  className="w-full border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-2 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-105 duration-200"
+                  className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500 ring-1"
                 >
                   <option value="daily">Daily</option>
                   <option value="weekly">Weekly</option>
@@ -172,7 +172,7 @@ function EditBudget({ budgetInfo, refreshData }) {
               <Button
                 disabled={!(name && amount)}
                 onClick={() => onUpdateBudget()}
-                className="text-md w-full bg-gradient-to-r from-fuchsia-500 via-blue-600 to-teal-500 text-white font-bold py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-transform transform hover:scale-105 duration-300 disabled:opacity-50 disabled:cursor-not-allowed dark:from-pink-600 dark:via-purple-700 dark:to-blue-600 dark:text-gray-200 hover:from-purple-600 hover:via-blue-500 hover:to-teal-400 dark:hover:from-pink-700 dark:hover:via-purple-800 dark:hover:to-blue-700 active:scale-95 active:shadow-md"
+                className="individual-expense-btn2 rounded-full"
               >
                 Update Budget
               </Button>

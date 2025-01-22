@@ -9,6 +9,7 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
+import next from "next";
 
 const { v4: uuidv4 } = require("uuid");
 
@@ -19,10 +20,11 @@ export const Users = pgTable("users", {
 });
 
 export const Budgets = pgTable("budgets", {
-  id: serial("id").primaryKey(),
+  id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name").notNull(),
   amount: numeric("amount").notNull(),
   icon: varchar("icon"),
+  category: varchar("category").notNull().default("travel"), // Category of either expenses or incomes
   budgetType: varchar("budgetType"),
   frequency: varchar("frequency"), // 'daily', 'weekly', 'monthly', 'yearly'
   createdBy: varchar("createdBy").notNull(),
@@ -30,13 +32,28 @@ export const Budgets = pgTable("budgets", {
 });
 
 export const Expenses = pgTable("expenses", {
-  id: serial("id").primaryKey(),
+  id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name").notNull(),
   amount: numeric("amount").notNull().default(0),
-  budgetId: integer("budgetId").references(() => Budgets.id),
+  budgetId: uuid("budgetId").references(() => Budgets.id),
   description: varchar("description"), //.notNull(),
   createdAt: varchar("createdAt").notNull(),
 });
+
+/**
+ * Planning for expense que 
+ * Implementation of expense que by creating a table expenseQue
+ * 
+ */
+
+export const ExpenseQue = pgTable("expenseQue", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: varchar("name"),
+  amount: numeric("amount"),
+  description: varchar("description"),
+  budgetId: uuid("budgetId").references(() => Budgets.id),
+  initiatedOn: varchar("initiatedOn"),
+})
 
 export const Incomes = pgTable("incomes", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -45,6 +62,7 @@ export const Incomes = pgTable("incomes", {
   icon: varchar("icon"),
   incomeType: varchar("incomeType"),
   frequency: varchar("frequency"), // 'daily', 'weekly', 'monthly', 'yearly'
+  category: varchar("category").notNull().default("salary"), // Category of either expenses or incomes
   status: varchar("status"), // 'upcoming', 'current'
   startDate: date("startDate"),
   endDate: date("endDate"), // Nullable for indefinite recurring transactions
@@ -56,7 +74,15 @@ export const Incomes = pgTable("incomes", {
 
 export const Transactions = pgTable("transactions", {
   id: uuid("id").defaultRandom().primaryKey(),
-  category: varchar("category").notNull(), // 'expense' or 'income'
+  type: varchar("type").notNull(), // 'expense' or 'income'
+  category: varchar("category").notNull(), // Category of either expenses or incomes
+  isRecurring: boolean("isRecurring").notNull().default(false),
+  frequency: varchar("frequency"), // 'daily', 'weekly', 'monthly', 'yearly'
+  nextRecurringDate: varchar("nextRecurringDate"),
+  lastProcessed: varchar("lastProcessed"),
+  lastUpdated: varchar("lastUpdated"),
+  status: varchar("status"), // 'active', 'deleted', 'expired', 'upcoming'
+  deletionRemark: varchar("deletionRemark"),
   referenceId: varchar("referenceId"), //.notNull(),
   name: varchar("name").notNull(), // Transaction name
   amount: numeric("amount").notNull(),

@@ -253,10 +253,7 @@ const CSVImportButton = () => {
 
   return (
     <div>
-      <Button
-        className="px-4 py-2 font-semibold text-white bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 dark:from-blue-500 dark:via-purple-600 dark:to-pink-500 rounded-xl shadow-xl hover:from-blue-500 hover:to-purple-700 dark:hover:from-purple-600 dark:hover:to-pink-600 transition-transform transform hover:scale-110 hover:backdrop-brightness-125 dark:hover:backdrop-brightness-110"
-        onClick={handleImportClick}
-      >
+      <Button className="individual-expense-btn1 rounded-3xl" onClick={handleImportClick}>
         <Upload className="mr-1 w-9 h-9" /> Import CSV
       </Button>
 
@@ -354,7 +351,9 @@ const CSVImportButton = () => {
           }}
         >
           <h2 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-500 dark:from-blue-500 dark:via-indigo-500 dark:to-purple-400 animate-gradient-text mb-4">
-            {csvData.length > 0 ? "Review & Add New Expenses" : "Upload Your Expense CSV"}
+            {csvData.length > 0
+              ? "Review & Add New Expenses"
+              : "Upload Your Expense CSV"}
             {/* Upload Your Expense CSV */}
           </h2>
           <CsvUpload
@@ -368,7 +367,7 @@ const CSVImportButton = () => {
           )}
           <DialogClose asChild>
             <Button
-              className="mt-4 px-4 py-2 font-semibold text-white bg-gradient-to-r from-purple-400 to-indigo-500 dark:from-purple-500 dark:to-indigo-600 rounded-lg shadow hover:from-purple-500 hover:to-indigo-600"
+              className="individual-expense-btn2 rounded-2xl mt-6"
               onClick={() => setShowUploadDialog(false)}
             >
               Close

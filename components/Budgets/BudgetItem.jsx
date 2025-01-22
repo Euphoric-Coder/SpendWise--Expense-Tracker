@@ -1,38 +1,45 @@
-"use client";
+// "use client";
 
 import { formatCurrency } from "@/utils/utilities";
 import { Repeat, Info } from "lucide-react";
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
 
 const RecurringBudgetInfo = () => {
-  const [open, setOpen] = useState(false);
-
-  const handleMouseEnter = () => setTimeout(() => setOpen(true), 300);
-  const handleMouseLeave = () => setTimeout(() => setOpen(false), 200);
-
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Info
-          size={18}
-          className="text-white hover:text-gray-700 cursor-pointer"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        />
+    <Popover>
+      <PopoverTrigger>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Info
+                size={18}
+                className="text-white hover:text-gray-700 cursor-pointer"
+              />
+            </TooltipTrigger>
+            <TooltipContent className="rounded-full font-bold">
+              <p>Recurring Budget Info</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </PopoverTrigger>
       <PopoverContent
         side="top"
         align="center"
         sideOffset={10}
-        className="bg-white dark:bg-gray-800 text-sm shadow-lg rounded-2xl p-4 border border-gray-200 dark:border-gray-700 transform transition-all duration-500 ease-in-out opacity-0 data-[state=open]:opacity-100 data-[state=open]:scale-100"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        className="bg-white dark:bg-gray-800 text-sm shadow-lg rounded-2xl p-4 border border-gray-200 dark:border-gray-700 transform transition-all duration-500 ease-in-out"
       >
         <p className="mb-2 text-justify">
           A <strong>Recurring Budget</strong> allows you to manage expenses that
@@ -121,9 +128,11 @@ const BudgetCard = ({ isBudget, budget }) => (
                 {budget.name}
               </h2>
               {budget.budgetType === "recurring" && (
-                <h2 className="inline-flex items-center gap-1 mt-2 mb-2  px-3 py-1 rounded-full bg-gradient-to-r from-blue-500 via-cyan-500 to-indigo-500 dark:from-blue-800 dark:via-cyan-800 dark:to-indigo-800 text-white font-medium text-xs sm:text-sm shadow-sm text-center">
-                  <Repeat size={20} /> Recurring Budget <RecurringBudgetInfo />
-                </h2>
+                <Badge className="inline-flex items-center gap-1 mt-2 mb-2  px-3 py-1 rounded-full bg-gradient-to-r from-blue-500 via-cyan-500 to-indigo-500 dark:from-blue-800 dark:via-cyan-800 dark:to-indigo-800 text-white font-medium text-xs sm:text-sm shadow-sm text-center">
+                  <Repeat size={20} />
+                  Recurring Budget
+                  <RecurringBudgetInfo />
+                </Badge>
               )}
               {budget.budgetType !== "recurring" && (
                 <h2 className="text-sm text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-indigo-400 to-pink-400 dark:from-purple-400 dark:via-indigo-400 dark:to-pink-400">
@@ -157,7 +166,7 @@ const BudgetCard = ({ isBudget, budget }) => (
               </h2>
             </div>
           )}
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex flex-col justify-center md:flex-row md:justify-between items-center mb-2">
             <h2 className="text-sm text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-indigo-400 to-pink-400 dark:from-purple-400 dark:via-indigo-400 dark:to-pink-400">
               {formatCurrency(budget.totalSpend ? budget.totalSpend : 0)} Spent
             </h2>
@@ -190,7 +199,7 @@ const BudgetItem = ({ budget, isBudget }) => {
   return (
     <>
       {isBudget ? (
-        <Link href={`/dashboard/expenses/${budget?.id}`}>
+        <Link href={`/dashboard/budgets/${budget?.id}`}>
           <div>
             <BudgetCard isBudget={isBudget} budget={budget} />
           </div>

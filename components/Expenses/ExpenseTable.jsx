@@ -31,6 +31,7 @@ import { eq } from "drizzle-orm";
 import { toast } from "sonner";
 import { expenseDateFormat, nextRecurringDate } from "@/utils/utilities";
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 
 const ExpenseTable = ({
   expenseList = [],
@@ -82,9 +83,9 @@ const ExpenseTable = ({
 
   return (
     <div>
-       <div className="w-full block md:hidden mx-auto px-4 sm:px-6 lg:px-8">
-         <div className="grid grid-cols-1 gap-10">
-           {expenseList?.length > 0 ? (
+      <div className="w-full block md:hidden mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-10">
+          {expenseList?.length > 0 ? (
             expenseList.map((expense, index) => (
               <Card
                 key={index}
@@ -240,13 +241,13 @@ const ExpenseTable = ({
                             >
                               Name
                             </label>
-                            <input
+                            <Input
                               id="name"
                               type="text"
                               value={editedName}
                               onChange={(e) => setEditedName(e.target.value)}
                               placeholder="Name"
-                              className="w-full border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-2 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-105 duration-200"
+                              className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500 ring-1"
                             />
 
                             {/* Amount Input */}
@@ -256,13 +257,13 @@ const ExpenseTable = ({
                             >
                               Amount
                             </label>
-                            <input
+                            <Input
                               id="amount"
                               type="number"
                               value={editedAmount}
                               onChange={(e) => setEditedAmount(e.target.value)}
                               placeholder="Amount"
-                              className="w-full border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-2 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-105 duration-200"
+                              className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500 ring-1"
                             />
 
                             {/* Amount Input */}
@@ -272,7 +273,7 @@ const ExpenseTable = ({
                             >
                               Description
                             </label>
-                            <input
+                            <Input
                               id="description"
                               type="text"
                               value={editedDescription}
@@ -280,14 +281,14 @@ const ExpenseTable = ({
                                 setEditedDescription(e.target.value)
                               }
                               placeholder="Description"
-                              className="w-full border border-blue-300 dark:border-gray-600 rounded-xl shadow-lg p-2 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus-visible:ring-blue-400 focus:ring-blue-400 dark:focus:ring-blue-500 transition-transform transform hover:scale-105 duration-200"
+                              className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500 ring-1"
                             />
 
                             {/* Save Button */}
-                            <DialogClose asChild>
+                            <DialogClose>
                               <button
                                 onClick={saveEditedExpense}
-                                className="mt-4 text-md w-full bg-gradient-to-r from-fuchsia-500 via-blue-600 to-teal-500 text-white font-bold p-2 rounded-3xl shadow-xl hover:shadow-2xl transition-transform transform hover:scale-105 duration-300 disabled:opacity-50 disabled:cursor-not-allowed dark:from-pink-600 dark:via-purple-700 dark:to-blue-600 dark:text-gray-200 hover:from-purple-600 hover:via-blue-500 hover:to-teal-400 dark:hover:from-pink-700 dark:hover:via-purple-800 dark:hover:to-blue-700 active:scale-95 active:shadow-md"
+                                className="individual-expense-btn2 rounded-full py-1 mt-4"
                               >
                                 Update Expense
                               </button>
@@ -326,7 +327,6 @@ const ExpenseTable = ({
           </table>
         </div>
       </div>
-      
     </div>
   );
 };

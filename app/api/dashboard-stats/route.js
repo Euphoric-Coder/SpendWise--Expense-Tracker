@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
-import { getBudgetInfo } from "@/utils/userAppData";
+import { dashboardData } from "@/utils/userAppData";
 
 export async function GET() {
   try {
@@ -13,8 +13,8 @@ export async function GET() {
       );
     }
 
-    const budgets = await getBudgetInfo(user?.emailAddresses[0].emailAddress);
-    return NextResponse.json(budgets);
+    const dashboardStats = await dashboardData(user?.emailAddresses[0].emailAddress);
+    return NextResponse.json(dashboardStats);
   } catch (error) {
     console.error("Error fetching budgets:", error);
     return NextResponse.json(
@@ -23,5 +23,3 @@ export async function GET() {
     );
   }
 }
-
-

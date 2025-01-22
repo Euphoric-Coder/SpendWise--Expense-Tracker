@@ -7,7 +7,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { Budgets, Users } from "@/utils/schema";
 import { db } from "@/utils/dbConfig";
 import DashboardSideNavbar from "@/components/Dashboard/DashboardSideNavbar";
-import Loading from "@/components/Loader";
 import NotificationTab from "@/components/Dashboard/Notifications";
 import DashboardMobile from "@/components/Dashboard/DashboardMobile";
 import { ModeToggle } from "@/components/ThemeButton";
@@ -16,7 +15,6 @@ const DashboardLayout = ({ children }) => {
   const { user } = useUser();
   const router = useRouter();
   const pathname = usePathname();
-  const [checking, setChecking] = useState(true);
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -57,20 +55,12 @@ const DashboardLayout = ({ children }) => {
           );
         if (result?.length === 0) {
           router.replace("/dashboard/budgets");
-        } else {
-          setChecking(false);
-        }
-      } else {
-      setChecking(false);
-      }
+        } 
+      } 
     };
 
     user && checkUserBudgets();
   }, [pathname, user, router]);
-
-  // if (checking) {
-  //   return <Loading />;
-  // }
 
   return (
     <div className="flex h-screen">
@@ -83,7 +73,6 @@ const DashboardLayout = ({ children }) => {
           <DashboardMobile />
         </div>
 
-
         <div className="hidden 2xl:block p-6">
           <div className="p-8 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 rounded-3xl shadow-2xl relative overflow-hidden transition-transform transform hover:scale-y-105 duration-500">
             <div className="absolute inset-0 pointer-events-none">
@@ -92,7 +81,7 @@ const DashboardLayout = ({ children }) => {
             </div>
 
             <div className="relative z-10 flex justify-between items-center">
-              <h2 className="font-extrabold text-4xl text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 dark:from-blue-300 dark:via-purple-400 dark:to-pink-300 animate-gradient-text">
+              <h2 className="pb-1 font-extrabold text-4xl text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 dark:from-blue-300 dark:via-purple-400 dark:to-pink-300 animate-gradient-text">
                 {getGreeting()}, {user?.fullName || "Valued User"}
               </h2>
               <div className="flex gap-5 items-center">

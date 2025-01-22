@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
-import { getBudgetInfo } from "@/utils/userAppData";
+import { getIncomeInfo } from "@/utils/userAppData";
 
 export async function GET() {
   try {
@@ -13,12 +13,12 @@ export async function GET() {
       );
     }
 
-    const budgets = await getBudgetInfo(user?.emailAddresses[0].emailAddress);
-    return NextResponse.json(budgets);
+    const incomes = await getIncomeInfo(user?.emailAddresses[0].emailAddress);
+    return NextResponse.json(incomes);
   } catch (error) {
-    console.error("Error fetching budgets:", error);
+    console.error("Error fetching incomes:", error);
     return NextResponse.json(
-      { error: "Failed to fetch budgets" },
+      { error: "Failed to fetch incomes" },
       { status: 500 }
     );
   }
