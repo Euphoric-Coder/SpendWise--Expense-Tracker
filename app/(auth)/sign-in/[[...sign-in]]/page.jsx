@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { Loader } from "lucide-react";
 
 export default function SignInPage() {
   return (
@@ -30,9 +31,16 @@ export default function SignInPage() {
           {(isGlobalLoading) => (
             <>
               <SignIn.Step name="start">
-                <Card className="w-full sm:w-96">
-                  <CardHeader>
-                    <CardTitle>Sign in to Acme Co</CardTitle>
+                <Card className="w-full sm:w-96 rounded-3xl">
+                  <CardHeader className="text-center">
+                    <Image
+                      src={"/favicon.png"}
+                      alt="SpendWise"
+                      width={50}
+                      height={50}
+                      className="mx-auto"
+                    />
+                    <CardTitle>Sign in to SpendWise</CardTitle>
                     <CardDescription>
                       Welcome back! Please sign in to continue
                     </CardDescription>
@@ -112,7 +120,10 @@ export default function SignInPage() {
                         <Label>Email address</Label>
                       </Clerk.Label>
                       <Clerk.Input type="email" required asChild>
-                        <Input />
+                        <Input
+                          className="rounded-3xl"
+                          placeholder="Enter your email address"
+                        />
                       </Clerk.Input>
                       <Clerk.FieldError className="block text-sm text-destructive" />
                     </Clerk.Field>
@@ -120,7 +131,10 @@ export default function SignInPage() {
                   <CardFooter>
                     <div className="grid w-full gap-y-4">
                       <SignIn.Action submit asChild>
-                        <Button disabled={isGlobalLoading}>
+                        <Button
+                          disabled={isGlobalLoading}
+                          className="login-btn"
+                        >
                           <Clerk.Loading>
                             {(isLoading) => {
                               return isLoading ? (
@@ -180,7 +194,10 @@ export default function SignInPage() {
                   <CardFooter>
                     <div className="grid w-full gap-y-4">
                       <SignIn.Action navigate="previous" asChild>
-                        <Button disabled={isGlobalLoading}>
+                        <Button
+                          disabled={isGlobalLoading}
+                          className="login-btn"
+                        >
                           <Clerk.Loading>
                             {(isLoading) => {
                               return isLoading ? (
@@ -205,11 +222,11 @@ export default function SignInPage() {
               <SignIn.Step name="verifications">
                 <SignIn.Strategy name="password">
                   <Card className="w-full sm:w-96">
-                    <CardHeader>
-                      <CardTitle>Check your email</CardTitle>
-                      <CardDescription>
+                    <CardHeader className="text-center">
+                      <CardTitle>Check your Mail</CardTitle>
+                      {/* <CardDescription>
                         Enter the verification code sent to your email
-                      </CardDescription>
+                      </CardDescription> */}
                       <p className="text-sm text-muted-foreground">
                         Welcome back <SignIn.SafeIdentifier />
                       </p>
@@ -220,7 +237,10 @@ export default function SignInPage() {
                           <Label>Password</Label>
                         </Clerk.Label>
                         <Clerk.Input type="password" asChild>
-                          <Input />
+                          <Input
+                            className="rounded-3xl"
+                            placeholder="Enter your password"
+                          />
                         </Clerk.Input>
                         <Clerk.FieldError className="block text-sm text-destructive" />
                       </Clerk.Field>
@@ -228,7 +248,10 @@ export default function SignInPage() {
                     <CardFooter>
                       <div className="grid w-full gap-y-4">
                         <SignIn.Action submit asChild>
-                          <Button disabled={isGlobalLoading}>
+                          <Button
+                            disabled={isGlobalLoading}
+                            className="login-btn"
+                          >
                             <Clerk.Loading>
                               {(isLoading) => {
                                 return isLoading ? (
@@ -256,8 +279,8 @@ export default function SignInPage() {
                 </SignIn.Strategy>
 
                 <SignIn.Strategy name="email_code">
-                  <Card className="w-full sm:w-96">
-                    <CardHeader>
+                  <Card className="w-full sm:w-96 rounded-3xl">
+                    <CardHeader className="text-center">
                       <CardTitle>Check your email</CardTitle>
                       <CardDescription>
                         Enter the verification code sent to your email
@@ -314,15 +337,16 @@ export default function SignInPage() {
                     <CardFooter>
                       <div className="grid w-full gap-y-4">
                         <SignIn.Action submit asChild>
-                          <Button disabled={isGlobalLoading}>
+                          <Button
+                            disabled={isGlobalLoading}
+                            className="login-btn"
+                          >
                             <Clerk.Loading>
                               {(isLoading) => {
                                 return isLoading ? (
-                                  <Image
-                                    src={"/loader.svg"}
-                                    width={20}
-                                    height={20}
-                                    className="size-4 animate-spin"
+                                  <Loader
+                                    size={25}
+                                    className="size-4 animate-spin dark:text-white [&_svg]:size-5"
                                   />
                                 ) : (
                                   "Continue"

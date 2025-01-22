@@ -8,10 +8,10 @@ import Typewriter from "typewriter-effect";
 
 const Layout = ({ children }) => {
   const { signIn } = useSignIn();
-  const [disableGuestLogin, setdisableGuestLogin] = useState(false)
+  const [disableGuestLogin, setdisableGuestLogin] = useState(false);
 
   const GuestLogin = async () => {
-    setdisableGuestLogin(true)
+    setdisableGuestLogin(true);
     try {
       const signInAttempt = await signIn.create({
         identifier: process.env.NEXT_PUBLIC_TEST_USER_EMAIL, // Guest email
@@ -192,7 +192,7 @@ const Layout = ({ children }) => {
                 . Your journey to financial freedom starts here.
               </p>
               <Button
-                className="mt-4 w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-3xl text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+                className="mt-4 login-btn"
                 disabled={disableGuestLogin}
                 onClick={GuestLogin}
               >
