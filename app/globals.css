@@ -78,6 +78,11 @@ html {
   }
 }
 
+/* Login Page CSS */
+.login-btn {
+  @apply text-lg w-full bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 text-white font-bold shadow-lg hover:shadow-xl transition-transform transform hover:scale-[1.05] active:scale-[0.95] duration-300 disabled:opacity-50 disabled:cursor-not-allowed rounded-full dark:bg-gradient-to-r dark:from-blue-800 dark:via-indigo-700 dark:to-fuchsia-800 dark:text-gray-300 hover:from-blue-500 hover:via-indigo-600 hover:to-purple-700 dark:hover:from-blue-900 dark:hover:via-purple-900 dark:hover:to-indigo-800
+    }
+
 /* Individual Expense Tab CSS */
 .individual-expense-btn1 {
   @apply px-4 py-2 font-semibold text-white bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 dark:from-blue-500 dark:via-purple-600 dark:to-pink-500 shadow-xl hover:from-blue-500 hover:to-purple-700 dark:hover:from-purple-600 dark:hover:to-pink-600 transition-transform transform hover:scale-110 hover:backdrop-brightness-125 dark:hover:backdrop-brightness-110

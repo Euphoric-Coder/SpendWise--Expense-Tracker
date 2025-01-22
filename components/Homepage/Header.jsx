@@ -167,7 +167,7 @@ const Header = () => {
                   Sign In
                 </Button>
               </Link>
-              <Link href={"/sign-up"}>
+              <Link href={"/dashboard"}>
                 <Button className="rounded-full bg-gradient-to-r from-teal-400 via-yellow-500 to-red-500 text-white hover:scale-105 transition-all duration-300 hover:shadow-2xl dark:from-purple-500 dark:via-pink-500 dark:to-blue-500">
                   Get Started
                 </Button>
