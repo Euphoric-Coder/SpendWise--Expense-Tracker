@@ -5,9 +5,8 @@ import { useUser } from "@clerk/nextjs";
 import { formatCurrencyDashboard } from "@/utils/utilities";
 import ExpenseDialog from "@/components/Expenses/ExpenseDialog";
 import { Skeleton } from "@/components/ui/skeleton";
-import ExpenseCard from "@/components/Budgets/BudgetCard";
-import { Button } from "@/components/ui/button";
 import CreateBudget from "@/components/Budgets/CreateBudget";
+import ExpenseCard from "@/components/Budgets/BudgetCard";
 
 const ExpenseDashboard = () => {
   const [budgetList, setBudgetList] = useState([]);
