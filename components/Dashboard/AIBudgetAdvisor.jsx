@@ -63,7 +63,7 @@ const AIBudgetAdvisor = ({
             {/* Refresh Button  */}
             <TooltipProvider>
               <Tooltip>
-                <TooltipTrigger>
+                <TooltipTrigger asChild>
                   <Button
                     onClick={refreshAdvice}
                     className="flex items-center justify-center rounded-full p-4 bg-gradient-to-r from-cyan-400 to-blue-500 shadow-lg hover:shadow-cyan-400/50 hover:scale-110 transition-transform duration-300 dark:from-blue-500 dark:to-teal-400"

@@ -8,9 +8,6 @@ export default {
   ],
   theme: {
     extend: {
-      animation: {
-        wiggle: "wiggle 0.5s ease-in-out infinite",
-      },
       keyframes: {
         wiggle: {
           "0%": { transform: "translateX(0) rotate(20deg) scale(1)" },
@@ -21,6 +18,9 @@ export default {
           "75%": { transform: "translateX(-1px) rotate(5deg) scale(1.02)" },
           "100%": { transform: "translateX(0) rotate(0deg) scale(1)" },
         },
+      },
+      animation: {
+        wiggle: "wiggle 0.5s ease-in-out infinite",
       },
       colors: {
         background: "hsl(var(--background))",

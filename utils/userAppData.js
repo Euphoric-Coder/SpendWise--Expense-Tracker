@@ -93,7 +93,7 @@ export const dashboardData = async (createdBy) => {
 
   // Calculate total incomes
   incomeList.forEach((element) => {
-    totalIncome += Number(element.totalAmount); // Parse income as a number
+    totalIncome += Number(element.amount); // Parse income as a number
   });
 
   // Calculate additional metrics

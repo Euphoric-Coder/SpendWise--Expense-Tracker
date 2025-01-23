@@ -25,6 +25,17 @@ export const Budgets = pgTable("budgets", {
   amount: numeric("amount").notNull(),
   icon: varchar("icon"),
   category: varchar("category").notNull().default("travel"), // Category of either expenses or incomes
+  budgetType: varchar("budgetType"), // 'recurring' or 'non-recurring'
+  frequency: varchar("frequency"), // 'daily', 'weekly', 'monthly', 'yearly'
+  createdBy: varchar("createdBy").notNull(),
+  createdAt: varchar("createdAt"), //.notNull()
+});
+
+export const BudgetsHistory = pgTable("budgets", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: varchar("name").notNull(),
+  amount: numeric("amount").notNull(),
+  category: varchar("category").notNull().default("travel"), // Category of either expenses or incomes
   budgetType: varchar("budgetType"),
   frequency: varchar("frequency"), // 'daily', 'weekly', 'monthly', 'yearly'
   createdBy: varchar("createdBy").notNull(),
@@ -60,7 +71,7 @@ export const Incomes = pgTable("incomes", {
   name: varchar("name").notNull(),
   amount: varchar("amount").notNull(),
   icon: varchar("icon"),
-  incomeType: varchar("incomeType"),
+  incomeType: varchar("incomeType"), // 'recurring' or 'non-recurring'
   frequency: varchar("frequency"), // 'daily', 'weekly', 'monthly', 'yearly'
   category: varchar("category").notNull().default("salary"), // Category of either expenses or incomes
   status: varchar("status"), // 'upcoming', 'current'
