@@ -1,6 +1,6 @@
 "use client";
 
-import DashboardCard from "@/components/Dashboard/DashboardCard";
+import DashboardCard from "@/components/Dashboard/DashboardInfo";
 import { db } from "@/utils/dbConfig";
 import { Budgets, Expenses, Incomes } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";

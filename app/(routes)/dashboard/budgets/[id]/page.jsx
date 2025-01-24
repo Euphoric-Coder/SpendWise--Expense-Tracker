@@ -29,11 +29,12 @@ import { desc, eq, getTableColumns, sql } from "drizzle-orm";
 import { PenBox, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import EditBudget from "@/components/Budgets/EditBudget";
 
-const ExpensesDashboard = ({ params }) => {
+const ExpensesDashboard = () => {
+  const params = useParams();
   const { user } = useUser();
   const [budgetInfo, setBudgetInfo] = useState();
   const [expensesList, setExpensesList] = useState([]);
@@ -88,11 +89,11 @@ const ExpensesDashboard = ({ params }) => {
   };
 
   /**
-     * 
-     * @todo
-     * To handle unfinished data input and show them.
-     * Maintaining those Data and either cancel or proceed with them. 
-     */
+   *
+   * @todo
+   * To handle unfinished data input and show them.
+   * Maintaining those Data and either cancel or proceed with them.
+   */
 
   return (
     <div className="p-10 bg-gradient-to-b from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 rounded-3xl shadow-2xl relative overflow-hidden">
