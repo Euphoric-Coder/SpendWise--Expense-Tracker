@@ -104,6 +104,9 @@ const transactions = [
   },
 ];
 
+const categories = ["All Categories", "food", "bills", "income", "travel"];
+const statuses = ["All Statuses", "completed", "pending"];
+
 const ExpenseDashboard = () => {
   const [budgetList, setBudgetList] = useState([]);
   const [expensesByBudget, setExpensesByBudget] = useState({});
@@ -515,13 +518,6 @@ const ExpenseDashboard = () => {
               Reset Filters
             </button>
           )}
-          <Button
-            onClick={exportTransactions}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-white bg-gradient-to-r from-blue-500 via-cyan-600 to-teal-500 hover:from-blue-600 hover:via-cyan-700 hover:to-teal-600 transition-all duration-300 shadow-md"
-          >
-            <Download size={24} />
-            Export
-          </Button>
         </div>
       </div>
 
