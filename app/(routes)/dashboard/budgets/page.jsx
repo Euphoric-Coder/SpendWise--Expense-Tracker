@@ -189,14 +189,10 @@ const ExpenseDashboard = () => {
     }
     setIsDialogOpen(isOpen); // Track dialog state
   };
-
-  console.log(filteredTransactions.length);
-  console.log(previewedTransactions.length);
   
   const displayedBudgets = isDialogOpen
-    ? previewedTransactions.length === 0 ? budgetList : previewedTransactions
+    ? previewedTransactions
     : filteredTransactions;
-
 
   const hasActiveFilters =
     appliedFilters.categories.length > 0 ||
