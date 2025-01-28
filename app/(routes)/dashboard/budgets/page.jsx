@@ -28,84 +28,9 @@ import {
   DialogTitle,
   DialogClose,
 } from "@/components/ui/dialog";
-
-const transactions = [
-  {
-    id: 1,
-    desc: "Grocery Shopping",
-    amount: 120,
-    date: "2024-03-15",
-    category: "groceries",
-    status: "completed",
-    type: "Expense",
-    recurring: false,
-    frequency: null,
-    deletionRemark: null,
-  },
-  {
-    id: 2,
-    desc: "Salary Deposit",
-    amount: 3500,
-    date: "2024-03-14",
-    category: "salary",
-    status: "completed",
-    type: "Income",
-    recurring: true,
-    frequency: "monthly",
-    deletionRemark: null,
-  },
-  {
-    id: 3,
-    desc: "Utility Bills",
-    amount: 250,
-    date: "2024-03-13",
-    category: "utilities",
-    status: "pending",
-    type: "Expense",
-    recurring: true,
-    frequency: "weekly",
-    deletionRemark: null,
-  },
-  {
-    id: 4,
-    desc: "Freelance Work",
-    amount: 800,
-    date: "2024-03-12",
-    category: "freelance",
-    status: "completed",
-    type: "Income",
-    recurring: true,
-    frequency: "monthly",
-    deletionRemark: null,
-  },
-  {
-    id: 5,
-    desc: "Restaurant",
-    amount: 85,
-    date: "2024-03-11",
-    category: "food",
-    status: "completed",
-    type: "Expense",
-    recurring: false,
-    frequency: null,
-    deletionRemark: null,
-  },
-  {
-    id: 6,
-    desc: "Transport",
-    amount: 30,
-    date: "2024-03-10",
-    category: "travel",
-    status: "completed",
-    type: "Expense",
-    recurring: false,
-    frequency: null,
-    deletionRemark: null,
-  },
-];
+import { toast } from "sonner";
 
 const categories = ["All Categories", "food", "bills", "income", "travel"];
-const statuses = ["All Statuses", "completed", "pending"];
 
 const ExpenseDashboard = () => {
   const [budgetList, setBudgetList] = useState([]);
@@ -114,7 +39,7 @@ const ExpenseDashboard = () => {
   const { user } = useUser();
 
   useEffect(() => {
-    if (user) fetchBudgetsAndExpenses();
+    user && fetchBudgetsAndExpenses();
   }, [user]);
 
   const fetchBudgetsAndExpenses = async () => {
@@ -159,10 +84,8 @@ const ExpenseDashboard = () => {
   const { totalBudgets, totalExpenses, remaining } = calculateStats();
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [expandedIndex, setExpandedIndex] = useState(null);
   const [tempFilters, setTempFilters] = useState({
     categories: [],
-    statuses: [],
     dateRange: { start: "", end: "" },
     amountRange: { min: "", max: "" },
   });
@@ -174,7 +97,6 @@ const ExpenseDashboard = () => {
   const filterCount = useMemo(() => {
     let count = 0;
     count += tempFilters.categories.length;
-    count += tempFilters.statuses.length;
     if (tempFilters.dateRange.start) count += 1;
     if (tempFilters.dateRange.end) count += 1;
     if (tempFilters.amountRange.min) count += 1;
@@ -183,21 +105,17 @@ const ExpenseDashboard = () => {
   }, [tempFilters]);
 
   const filteredTransactions = useMemo(() => {
-    return transactions.filter((tx) => {
+    return budgetList.filter((tx) => {
       const filtersToApply = appliedFilters;
 
       const matchesSearch =
-        tx.desc.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        tx.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         tx.amount.toString().includes(searchTerm) ||
-        tx.date.includes(searchTerm);
+        tx.category.includes(searchTerm);
 
       const matchesCategory =
         filtersToApply.categories.length === 0 ||
         filtersToApply.categories.includes(tx.category);
-
-      const matchesStatus =
-        filtersToApply.statuses.length === 0 ||
-        filtersToApply.statuses.includes(tx.status);
 
       const matchesDateRange =
         (!filtersToApply.dateRange.start ||
@@ -214,22 +132,17 @@ const ExpenseDashboard = () => {
       return (
         matchesSearch &&
         matchesCategory &&
-        matchesStatus &&
         matchesDateRange &&
         matchesAmountRange
       );
     });
-  }, [searchTerm, appliedFilters]);
+  }, [searchTerm, appliedFilters, budgetList]);
 
   const previewedTransactions = useMemo(() => {
-    return transactions.filter((tx) => {
+    return budgetList.filter((tx) => {
       const matchesCategory =
         tempFilters.categories.length === 0 ||
         tempFilters.categories.includes(tx.category);
-
-      const matchesStatus =
-        tempFilters.statuses.length === 0 ||
-        tempFilters.statuses.includes(tx.status);
 
       const matchesDateRange =
         (!tempFilters.dateRange.start ||
@@ -242,14 +155,9 @@ const ExpenseDashboard = () => {
         (!tempFilters.amountRange.max ||
           tx.amount <= Number(tempFilters.amountRange.max));
 
-      return (
-        matchesCategory &&
-        matchesStatus &&
-        matchesDateRange &&
-        matchesAmountRange
-      );
+      return matchesCategory && matchesDateRange && matchesAmountRange;
     });
-  }, [tempFilters]);
+  }, [tempFilters, budgetList]);
 
   const applyFilters = () => {
     setAppliedFilters({ ...tempFilters });
@@ -263,13 +171,11 @@ const ExpenseDashboard = () => {
   const resetFilters = () => {
     setAppliedFilters({
       categories: [],
-      statuses: [],
       dateRange: { start: "", end: "" },
       amountRange: { min: "", max: "" },
     });
     setTempFilters({
       categories: [],
-      statuses: [],
       dateRange: { start: "", end: "" },
       amountRange: { min: "", max: "" },
     });
@@ -284,13 +190,16 @@ const ExpenseDashboard = () => {
     setIsDialogOpen(isOpen); // Track dialog state
   };
 
-  const displayedTransactions = isDialogOpen
-    ? previewedTransactions
+  console.log(filteredTransactions.length);
+  console.log(previewedTransactions.length);
+  
+  const displayedBudgets = isDialogOpen
+    ? previewedTransactions.length === 0 ? budgetList : previewedTransactions
     : filteredTransactions;
+
 
   const hasActiveFilters =
     appliedFilters.categories.length > 0 ||
-    appliedFilters.statuses.length > 0 ||
     (appliedFilters.dateRange.start &&
       appliedFilters.dateRange.start.trim() !== "") ||
     (appliedFilters.dateRange.end &&
@@ -378,34 +287,6 @@ const ExpenseDashboard = () => {
                         }`}
                       >
                         {category}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                {/* Status */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Status
-                  </label>
-                  <div className="flex flex-wrap gap-2">
-                    {statuses.slice(1).map((status) => (
-                      <button
-                        key={status}
-                        onClick={() => {
-                          setTempFilters((prev) => ({
-                            ...prev,
-                            statuses: prev.statuses.includes(status)
-                              ? prev.statuses.filter((s) => s !== status)
-                              : [...prev.statuses, status],
-                          }));
-                        }}
-                        className={`px-3 py-1 rounded-full text-sm ${
-                          tempFilters.statuses.includes(status)
-                            ? "bg-purple-600 text-white"
-                            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                        }`}
-                      >
-                        {status}
                       </button>
                     ))}
                   </div>
@@ -555,7 +436,8 @@ const ExpenseDashboard = () => {
 
       {/* Budget Cards */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-        {budgetList.length === 0
+        {displayedBudgets.length === 0 && <p>No budgets found.</p>}
+        {displayedBudgets.length === 0
           ? [1, 2, 3, 4, 5, 6].map((item, index) => (
               <div key={index}>
                 <Skeleton className="h-[145px] rounded-3xl bg-gradient-to-r from-blue-200 via-indigo-300 to-purple-300 dark:from-blue-800 dark:via-indigo-900 dark:to-gray-800 shadow-lg" />
@@ -565,7 +447,7 @@ const ExpenseDashboard = () => {
                 </div>
               </div>
             ))
-          : budgetList.map((budget) => (
+          : displayedBudgets.map((budget) => (
               <div className="p-2" key={budget.id}>
                 <ExpenseCard
                   budget={budget}
