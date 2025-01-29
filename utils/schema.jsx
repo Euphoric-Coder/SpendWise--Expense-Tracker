@@ -1,3 +1,4 @@
+import { sub } from "date-fns";
 import {
   boolean,
   date,
@@ -25,17 +26,19 @@ export const Budgets = pgTable("budgets", {
   amount: numeric("amount").notNull(),
   icon: varchar("icon"),
   category: varchar("category").notNull().default("travel"), // Category of either expenses or incomes
+  subCategory: varchar("subCategory"),
   budgetType: varchar("budgetType"), // 'recurring' or 'non-recurring'
   frequency: varchar("frequency"), // 'daily', 'weekly', 'monthly', 'yearly'
   createdBy: varchar("createdBy").notNull(),
   createdAt: varchar("createdAt"), //.notNull()
 });
 
-export const BudgetsHistory = pgTable("budgets", {
+export const BudgetsHistory = pgTable("budgetHistory", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name").notNull(),
   amount: numeric("amount").notNull(),
   category: varchar("category").notNull().default("travel"), // Category of either expenses or incomes
+  subCategory: varchar("subCategory"),
   budgetType: varchar("budgetType"),
   frequency: varchar("frequency"), // 'daily', 'weekly', 'monthly', 'yearly'
   createdBy: varchar("createdBy").notNull(),

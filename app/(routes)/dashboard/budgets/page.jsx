@@ -29,8 +29,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-
-const categories = ["All Categories", "food", "bills", "income", "travel"];
+import { expenseCategoriesList, expenseSubcategories } from "@/data/categories";
 
 const ExpenseDashboard = () => {
   const [budgetList, setBudgetList] = useState([]);
@@ -86,6 +85,7 @@ const ExpenseDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [tempFilters, setTempFilters] = useState({
     categories: [],
+    subCategories: [],
     dateRange: { start: "", end: "" },
     amountRange: { min: "", max: "" },
   });
@@ -97,6 +97,7 @@ const ExpenseDashboard = () => {
   const filterCount = useMemo(() => {
     let count = 0;
     count += tempFilters.categories.length;
+    count += tempFilters.subCategories.length;
     if (tempFilters.dateRange.start) count += 1;
     if (tempFilters.dateRange.end) count += 1;
     if (tempFilters.amountRange.min) count += 1;
@@ -115,7 +116,7 @@ const ExpenseDashboard = () => {
 
       const matchesCategory =
         filtersToApply.categories.length === 0 ||
-        filtersToApply.categories.includes(tx.category);
+        filtersToApply.categories.includes(tx.category.toLowerCase());
 
       const matchesDateRange =
         (!filtersToApply.dateRange.start ||
@@ -142,7 +143,17 @@ const ExpenseDashboard = () => {
     return budgetList.filter((tx) => {
       const matchesCategory =
         tempFilters.categories.length === 0 ||
-        tempFilters.categories.includes(tx.category);
+        tempFilters.categories.includes(tx.category.toLowerCase());
+
+      const transactionSubCategories = tx.subCategory
+        ? tx.subCategory.split(",").map((sub) => sub.trim()) // Convert to array and trim spaces
+        : [];
+
+      const matchesSubCategory =
+        tempFilters.subCategories.length === 0 ||
+        transactionSubCategories.some((sub) =>
+          tempFilters.subCategories.includes(sub)
+        );
 
       const matchesDateRange =
         (!tempFilters.dateRange.start ||
@@ -155,7 +166,12 @@ const ExpenseDashboard = () => {
         (!tempFilters.amountRange.max ||
           tx.amount <= Number(tempFilters.amountRange.max));
 
-      return matchesCategory && matchesDateRange && matchesAmountRange;
+      return (
+        matchesCategory &&
+        matchesSubCategory &&
+        matchesDateRange &&
+        matchesAmountRange
+      );
     });
   }, [tempFilters, budgetList]);
 
@@ -171,11 +187,13 @@ const ExpenseDashboard = () => {
   const resetFilters = () => {
     setAppliedFilters({
       categories: [],
+      subCategories: [],
       dateRange: { start: "", end: "" },
       amountRange: { min: "", max: "" },
     });
     setTempFilters({
       categories: [],
+      subCategories: [],
       dateRange: { start: "", end: "" },
       amountRange: { min: "", max: "" },
     });
@@ -189,7 +207,7 @@ const ExpenseDashboard = () => {
     }
     setIsDialogOpen(isOpen); // Track dialog state
   };
-  
+
   const displayedBudgets = isDialogOpen
     ? previewedTransactions
     : filteredTransactions;
@@ -225,7 +243,7 @@ const ExpenseDashboard = () => {
             placeholder="Search transactions by name, description, or category..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-6 py-4 rounded-full shadow-lg border transition-all duration-300 bg-white dark:bg-gray-900 dark:text-white text-gray-800 border-gray-300 dark:border-gray-600 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-500 dark:focus:ring-purple-600"
+            className="w-full px-6 py-5 rounded-full shadow-lg border transition-all duration-300 bg-white dark:bg-gray-900 dark:text-white text-gray-800 border-gray-300 dark:border-gray-600 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-500 dark:focus:ring-purple-600"
           />
 
           {/* Clear Button Inside Search Bar */}
@@ -264,20 +282,26 @@ const ExpenseDashboard = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Categories
                   </label>
-                  <div className="flex flex-wrap gap-2">
-                    {categories.slice(1).map((category) => (
+                  <div className="flex flex-wrap gap-2 space-y-2">
+                    {expenseCategoriesList.slice(1).map((category) => (
                       <button
                         key={category}
                         onClick={() => {
                           setTempFilters((prev) => ({
                             ...prev,
-                            categories: prev.categories.includes(category)
-                              ? prev.categories.filter((c) => c !== category)
-                              : [...prev.categories, category],
+                            categories: prev.categories.includes(
+                              category.toLowerCase()
+                            )
+                              ? prev.categories.filter(
+                                  (c) => c !== category.toLowerCase()
+                                )
+                              : [...prev.categories, category.toLowerCase()],
                           }));
                         }}
                         className={`px-3 py-1 rounded-full text-sm ${
-                          tempFilters.categories.includes(category)
+                          tempFilters.categories.includes(
+                            category.toLowerCase()
+                          )
                             ? "bg-purple-600 text-white"
                             : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                         }`}
@@ -287,6 +311,64 @@ const ExpenseDashboard = () => {
                     ))}
                   </div>
                 </div>
+
+                {/* Sub-Categories (Only Show When Categories Are Selected) */}
+                {tempFilters.categories.length > 0 && (
+                  <div className="relative max-h-[200px] overflow-y-auto border border-gray-300 rounded-md p-3 shadow-sm">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Sub-Categories (
+                      {
+                        new Set(
+                          tempFilters.categories.flatMap(
+                            (category) => expenseSubcategories[category] || []
+                          )
+                        ).size
+                      }
+                      )
+                    </label>
+
+                    {/* Subcategories List */}
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        ...new Set(
+                          tempFilters.categories.flatMap(
+                            (category) => expenseSubcategories[category] || []
+                          )
+                        ),
+                      ] // Convert Set back to an array to prevent duplicates
+                        .map((subCategory) => (
+                          <button
+                            key={subCategory}
+                            onClick={() => {
+                              setTempFilters((prev) => ({
+                                ...prev,
+                                subCategories: prev.subCategories.includes(
+                                  subCategory.toLowerCase()
+                                )
+                                  ? prev.subCategories.filter(
+                                      (c) => c !== subCategory.toLowerCase()
+                                    )
+                                  : [
+                                      ...prev.subCategories,
+                                      subCategory.toLowerCase(),
+                                    ],
+                              }));
+                            }}
+                            className={`px-3 py-1 rounded-full text-sm ${
+                              tempFilters.subCategories.includes(
+                                subCategory.toLowerCase()
+                              )
+                                ? "bg-purple-600 text-white"
+                                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                            }`}
+                          >
+                            {subCategory}
+                          </button>
+                        ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* Date Range */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
