@@ -11,6 +11,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import EmojiPicker from "emoji-picker-react";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
@@ -21,12 +29,16 @@ import { Input } from "../ui/input";
 import { useRouter } from "next/navigation";
 import { Checkbox } from "../ui/checkbox";
 import { getISTDateTime } from "@/utils/utilities";
+import { expenseCategoriesList, expenseSubcategories } from "@/data/categories";
 
 const CreateBudget = ({ refreshData }) => {
   const [emojiIcon, setEmojiIcon] = useState("😀");
   const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
   const [isRecurring, setIsRecurring] = useState(false); // Toggle for recurring
   const [frequency, setFrequency] = useState("monthly"); // Default frequency
+  const [category, setCategory] = useState("housing");
+  const [selectedSubCategories, setSelectedSubCategories] = useState("");
+
   const router = useRouter();
   const [name, setname] = useState();
   const [amount, setamount] = useState();
@@ -131,6 +143,95 @@ const CreateBudget = ({ refreshData }) => {
           />
         </div>
 
+        <div className="mt-4">
+          <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+            Category
+          </h2>
+          <Select
+            value={category.toLowerCase()}
+            onValueChange={(e) => setCategory(e)}
+            // className="block w-full p-2 mb-2 border border-gray-300 rounded-full"
+          >
+            <SelectTrigger className="w-full p-4 border rounded-lg shadow-md text-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200">
+              <SelectValue
+              // placeholder={category}
+              // className="text-lg font-bold"
+              />
+            </SelectTrigger>
+            <SelectContent className="w-full p-4 border rounded-lg shadow-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200">
+              <ScrollArea className="max-h-60 overflow-auto">
+                {expenseCategoriesList.map((category, index) => (
+                  <SelectItem
+                    key={index}
+                    value={category.toLowerCase()}
+                    className="text-lg rounded-xl bg-gradient-to-r hover:from-cyan-100 hover:to-blue-100 dark:hover:from-gray-700 dark:hover:to-gray-600"
+                  >
+                    {category}
+                  </SelectItem>
+                ))}
+              </ScrollArea>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Sub-Categories (Only Show When Category is Selected) */}
+        {category && (
+          <div className="relative max-h-[200px] overflow-y-auto border border-gray-300 rounded-md p-3 shadow-sm">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Sub-Categories (
+              {new Set(expenseSubcategories[category] || []).size})
+            </label>
+
+            {/* Subcategories List */}
+            <div className="flex flex-wrap gap-2">
+              {[...new Set(expenseSubcategories[category] || [])].map(
+                (subCategory) => {
+                  const lowerSubCategory = subCategory.toLowerCase();
+                  const isSelected =
+                    selectedSubCategories.includes(lowerSubCategory);
+
+                  return (
+                    <button
+                      key={subCategory}
+                      onClick={() => {
+                        setSelectedSubCategories((prev) => {
+                          let subCategoriesArray = prev ? prev.split(", ") : [];
+
+                          if (isSelected) {
+                            // Remove if already selected
+                            subCategoriesArray = subCategoriesArray.filter(
+                              (c) => c !== lowerSubCategory
+                            );
+                          } else {
+                            // Add new selection
+                            subCategoriesArray.push(lowerSubCategory);
+                          }
+
+                          return subCategoriesArray.join(", "); // Convert back to a comma-separated string
+                        });
+                      }}
+                      className={`px-3 py-1 rounded-full text-sm ${
+                        isSelected
+                          ? "bg-purple-600 text-white"
+                          : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                      }`}
+                    >
+                      {subCategory}
+                    </button>
+                  );
+                }
+              )}
+            </div>
+
+            {/* Display Selected Subcategories */}
+            {selectedSubCategories && (
+              <p className="mt-3 text-sm text-gray-600">
+                <strong>Selected:</strong> {selectedSubCategories}
+              </p>
+            )}
+          </div>
+        )}
+
         {/* Recurring Income Section */}
         <div className="mt-6 flex items-center space-x-2">
           <Checkbox
@@ -162,6 +263,18 @@ const CreateBudget = ({ refreshData }) => {
             </select>
           </div>
         )}
+
+        <div className="mt-6">
+          <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+            Budget Amount
+          </h2>
+          <Input
+            type="number"
+            placeholder="e.g. Rs.5000"
+            className="w-full p-4 border rounded-lg shadow-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-600 transition duration-200"
+            onChange={(e) => setamount(e.target.value)}
+          />
+        </div>
 
         {/* Footer Section */}
         <DialogFooter className="mt-6">

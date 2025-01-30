@@ -21,7 +21,7 @@ const NotificationTab = () => {
       try {
         const response = await fetch("/api/notifications");
         if (!response.ok) {
-          console.error("Failed to fetch notifications:", response.status);
+          // console.error("Failed to fetch notifications:", response.status);
           setNotifications([]);
           return;
         }
@@ -29,7 +29,7 @@ const NotificationTab = () => {
         setNotifications(Array.isArray(data) ? data : []);
         setUnreadCount(data.filter((n) => !n.read).length);
       } catch (error) {
-        console.error("Error fetching notifications:", error);
+        // console.error("Error fetching notifications:", error);
         setNotifications([]);
       }
     };

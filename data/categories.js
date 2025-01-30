@@ -1,4 +1,3 @@
-import { text } from "drizzle-orm/mysql-core";
 import {
   Laptop,
   TrendingUp,
@@ -82,6 +81,10 @@ export const expenseSubcategories = {
     "Property Tax",
     "Maintenance",
     "Home Insurance",
+    "Furnishing",
+    "Laundry",
+    "Utilities",
+    "Other"
   ],
   transportation: [
     "Fuel",
