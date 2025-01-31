@@ -115,7 +115,7 @@ function EditBudget({ budgetInfo, refreshData }) {
                 placeholder="e.g. Home Decor"
                 defaultValue={budgetInfo?.name}
                 onChange={(e) => setName(e.target.value)}
-                className="exp-input-field focus-visible:ring-blue-500 dark:focus:ring-blue-600 ring-1"
+                className="exp-input-field focus-visible:ring-blue-500 dark:focus-visible:ring-blue-400 focus-visible:ring-[3px]"
               />
             </div>
 
@@ -129,7 +129,7 @@ function EditBudget({ budgetInfo, refreshData }) {
                 defaultValue={budgetInfo?.amount}
                 placeholder="e.g. 5000₹"
                 onChange={(e) => setAmount(e.target.value)}
-                className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500 ring-1"
+                className="exp-input-field focus-visible:ring-blue-500 dark:focus-visible:ring-blue-400 focus-visible:ring-[3px]"
               />
             </div>
 
@@ -155,7 +155,7 @@ function EditBudget({ budgetInfo, refreshData }) {
                 <select
                   value={frequency}
                   onChange={(e) => setFrequency(e.target.value)}
-                  className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500 ring-1"
+                  className="exp-input-field focus-visible:ring-blue-500 dark:focus-visible:ring-blue-400 focus-visible:ring-[3px]"
                 >
                   <option value="daily">Daily</option>
                   <option value="weekly">Weekly</option>
