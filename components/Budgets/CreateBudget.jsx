@@ -63,7 +63,14 @@ const CreateBudget = ({ refreshData }) => {
     }
   };
   return (
-    <Dialog>
+    <Dialog onOpenChange={() => {
+      setIsRecurring(false);
+      setFrequency("monthly");
+      setCategory("housing");
+      setSelectedSubCategories("");
+      setname("");
+      setamount("");
+    }}>
       <DialogTrigger>
         <div className="bg-gradient-to-b from-white via-blue-50 to-indigo-50 dark:from-gray-800 dark:via-blue-900 dark:to-indigo-950 p-10 rounded-2xl items-center flex flex-col border-2 border-dashed border-indigo-300 dark:border-blue-600 cursor-pointer hover:shadow-[0_4px_20px_rgba(0,200,255,0.5)] hover:scale-105 transition-transform transform">
           <h2 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 dark:from-indigo-400 dark:via-blue-400 dark:to-blue-500">
@@ -75,7 +82,7 @@ const CreateBudget = ({ refreshData }) => {
         </div>
       </DialogTrigger>
 
-      <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-br from-white via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-8 rounded-3xl shadow-[0_0_40px_rgba(0,200,255,0.3)] w-[95%] max-w-lg max-h-[90vh]">
+      <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-br from-white via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-8 rounded-3xl shadow-[0_0_40px_rgba(0,200,255,0.3)] w-[95%] max-w-lg max-h-[80vh] md:max-h-[90vh] overflow-y-auto">
         {/* Background Effects */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -top-10 -left-10 w-60 h-60 bg-gradient-radial from-purple-400 via-blue-400 to-transparent dark:from-indigo-800 dark:via-blue-800 dark:to-gray-800 opacity-25 blur-3xl animate-spin-slow"></div>
@@ -127,7 +134,7 @@ const CreateBudget = ({ refreshData }) => {
           <Input
             type="text"
             placeholder="e.g. Home Decor"
-            className="w-full p-4 border rounded-lg shadow-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-600 transition duration-200"
+            className="budg-input-field"
             onChange={(e) => setname(e.target.value)}
           />
         </div>

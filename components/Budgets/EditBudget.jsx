@@ -115,7 +115,7 @@ function EditBudget({ budgetInfo, refreshData }) {
                 placeholder="e.g. Home Decor"
                 defaultValue={budgetInfo?.name}
                 onChange={(e) => setName(e.target.value)}
-                className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500 ring-1"
+                className="exp-input-field focus-visible:ring-blue-500 dark:focus:ring-blue-600 ring-1"
               />
             </div>
 

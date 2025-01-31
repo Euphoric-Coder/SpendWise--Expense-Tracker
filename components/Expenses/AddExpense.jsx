@@ -172,7 +172,7 @@ const AddExpense = ({
         <Input
           type="text"
           placeholder="e.g. Home Decor"
-          className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500 ring-1"
+          className="exp-input-field focus-visible:ring-blue-500 focus-visible:ring-[2px] dark:focus:ring-blue-700 ring-1"
           value={name}
           onChange={(e) => setname(e.target.value)}
         />
@@ -186,7 +186,7 @@ const AddExpense = ({
         <Input
           type="number"
           placeholder="e.g. Rs.5000"
-          className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500 ring-1"
+          className="exp-input-field focus-visible:ring-blue-500 focus-visible:dark:ring-gray-500 focus-visible:ring-[2px] ring-1"
           value={amount}
           onChange={(e) => setamount(e.target.value)}
         />
@@ -200,7 +200,7 @@ const AddExpense = ({
         <Input
           type="text"
           placeholder="e.g. For decorating the living room"
-          className="exp-input-field focus-visible:ring-blue-400 dark:focus:ring-blue-500 ring-1"
+          className="exp-input-field focus-visible:ring-blue-500 focus-visible:ring-[2px] dark:focus:ring-blue-700 ring-1"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
