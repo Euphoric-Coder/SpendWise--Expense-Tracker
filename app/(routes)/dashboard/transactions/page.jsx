@@ -20,7 +20,7 @@ import {
   DialogTitle,
   DialogClose,
 } from "@/components/ui/dialog";
-import { expenseCategories, incomeCategories } from "@/data/categories";
+import { expenseCategories, incomeCategories } from "@/utils/data";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -257,14 +257,22 @@ export default function Transactions() {
   };
   const exportTransactions = () => {
     const csvContent = [
-      ["Name", "Date", "Description", "Category", "Amount", "Recurring", "Status"],
+      [
+        "Name",
+        "Date",
+        "Description",
+        "Category",
+        "Amount",
+        "Recurring",
+        "Status",
+      ],
       ...filteredTransactions.map((tx) => [
         tx.name,
         tx.date,
         tx.desc,
         tx.category,
         tx.amount,
-        (tx.frequency? tx.frequency : "One-Time"),
+        tx.frequency ? tx.frequency : "One-Time",
         tx.status,
       ]),
     ]

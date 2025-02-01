@@ -60,7 +60,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Calendar } from "../ui/calendar";
-import { incomeCategories } from "@/data/categories";
+import { incomeCategories } from "@/utils/data";
 
 function IncomeItem({ income, refreshData }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -74,7 +74,7 @@ function IncomeItem({ income, refreshData }) {
   const [editedStartDate, setEditedStartDate] = useState(null);
   const [editedEndDate, setEditedEndDate] = useState(null);
 
-  console.log(getISTDateTime())
+  console.log(getISTDateTime());
   const nonrecurringProgress = calculateNonRecurringProgress(
     getISTCustomDate(income.createdAt),
     income.endDate

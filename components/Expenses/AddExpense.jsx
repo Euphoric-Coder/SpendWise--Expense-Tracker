@@ -172,7 +172,7 @@ const AddExpense = ({
         <Input
           type="text"
           placeholder="e.g. Home Decor"
-          className="exp-input-field focus-visible:ring-blue-500 dark:focus-visible:ring-blue-400 focus-visible:ring-[3px]"
+          className="exp-input-field focus-visible:ring-blue-500 dark:focus-visible:ring-offset-gray-800 dark:focus-visible:ring-blue-400 focus-visible:ring-[3px]"
           value={name}
           onChange={(e) => setname(e.target.value)}
         />
@@ -214,7 +214,6 @@ const AddExpense = ({
           <Popover modal>
             <PopoverTrigger asChild>
               <Button
-                // variant={"outline"}
                 className={cn(
                   "exp-input-field justify-start focus-visible:ring-blue-400 dark:focus:ring-blue-500 ring-1",
                   isSameDate(dueDate, getISTDate()) && "text-muted-foreground"

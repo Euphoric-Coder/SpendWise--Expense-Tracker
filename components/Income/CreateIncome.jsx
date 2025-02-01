@@ -33,7 +33,7 @@ import {
   isSameDate,
   nextRecurringDate,
 } from "@/utils/utilities";
-import { incomeCategories } from "@/data/categories";
+import { incomeCategories } from "@/utils/data";
 
 function CreateIncomes({ refreshData }) {
   const [emojiIcon, setEmojiIcon] = useState("😀");
@@ -89,7 +89,9 @@ function CreateIncomes({ refreshData }) {
           category: category,
           isRecurring: isRecurring,
           frequency: isRecurring ? frequency : null,
-          nextRecurringDate: isRecurring ? nextRecurringDate(startDate, frequency) : null,
+          nextRecurringDate: isRecurring
+            ? nextRecurringDate(startDate, frequency)
+            : null,
           lastProcessed: isSameDate(
             startDate ? startDate : getISTDate(),
             getISTDate()

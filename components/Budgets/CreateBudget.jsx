@@ -29,7 +29,11 @@ import { Input } from "../ui/input";
 import { useRouter } from "next/navigation";
 import { Checkbox } from "../ui/checkbox";
 import { getISTDateTime } from "@/utils/utilities";
-import { expenseCategoriesList, expenseSubcategories } from "@/data/categories";
+import {
+  expenseCategoriesList,
+  expenseSubcategories,
+  frequencyTypes,
+} from "@/utils/data";
 
 const CreateBudget = ({ refreshData }) => {
   const [emojiIcon, setEmojiIcon] = useState("😀");
@@ -63,14 +67,16 @@ const CreateBudget = ({ refreshData }) => {
     }
   };
   return (
-    <Dialog onOpenChange={() => {
-      setIsRecurring(false);
-      setFrequency("monthly");
-      setCategory("housing");
-      setSelectedSubCategories("");
-      setname("");
-      setamount("");
-    }}>
+    <Dialog
+      onOpenChange={() => {
+        setIsRecurring(false);
+        setFrequency("monthly");
+        setCategory("housing");
+        setSelectedSubCategories("");
+        setname("");
+        setamount("");
+      }}
+    >
       <DialogTrigger>
         <div className="bg-gradient-to-b from-white via-blue-50 to-indigo-50 dark:from-gray-800 dark:via-blue-900 dark:to-indigo-950 p-10 rounded-2xl items-center flex flex-col border-2 border-dashed border-indigo-300 dark:border-blue-600 cursor-pointer hover:shadow-[0_4px_20px_rgba(0,200,255,0.5)] hover:scale-105 transition-transform transform">
           <h2 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 dark:from-indigo-400 dark:via-blue-400 dark:to-blue-500">
@@ -134,7 +140,7 @@ const CreateBudget = ({ refreshData }) => {
           <Input
             type="text"
             placeholder="e.g. Home Decor"
-            className="budg-input-field"
+            className="budg-input-field focus-visible:ring-cyan-400 dark:focus-visible:ring-blue-400 focus-visible:ring-[2px]"
             onChange={(e) => setname(e.target.value)}
           />
         </div>
@@ -145,7 +151,7 @@ const CreateBudget = ({ refreshData }) => {
           <Input
             type="number"
             placeholder="e.g. Rs.5000"
-            className="w-full p-4 border rounded-lg shadow-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-600 transition duration-200"
+            className="budg-input-field focus-visible:ring-cyan-400 dark:focus-visible:ring-blue-400 focus-visible:ring-[2px]"
             onChange={(e) => setamount(e.target.value)}
           />
         </div>
@@ -159,19 +165,19 @@ const CreateBudget = ({ refreshData }) => {
             onValueChange={(e) => setCategory(e)}
             // className="block w-full p-2 mb-2 border border-gray-300 rounded-full"
           >
-            <SelectTrigger className="w-full p-4 border rounded-lg shadow-md text-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200">
+            <SelectTrigger className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]">
               <SelectValue
               // placeholder={category}
               // className="text-lg font-bold"
               />
             </SelectTrigger>
-            <SelectContent className="w-full p-4 border rounded-lg shadow-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200">
+            <SelectContent className="budg-select-content mt-2">
               <ScrollArea className="max-h-60 overflow-auto">
                 {expenseCategoriesList.map((category, index) => (
                   <SelectItem
                     key={index}
                     value={category.toLowerCase()}
-                    className="text-lg rounded-xl bg-gradient-to-r hover:from-cyan-100 hover:to-blue-100 dark:hover:from-gray-700 dark:hover:to-gray-600"
+                    className="budg-select-item"
                   >
                     {category}
                   </SelectItem>
@@ -183,7 +189,7 @@ const CreateBudget = ({ refreshData }) => {
 
         {/* Sub-Categories (Only Show When Category is Selected) */}
         {category && (
-          <div className="relative max-h-[200px] overflow-y-auto border border-gray-300 rounded-md p-3 shadow-sm">
+          <div className="relative max-h-[200px] mt-2 overflow-y-auto border border-gray-300 rounded-md p-3 shadow-sm">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Sub-Categories (
               {new Set(expenseSubcategories[category] || []).size})
@@ -198,7 +204,7 @@ const CreateBudget = ({ refreshData }) => {
                     selectedSubCategories.includes(lowerSubCategory);
 
                   return (
-                    <button
+                    <Button
                       key={subCategory}
                       onClick={() => {
                         setSelectedSubCategories((prev) => {
@@ -217,14 +223,14 @@ const CreateBudget = ({ refreshData }) => {
                           return subCategoriesArray.join(", "); // Convert back to a comma-separated string
                         });
                       }}
-                      className={`px-3 py-1 rounded-full text-sm ${
+                      className={`rounded-full text-sm ${
                         isSelected
                           ? "bg-purple-600 text-white"
                           : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                       }`}
                     >
                       {subCategory}
-                    </button>
+                    </Button>
                   );
                 }
               )}
@@ -258,30 +264,24 @@ const CreateBudget = ({ refreshData }) => {
             <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
               Frequency
             </h2>
-            <select
-              value={frequency}
-              onChange={(e) => setFrequency(e.target.value)}
-              className="block w-full p-2 border border-gray-300 rounded-md"
-            >
-              <option value="daily">Daily</option>
-              <option value="weekly">Weekly</option>
-              <option value="monthly">Monthly</option>
-              <option value="yearly">Yearly</option>
-            </select>
+            <Select value={frequency} onValueChange={(e) => setFrequency(e)}>
+              <SelectTrigger className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="budg-select-content">
+                {frequencyTypes.map((frequency, index) => (
+                  <SelectItem
+                    key={index}
+                    value={frequency}
+                    className="budg-select-item"
+                  >
+                    {frequency.replace(/^./, (char) => char.toUpperCase())}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         )}
-
-        <div className="mt-6">
-          <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-            Budget Amount
-          </h2>
-          <Input
-            type="number"
-            placeholder="e.g. Rs.5000"
-            className="w-full p-4 border rounded-lg shadow-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-600 transition duration-200"
-            onChange={(e) => setamount(e.target.value)}
-          />
-        </div>
 
         {/* Footer Section */}
         <DialogFooter className="mt-6">

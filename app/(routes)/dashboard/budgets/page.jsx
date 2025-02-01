@@ -29,7 +29,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { expenseCategoriesList, expenseSubcategories } from "@/data/categories";
+import { expenseCategoriesList, expenseSubcategories } from "@/utils/data";
 
 const ExpenseDashboard = () => {
   const [budgetList, setBudgetList] = useState([]);

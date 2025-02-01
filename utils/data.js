@@ -84,7 +84,7 @@ export const expenseSubcategories = {
     "Furnishing",
     "Laundry",
     "Utilities",
-    "Other"
+    "Other",
   ],
   transportation: [
     "Fuel",
@@ -240,3 +240,5 @@ export const expenseCategories = [
     subcategories: expenseSubcategories.other_expense,
   },
 ];
+
+export const frequencyTypes = ["daily", "weekly", "monthly", "yearly"];
