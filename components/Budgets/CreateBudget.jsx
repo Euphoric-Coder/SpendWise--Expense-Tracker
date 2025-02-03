@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Dialog,
   DialogClose,
@@ -34,6 +35,17 @@ import {
   expenseSubcategories,
   frequencyTypes,
 } from "@/utils/data";
+import { Badge } from "../ui/badge";
+import { Switch } from "../ui/switch";
+import {
+  AlertCircle,
+  AlertTriangle,
+  Eraser,
+  PlusCircleIcon,
+  RepeatIcon,
+} from "lucide-react";
+import { useTheme } from "next-themes";
+import { ConsoleLogWriter } from "drizzle-orm";
 
 const CreateBudget = ({ refreshData }) => {
   const [emojiIcon, setEmojiIcon] = useState("😀");
@@ -42,8 +54,12 @@ const CreateBudget = ({ refreshData }) => {
   const [frequency, setFrequency] = useState("monthly"); // Default frequency
   const [category, setCategory] = useState("housing");
   const [selectedSubCategories, setSelectedSubCategories] = useState("");
+  const selectedCount = selectedSubCategories
+    ? selectedSubCategories.split(", ").length
+    : 0;
 
   const router = useRouter();
+  const theme = useTheme()
   const [name, setname] = useState();
   const [amount, setamount] = useState();
 
@@ -66,6 +82,16 @@ const CreateBudget = ({ refreshData }) => {
       toast.success(`New Budget:"${name}" Created!`);
     }
   };
+
+  const clearData = () => {
+    setIsRecurring(false);
+    setFrequency("monthly");
+    setCategory("housing");
+    setSelectedSubCategories("");
+    setname("");
+    setamount("");
+  };
+
   return (
     <Dialog
       onOpenChange={() => {
@@ -94,22 +120,26 @@ const CreateBudget = ({ refreshData }) => {
           <div className="absolute -top-10 -left-10 w-60 h-60 bg-gradient-radial from-purple-400 via-blue-400 to-transparent dark:from-indigo-800 dark:via-blue-800 dark:to-gray-800 opacity-25 blur-3xl animate-spin-slow"></div>
           <div className="absolute bottom-20 right-10 w-80 h-80 bg-gradient-radial from-teal-300 via-blue-300 to-transparent dark:from-blue-900 dark:via-teal-800 dark:to-gray-800 opacity-30 blur-[120px]"></div>
         </div>
-
         {/* Dialog Header */}
         <DialogHeader>
-          <DialogTitle className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-500 via-purple-500 to-pink-500 dark:from-blue-400 dark:via-indigo-400 dark:to-teal-400">
+          <DialogTitle className="flex gap-2 items-center text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-500 via-purple-500 to-pink-500 dark:from-blue-400 dark:via-indigo-400 dark:to-teal-400">
             Create New Budget
+            {isRecurring && (
+              <Badge className="border-0 bg-gradient-to-r from-green-400 to-green-600 text-white px-4 rounded-3xl text-sm dark:from-green-500 dark:to-green-700">
+                Recurring Budget
+              </Badge>
+            )}
           </DialogTitle>
-          <DialogDescription className="text-sm text-gray-600 dark:text-gray-400">
-            Fill in the details below to create your budget.
+          <DialogDescription className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+            <div>Fill in the details below to create your budget.</div>
+            <Button onClick={clearData} size="sm" className=""><Eraser />Clear Data</Button>
           </DialogDescription>
         </DialogHeader>
-
         {/* Emoji Picker Section */}
         <div className="">
           <Button
             variant="outline"
-            size="lg"
+            size="sm"
             className="border-2 border-indigo-300 dark:border-indigo-600 rounded-full p-4 bg-gradient-to-r from-white to-blue-50 dark:from-gray-800 dark:to-gray-700 shadow-md hover:shadow-lg hover:scale-105 transition-transform"
             onClick={() => setOpenEmojiPicker(!openEmojiPicker)}
           >
@@ -127,11 +157,11 @@ const CreateBudget = ({ refreshData }) => {
                   setEmojiIcon(e.emoji);
                   setOpenEmojiPicker(false);
                 }}
+                theme={theme.theme === "dark" ? "dark" : "light"}
               />
             </div>
           )}
         </div>
-
         {/* Input Fields */}
         <div className="mt-1">
           <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
@@ -144,7 +174,7 @@ const CreateBudget = ({ refreshData }) => {
             onChange={(e) => setname(e.target.value)}
           />
         </div>
-        <div className="mt-6">
+        <div className="mt-1">
           <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
             Budget Amount
           </h2>
@@ -156,7 +186,8 @@ const CreateBudget = ({ refreshData }) => {
           />
         </div>
 
-        <div className="mt-4">
+        {/* Categories  */}
+        <div className="mt-1">
           <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
             Category
           </h2>
@@ -188,15 +219,45 @@ const CreateBudget = ({ refreshData }) => {
         </div>
 
         {/* Sub-Categories (Only Show When Category is Selected) */}
-        {category && (
-          <div className="relative max-h-[200px] mt-2 overflow-y-auto border border-gray-300 rounded-md p-3 shadow-sm">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Sub-Categories (
-              {new Set(expenseSubcategories[category] || []).size})
-            </label>
+        {category && expenseSubcategories[category] && (
+          <div
+            className="relative max-h-[200px] mt-2 overflow-y-auto 
+        p-3 shadow-sm rounded-md border 
+        bg-gradient-to-r from-blue-50 to-blue-100 dark:from-gray-800 dark:to-gray-900
+        border-blue-300 dark:border-blue-500 transition-all"
+          >
+            <div className="flex items-center justify-between">
+              {/* Title & Selected Badge */}
+              <div className="flex items-center gap-2">
+                <label className="block text-sm font-medium text-gray-800 dark:text-white">
+                  Sub-Categories (
+                  {new Set(expenseSubcategories[category] || []).size})
+                </label>
+
+                {/* Show Selected Count Badge */}
+                {selectedCount > 0 && (
+                  <Badge className="border-0 bg-gradient-to-r from-green-400 to-green-600 text-white px-2 py-1 rounded-full text-xs dark:from-green-500 dark:to-green-700 ">
+                    Selected: {selectedCount}
+                  </Badge>
+                )}
+              </div>
+              <div>
+                {/* Clear Button */}
+                {selectedCount > 0 && (
+                  <Button
+                    variant="outline"
+                    onClick={() => setSelectedSubCategories("")}
+                    className="text-sm rounded-full text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-500 dark:border-gray-300"
+                    size="sm"
+                  >
+                    Clear Selection
+                  </Button>
+                )}
+              </div>
+            </div>
 
             {/* Subcategories List */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 mt-3">
               {[...new Set(expenseSubcategories[category] || [])].map(
                 (subCategory) => {
                   const lowerSubCategory = subCategory.toLowerCase();
@@ -204,63 +265,69 @@ const CreateBudget = ({ refreshData }) => {
                     selectedSubCategories.includes(lowerSubCategory);
 
                   return (
-                    <Button
+                    <Badge
                       key={subCategory}
                       onClick={() => {
                         setSelectedSubCategories((prev) => {
                           let subCategoriesArray = prev ? prev.split(", ") : [];
 
                           if (isSelected) {
-                            // Remove if already selected
                             subCategoriesArray = subCategoriesArray.filter(
                               (c) => c !== lowerSubCategory
                             );
                           } else {
-                            // Add new selection
                             subCategoriesArray.push(lowerSubCategory);
                           }
 
-                          return subCategoriesArray.join(", "); // Convert back to a comma-separated string
+                          return subCategoriesArray.join(", ");
                         });
                       }}
-                      className={`rounded-full text-sm ${
-                        isSelected
-                          ? "bg-purple-600 text-white"
-                          : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                      }`}
+                      className={`border-0 rounded-full text-sm cursor-pointer px-3 py-1 transition-all
+                  ${
+                    isSelected
+                      ? "bg-gradient-to-r from-blue-500 to-blue-700 text-white hover:from-blue-600 hover:to-blue-800"
+                      : "bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+                  }`}
                     >
                       {subCategory}
-                    </Button>
+                    </Badge>
                   );
                 }
               )}
             </div>
-
-            {/* Display Selected Subcategories */}
-            {selectedSubCategories && (
-              <p className="mt-3 text-sm text-gray-600">
-                <strong>Selected:</strong> {selectedSubCategories}
-              </p>
-            )}
           </div>
         )}
 
         {/* Recurring Income Section */}
-        <div className="mt-6 flex items-center space-x-2">
-          <Checkbox
-            id="recurring"
+        <div
+          className="flex items-center justify-between p-4 rounded-xl 
+      bg-gradient-to-r from-cyan-50 via-blue-100 to-indigo-100 
+      dark:bg-gradient-to-r dark:from-[#243089] dark:via-[#3a6aa4] dark:to-[#76b2e6] 
+      border border-blue-300 dark:border-0 transition-all"
+        >
+          <div>
+            <h3 className="flex gap-2 items-center text-sm font-extrabold tracking-wide text-gray-900 dark:text-white">
+              Recurring Budget
+              {isRecurring && (
+                <Badge className="border-0 bg-gradient-to-r from-green-400 to-green-600 text-white px-2 rounded-3xl text-xs dark:from-green-500 dark:to-green-700">
+                  Active
+                </Badge>
+              )}
+            </h3>
+            <p className="mt-2 text-xs text-gray-900 dark:text-blue-100">
+              Enable to automatically allocate a recurring budget each cycle.
+            </p>
+          </div>
+
+          <Switch
             checked={isRecurring}
-            onCheckedChange={(value) => setIsRecurring(value)}
+            onCheckedChange={(e) => setIsRecurring(e)}
+            className="data-[state=checked]:bg-blue-600 data-[state=unchecked]:bg-gray-400 
+        dark:data-[state=checked]:bg-white dark:data-[state=unchecked]:bg-blue-300 border-2 border-blue-400 dark:border-indigo-200"
           />
-          <label
-            htmlFor="recurring"
-            className="text-gray-700 dark:text-gray-300 font-medium text-sm"
-          >
-            Recurring Income
-          </label>
         </div>
         {isRecurring && (
-          <div className="mt-4">
+          <div className="mt-1">
             <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
               Frequency
             </h2>
@@ -283,15 +350,45 @@ const CreateBudget = ({ refreshData }) => {
           </div>
         )}
 
+        {/* Budget Expiration Information  */}
+        {name && amount && (
+          <Alert
+            className={`p-4 rounded-lg shadow-lg border bg-gradient-to-r from-red-700 via-red-500 to-orange-400 text-white dark:bg-gradient-to-r dark:from-red-300 dark:via-orange-300 dark:to-yellow-300 dark:text-black`}
+          >
+            <div className="flex items-center gap-3">
+              <AlertTriangle className="h-5 w-5" />
+              <div>
+                <AlertTitle className="font-semibold">
+                  Budget Expiration Warning
+                </AlertTitle>
+                <AlertDescription>
+                  Your budget for <strong>{name}</strong> (₹{amount}) will
+                  expire on <strong>today</strong>. Please take necessary
+                  actions.
+                </AlertDescription>
+              </div>
+            </div>
+          </Alert>
+        )}
         {/* Footer Section */}
-        <DialogFooter className="mt-6">
+        <DialogFooter className="mt-2">
           <DialogClose asChild>
             <Button
-              className="w-full py-4 rounded-2xl bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 dark:from-blue-600 dark:via-indigo-600 dark:to-teal-600 text-white font-bold shadow-lg hover:shadow-[0_0_30px_rgba(100,150,255,0.5)] transition-transform transform hover:scale-105 disabled:opacity-50"
+              className="w-full py-4 rounded-2xl bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 dark:from-blue-600 dark:via-indigo-600 dark:to-teal-600 text-white font-bold shadow-lg hover:shadow-[0_0_30px_rgba(100,150,255,0.5)] transition-transform transform hover:scale-105 disabled:opacity-50 [&_svg]:size-5"
               onClick={() => onCreateBudget()}
               disabled={!(name && amount)}
             >
-              Create Budget
+              {isRecurring ? (
+                <span className="flex gap-2">
+                  <RepeatIcon />
+                  <p>Create New Recurring Budget</p>
+                </span>
+              ) : (
+                <span className="flex gap-2">
+                  <PlusCircleIcon />
+                  <p>Create New Budget</p>
+                </span>
+              )}
             </Button>
           </DialogClose>
         </DialogFooter>

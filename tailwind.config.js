@@ -71,7 +71,5 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate", 
-    "tailwind-scroll"
-  )],
+  plugins: [require("tailwindcss-animate")],
 };
