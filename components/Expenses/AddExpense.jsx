@@ -38,13 +38,12 @@ const AddExpense = ({
   const [dueDate, setDueDate] = useState(getISTDate());
   const alertTimeoutRef = useRef(null);
 
-
   /**PLAN TO MAINTAIN A QUEING SYSTEM FOR EXPENSES
-   * 
-   * @todo Add a Queing System for unfinished expense data 
+   *
+   * @todo Add a Queing System for unfinished expense data
    * @todo After Adding the expense delete it from the que
    * @todo If remained unfinished, prompt the user to either cancel or edit it
-   * 
+   *
    */
   // Function to fetch the total expenses for the specified budget
   const fetchTotalExpenses = async () => {
@@ -134,7 +133,7 @@ const AddExpense = ({
         <div className="flex flex-col md:flex-row gap-3">
           <Button
             onClick={() => clearData()}
-            className="individual-expense-btn1 rounded-full"
+            className="expense-btn1 rounded-full"
           >
             <Eraser /> Clear Data
           </Button>
@@ -239,7 +238,7 @@ const AddExpense = ({
       <Button
         onClick={() => addNewExpense()}
         disabled={!(name && amount)}
-        className="individual-expense-btn2 mt-5 p-2 rounded-3xl"
+        className="expense-btn2 mt-5 p-2 rounded-3xl"
       >
         Add New Expense
       </Button>

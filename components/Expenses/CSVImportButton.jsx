@@ -19,7 +19,7 @@ const CSVImportButton = () => {
   const [currentTutorialPage, setCurrentTutorialPage] = useState(0);
   const [showCSVImport, setShowCSVImport] = useState(true); // Default to true
   const [csvData, setCsvData] = useState([]);
-  const [reuploadReset, setReuploadReset] = useState(false)
+  const [reuploadReset, setReuploadReset] = useState(false);
   const { user } = useUser();
 
   const progressColors = [
@@ -161,7 +161,6 @@ const CSVImportButton = () => {
     },
   ];
 
-
   useEffect(() => {
     const fetchOrCreateSettings = async () => {
       if (!user?.primaryEmailAddress?.emailAddress) return;
@@ -250,10 +249,9 @@ const CSVImportButton = () => {
     setCsvData(data); // Populate table with CSV data
   };
 
-
   return (
     <div>
-      <Button className="individual-expense-btn1 rounded-3xl" onClick={handleImportClick}>
+      <Button className="expense-btn1 rounded-3xl" onClick={handleImportClick}>
         <Upload className="mr-1 w-9 h-9" /> Import CSV
       </Button>
 
@@ -367,7 +365,7 @@ const CSVImportButton = () => {
           )}
           <DialogClose asChild>
             <Button
-              className="individual-expense-btn2 rounded-2xl mt-6"
+              className="expense-btn2 rounded-2xl mt-6"
               onClick={() => setShowUploadDialog(false)}
             >
               Close

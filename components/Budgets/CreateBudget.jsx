@@ -29,7 +29,11 @@ import { Budgets } from "@/utils/schema";
 import { Input } from "../ui/input";
 import { useRouter } from "next/navigation";
 import { Checkbox } from "../ui/checkbox";
-import { getISTDateTime } from "@/utils/utilities";
+import {
+  getISTDate,
+  getISTDateTime,
+  nextRecurringDate,
+} from "@/utils/utilities";
 import {
   expenseCategoriesList,
   expenseSubcategories,
@@ -46,8 +50,11 @@ import {
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { ConsoleLogWriter } from "drizzle-orm";
+import { format } from "date-fns";
 
 const CreateBudget = ({ refreshData }) => {
+  const [name, setname] = useState("");
+  const [amount, setamount] = useState();
   const [emojiIcon, setEmojiIcon] = useState("😀");
   const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
   const [isRecurring, setIsRecurring] = useState(false); // Toggle for recurring
@@ -58,10 +65,10 @@ const CreateBudget = ({ refreshData }) => {
     ? selectedSubCategories.split(", ").length
     : 0;
 
-  const router = useRouter();
-  const theme = useTheme()
-  const [name, setname] = useState();
-  const [amount, setamount] = useState();
+  const expiryDate = getISTDate();
+  const renewDate = isRecurring && nextRecurringDate(expiryDate, frequency);
+
+  const theme = useTheme();
 
   const { user } = useUser();
   const onCreateBudget = async () => {
@@ -102,6 +109,7 @@ const CreateBudget = ({ refreshData }) => {
         setname("");
         setamount("");
       }}
+      className="ring-0 ring-offset-0"
     >
       <DialogTrigger>
         <div className="bg-gradient-to-b from-white via-blue-50 to-indigo-50 dark:from-gray-800 dark:via-blue-900 dark:to-indigo-950 p-10 rounded-2xl items-center flex flex-col border-2 border-dashed border-indigo-300 dark:border-blue-600 cursor-pointer hover:shadow-[0_4px_20px_rgba(0,200,255,0.5)] hover:scale-105 transition-transform transform">
@@ -130,10 +138,15 @@ const CreateBudget = ({ refreshData }) => {
               </Badge>
             )}
           </DialogTitle>
-          <DialogDescription className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
-            <div>Fill in the details below to create your budget.</div>
-            <Button onClick={clearData} size="sm" className=""><Eraser />Clear Data</Button>
-          </DialogDescription>
+          <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+            <DialogDescription className="flex justify-start">
+              Fill in the details below to create your budget.
+            </DialogDescription>
+            <Button onClick={clearData} size="sm" className="budg-btn2">
+              <Eraser />
+              Clear Data
+            </Button>
+          </div>
         </DialogHeader>
         {/* Emoji Picker Section */}
         <div className="">
@@ -171,6 +184,7 @@ const CreateBudget = ({ refreshData }) => {
             type="text"
             placeholder="e.g. Home Decor"
             className="budg-input-field focus-visible:ring-cyan-400 dark:focus-visible:ring-blue-400 focus-visible:ring-[2px]"
+            value={name}
             onChange={(e) => setname(e.target.value)}
           />
         </div>
@@ -182,6 +196,7 @@ const CreateBudget = ({ refreshData }) => {
             type="number"
             placeholder="e.g. Rs.5000"
             className="budg-input-field focus-visible:ring-cyan-400 dark:focus-visible:ring-blue-400 focus-visible:ring-[2px]"
+            value={amount}
             onChange={(e) => setamount(e.target.value)}
           />
         </div>
@@ -193,7 +208,10 @@ const CreateBudget = ({ refreshData }) => {
           </h2>
           <Select
             value={category.toLowerCase()}
-            onValueChange={(e) => setCategory(e)}
+            onValueChange={(e) => {
+              setCategory(e);
+              setSelectedSubCategories("");
+            }}
             // className="block w-full p-2 mb-2 border border-gray-300 rounded-full"
           >
             <SelectTrigger className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]">
@@ -222,7 +240,7 @@ const CreateBudget = ({ refreshData }) => {
         {category && expenseSubcategories[category] && (
           <div
             className="relative max-h-[200px] mt-2 overflow-y-auto 
-        p-3 shadow-sm rounded-md border 
+        p-3 shadow-sm rounded-xl border 
         bg-gradient-to-r from-blue-50 to-blue-100 dark:from-gray-800 dark:to-gray-900
         border-blue-300 dark:border-blue-500 transition-all"
           >
@@ -300,7 +318,7 @@ const CreateBudget = ({ refreshData }) => {
 
         {/* Recurring Income Section */}
         <div
-          className="flex items-center justify-between p-4 rounded-xl 
+          className="flex items-center justify-between p-4 rounded-3xl 
       bg-gradient-to-r from-cyan-50 via-blue-100 to-indigo-100 
       dark:bg-gradient-to-r dark:from-[#243089] dark:via-[#3a6aa4] dark:to-[#76b2e6] 
       border border-blue-300 dark:border-0 transition-all"
@@ -353,28 +371,41 @@ const CreateBudget = ({ refreshData }) => {
         {/* Budget Expiration Information  */}
         {name && amount && (
           <Alert
-            className={`p-4 rounded-lg shadow-lg border bg-gradient-to-r from-red-700 via-red-500 to-orange-400 text-white dark:bg-gradient-to-r dark:from-red-300 dark:via-orange-300 dark:to-yellow-300 dark:text-black`}
+            variant="destructive"
+            className="bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-gray-800 dark:to-gray-700 border border-blue-400 dark:border-gray-600 shadow-lg p-4 rounded-xl flex items-center"
           >
-            <div className="flex items-center gap-3">
-              <AlertTriangle className="h-5 w-5" />
-              <div>
-                <AlertTitle className="font-semibold">
-                  Budget Expiration Warning
-                </AlertTitle>
-                <AlertDescription>
-                  Your budget for <strong>{name}</strong> (₹{amount}) will
-                  expire on <strong>today</strong>. Please take necessary
-                  actions.
-                </AlertDescription>
-              </div>
+            <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-3" />
+            <div>
+              <AlertTitle className="text-blue-700 dark:text-blue-300 font-bold">
+                Budget Expiration Warning
+              </AlertTitle>
+              <AlertDescription className="text-blue-600 dark:text-blue-400">
+                {!isRecurring && (
+                  <>
+                    Your budget <strong>"{name}"</strong> will expire on{" "}
+                    <strong>{format(nextRecurringDate(expiryDate, "monthly"), "PPP")}</strong>.
+                  </>
+                )}
+                {isRecurring && (
+                  <>
+                    Your budget is{" "}
+                    <span className="border-0 p-[2px] bg-gradient-to-r from-green-400 to-green-600 text-white px-2 rounded-3xl text-xs dark:from-green-500 dark:to-green-700">
+                      Recurring
+                    </span>
+                    {" "}
+                     and will renew on a <strong>{frequency}</strong>{" "}
+                    basis. Next renewal date: <strong>{format(renewDate, "PPP")}</strong>.
+                  </>
+                )}
+              </AlertDescription>
             </div>
           </Alert>
         )}
         {/* Footer Section */}
-        <DialogFooter className="mt-2">
+        <DialogFooter className="mt-1">
           <DialogClose asChild>
             <Button
-              className="w-full py-4 rounded-2xl bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 dark:from-blue-600 dark:via-indigo-600 dark:to-teal-600 text-white font-bold shadow-lg hover:shadow-[0_0_30px_rgba(100,150,255,0.5)] transition-transform transform hover:scale-105 disabled:opacity-50 [&_svg]:size-5"
+              className="budg-btn1 disabled:opacity-50 [&_svg]:size-5"
               onClick={() => onCreateBudget()}
               disabled={!(name && amount)}
             >

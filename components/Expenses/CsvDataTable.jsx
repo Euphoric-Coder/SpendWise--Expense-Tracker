@@ -92,7 +92,7 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
         {csvData.length > 0 && (
           <Button
             onClick={addAllToExpense}
-            className="individual-expense-btn1 rounded-2xl"
+            className="expense-btn1 rounded-2xl"
           >
             Add All to Expense
           </Button>
@@ -198,7 +198,7 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
                           <DialogClose>
                             <Button
                               onClick={saveEditedRow}
-                              className="individual-expense-btn2 rounded-3xl p-2 mt-2"
+                              className="expense-btn2 rounded-3xl p-2 mt-2"
                             >
                               Update Data
                             </Button>

@@ -63,7 +63,7 @@ function EditBudget({ budgetInfo, refreshData }) {
     <div>
       <Dialog>
         <DialogTrigger asChild>
-          <Button className="individual-expense-btn1 rounded-2xl">
+          <Button className="expense-btn1 rounded-2xl">
             <PenBox /> Edit
           </Button>
         </DialogTrigger>
@@ -172,7 +172,7 @@ function EditBudget({ budgetInfo, refreshData }) {
               <Button
                 disabled={!(name && amount)}
                 onClick={() => onUpdateBudget()}
-                className="individual-expense-btn2 rounded-full"
+                className="expense-btn2 rounded-full"
               >
                 Update Budget
               </Button>

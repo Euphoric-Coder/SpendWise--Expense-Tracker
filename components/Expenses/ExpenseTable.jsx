@@ -288,7 +288,7 @@ const ExpenseTable = ({
                             <DialogClose>
                               <button
                                 onClick={saveEditedExpense}
-                                className="individual-expense-btn2 rounded-full py-1 mt-4"
+                                className="expense-btn2 rounded-full py-1 mt-4"
                               >
                                 Update Expense
                               </button>

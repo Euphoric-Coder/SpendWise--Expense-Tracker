@@ -121,7 +121,7 @@ const ExpensesDashboard = () => {
             <AlertDialogTrigger asChild>
               <Button
                 variant="destructive"
-                className="individual-expense-btn1 rounded-2xl"
+                className="expense-btn1 rounded-2xl"
               >
                 <Trash2 />
                 Delete
@@ -163,9 +163,7 @@ const ExpensesDashboard = () => {
 
           {/* Go to Budgets Button */}
           <Link href={"/dashboard/budgets"}>
-            <Button className="individual-expense-btn1 rounded-2xl">
-              Go to Budgets
-            </Button>
+            <Button className="expense-btn1 rounded-2xl">Go to Budgets</Button>
           </Link>
         </div>
       </div>

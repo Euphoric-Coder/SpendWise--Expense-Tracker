@@ -175,7 +175,7 @@ const RecieptDataTable = ({ recieptData = [], setRecieptData }) => {
                           <DialogClose asChild>
                             <Button
                               onClick={saveEditedRow}
-                              className="individual-expense-btn2 rounded-3xl p-2 mt-2"
+                              className="expense-btn2 rounded-3xl p-2 mt-2"
                             >
                               Update Data
                             </Button>

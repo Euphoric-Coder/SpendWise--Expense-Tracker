@@ -104,14 +104,26 @@ body {
   @apply w-[90%] text-lg text-gray-800 dark:text-white hover:font-semibold rounded-2xl cursor-pointer bg-gradient-to-r hover:from-cyan-200 hover:to-blue-200 dark:hover:from-gray-700 dark:hover:to-gray-600 transition-all duration-200
 }
 
+.budg-btn1 {
+  @apply w-full py-4 rounded-2xl bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 dark:from-blue-600 dark:via-indigo-600 dark:to-teal-600 text-white font-bold hover:shadow-lg hover:dark:shadow-gray-700 hover:bg-gradient-to-r hover:from-pink-600 hover:via-purple-600 hover:to-indigo-600 dark:hover:bg-gradient-to-r dark:hover:from-blue-700 dark:hover:via-indigo-700 dark:hover:to-teal-700 transition-transform transform md:hover:scale-105 hover:backdrop-brightness-125
+}
+
+.budg-btn2 {
+  @apply py-4 rounded-2xl 
+    bg-gradient-to-r from-fuchsia-500 via-purple-500 to-pink-500 dark:from-cyan-600 dark:via-blue-600 dark:to-violet-600 text-white font-bold hover:shadow-lg hover:dark:shadow-gray-700 hover:bg-gradient-to-r hover:from-fuchsia-600 hover:via-purple-600 hover:to-pink-600 dark:hover:bg-gradient-to-r dark:hover:from-cyan-700 dark:hover:via-blue-700 dark:hover:to-violet-700 transition-transform transform md:hover:scale-105 hover:backdrop-brightness-125;
+}
+
+.budg-btn3 {
+  @apply w-full py-4 rounded-2xl bg-gradient-to-r from-blue-400 via-sky-500 to-purple-500 dark:from-indigo-600 dark:via-blue-700 dark:to-teal-600 text-white font-bold hover:shadow-lg hover:dark:shadow-gray-700 hover:bg-gradient-to-r hover:from-blue-500 hover:via-sky-600 hover:to-purple-600 dark:hover:bg-gradient-to-r dark:hover:from-indigo-700 dark:hover:via-blue-800 dark:hover:to-teal-700 transition-transform transform md:hover:scale-105 hover:backdrop-brightness-125;
+}
 
 
 /* Individual Budget (Expense) Tab CSS */
-.individual-expense-btn1 {
+.expense-btn1 {
   @apply px-4 py-2 font-semibold text-white bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 dark:from-blue-500 dark:via-purple-600 dark:to-pink-500 shadow-xl hover:from-blue-500 hover:to-purple-700 dark:hover:from-purple-600 dark:hover:to-pink-600 transition-transform transform hover:scale-110 hover:backdrop-brightness-125 dark:hover:backdrop-brightness-110
 }
 
-.individual-expense-btn2 {
+.expense-btn2 {
   @apply text-lg w-full bg-gradient-to-r from-fuchsia-500 via-blue-600 to-teal-500 text-white font-bold shadow-xl hover:shadow-2xl transition-transform transform hover:scale-[1.04] duration-300 disabled:opacity-50 disabled:cursor-not-allowed dark:from-pink-600 dark:via-purple-700 dark:to-blue-600 dark:text-gray-200 hover:from-purple-600 hover:via-blue-500 hover:to-teal-400 dark:hover:from-pink-700 dark:hover:via-purple-800 dark:hover:to-blue-700 active:scale-95 active:shadow-md
 }
 

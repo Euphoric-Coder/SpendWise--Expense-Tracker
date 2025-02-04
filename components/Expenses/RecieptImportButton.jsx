@@ -20,7 +20,7 @@ const RecieptImportButton = () => {
   const [currentTutorialPage, setCurrentTutorialPage] = useState(0);
   const [showRecieptImport, setShowRecieptImport] = useState(true); // Default to true
   const [recieptData, setRecieptData] = useState([]);
-  const [reuploadReset, setReuploadReset] = useState(false)
+  const [reuploadReset, setReuploadReset] = useState(false);
   const { user } = useUser();
 
   const progressColors = [
@@ -171,8 +171,6 @@ const RecieptImportButton = () => {
     },
   ];
 
-
-
   useEffect(() => {
     const fetchOrCreateSettings = async () => {
       if (!user?.primaryEmailAddress?.emailAddress) return;
@@ -263,10 +261,7 @@ const RecieptImportButton = () => {
 
   return (
     <div>
-      <Button
-        className="individual-expense-btn1 rounded-full"
-        onClick={handleImportClick}
-      >
+      <Button className="expense-btn1 rounded-full" onClick={handleImportClick}>
         <ScanText className="mr-1 w-9 h-9" /> Import Reciept
       </Button>
 
@@ -365,7 +360,9 @@ const RecieptImportButton = () => {
           }}
         >
           <h2 className="font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-500 dark:from-blue-500 dark:via-indigo-500 dark:to-purple-400 animate-gradient-text mb-4">
-            {recieptData?.length > 0 ? "Review & Add New Expenses" : "Upload Your Receipt Image File"}
+            {recieptData?.length > 0
+              ? "Review & Add New Expenses"
+              : "Upload Your Receipt Image File"}
           </h2>
           <RecieptUpload
             onFileSelect={handleFileSelect}
