@@ -49,8 +49,6 @@ const DashboardSideNavbar = () => {
   ];
 
   const path = usePathname();
-  console.log(path);
-  console.log(path.startsWith(`/dashboard/expenses/`));
 
   return (
     <div className="h-screen w-80 p-6 shadow-xl bg-gradient-to-br from-white/80 via-blue-50/60 to-purple-100/40 border border-gray-200 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 dark:border-gray-600 rounded-3xl backdrop-blur-3xl flex flex-col items-center space-y-10 font-sans text-gray-700 dark:text-gray-300">

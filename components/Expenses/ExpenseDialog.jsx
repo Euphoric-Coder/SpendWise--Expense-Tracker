@@ -8,13 +8,22 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { formatCurrencyDashboard } from "@/utils/utilities";
 import { Button } from "../ui/button";
 
 const ExpenseDialog = ({ budget, expenses, onClose }) => {
   return (
     <Dialog open={!!budget} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl bg-gradient-to-b from-red-50 via-orange-100 to-yellow-100 text-gray-800 shadow-2xl rounded-3xl border border-orange-300 overflow-hidden">
+      <DialogContent className="max-w-6xl bg-gradient-to-b from-red-50 via-orange-100 to-yellow-100 text-gray-800 shadow-2xl rounded-3xl border border-orange-300 overflow-hidden">
         {/* Background Effects */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -top-12 -left-12 w-40 h-40 bg-gradient-to-r from-yellow-200 via-orange-200 to-red-200 opacity-40 blur-3xl animate-spin-slow"></div>
@@ -39,9 +48,7 @@ const ExpenseDialog = ({ budget, expenses, onClose }) => {
         {/* Budget Details */}
         <div className="mt-6 relative z-10">
           <p className="text-lg">
-            <span className="font-bold text-orange-600">
-              Allocated Budget:
-            </span>{" "}
+            <span className="font-bold text-orange-600">Allocated Budget:</span>{" "}
             {formatCurrencyDashboard(budget.amount)}
           </p>
           <p className="text-lg">
@@ -55,33 +62,41 @@ const ExpenseDialog = ({ budget, expenses, onClose }) => {
         </div>
 
         {/* Expense List */}
-        <ul className="mt-8 space-y-4 relative z-10">
-          {expenses.length > 0 ? (
-            expenses.map((expense) => (
-              <li
-                key={expense.id}
-                className="p-4 rounded-lg bg-gradient-to-r from-yellow-200 via-orange-200 to-red-200 flex justify-between items-center shadow-md"
-              >
-                <div>
-                  <p className="font-medium text-gray-800">{expense.name}</p>
-                  <p className="text-sm text-gray-600">
-                    ₹{expense.amount.toLocaleString()} - {expense.createdAt}
-                  </p>
-                </div>
-              </li>
-            ))
-          ) : (
-            <p className="text-gray-600">No expenses found for this budget.</p>
-          )}
-        </ul>
-        <DialogFooter>
-            <button
-              className="w-full bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 text-white font-medium py-2 rounded-lg shadow-lg hover:opacity-90 transition transform hover:scale-105"
-              onClick={onClose}
-            >
-              Close
-            </button>
-        </DialogFooter>
+        <div className="overflow-y-auto max-h-[400px] scroll">
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-blue-100 dark:hover:bg-blue-950">
+                <TableHead className="font-bold">#</TableHead>
+                <TableHead className="font-bold">Name</TableHead>
+                <TableHead className="font-bold">Amount</TableHead>
+                <TableHead className="font-bold">Date</TableHead>
+                <TableHead className="font-bold">Description</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {expenses.length > 0 ? (
+                expenses.map((expense, index) => (
+                  <TableRow
+                    key={index}
+                    className="hover:bg-blue-100 dark:hover:bg-blue-950"
+                  >
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{expense.name}</TableCell>
+                    <TableCell>₹{expense.amount.toLocaleString()}</TableCell>
+                    <TableCell>{expense.createdAt}</TableCell>
+                    <TableCell>{expense.description}</TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan="4" className="text-center">
+                    No data found.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </DialogContent>
     </Dialog>
   );

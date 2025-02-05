@@ -77,6 +77,8 @@ const CreateBudget = ({ refreshData }) => {
       .values({
         name: name,
         amount: amount,
+        category: category,
+        subCategory: selectedSubCategories,
         createdBy: user?.primaryEmailAddress?.emailAddress,
         icon: emojiIcon,
         budgetType: isRecurring ? "recurring" : "non-recurring",

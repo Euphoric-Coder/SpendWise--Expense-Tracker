@@ -182,12 +182,12 @@ const ExpenseCard = ({ budget, onOpen }) => {
               <TooltipTrigger asChild>
                 <Link href={`/dashboard/budgets/${budget.id}`}>
                   <Button className="w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 dark:from-blue-700 dark:via-indigo-800 dark:to-purple-800 text-white font-medium text-sm sm:text-base rounded-full shadow-lg hover:opacity-90 transition-transform transform hover:scale-105">
-                    Go to Dedicated Expense Tab
+                    Manage Expenses
                   </Button>
                 </Link>
               </TooltipTrigger>
               <TooltipContent className="relative">
-                <p>
+                <p className="rounded-3xl text-bold">
                   Go to "<strong>{budget.name}</strong>" Expense Tab
                 </p>
               </TooltipContent>
