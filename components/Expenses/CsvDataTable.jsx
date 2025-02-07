@@ -98,7 +98,7 @@ const CsvDataTable = ({ csvData = [], setCsvData }) => {
           </Button>
         )}
       </div>
-      <div className="overflow-y-auto max-h-[400px] scroll">
+      <div className="overflow-y-auto max-h-[400px]">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-blue-100 dark:hover:bg-blue-950">

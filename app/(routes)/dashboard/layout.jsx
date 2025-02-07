@@ -2,7 +2,7 @@
 
 import { eq } from "drizzle-orm";
 import { useUser } from "@clerk/nextjs";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Budgets, Users } from "@/utils/schema";
 import { db } from "@/utils/dbConfig";
@@ -18,8 +18,8 @@ const DashboardLayout = ({ children }) => {
 
   const getGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return "Good Morning";
-    if (hour < 18) return "Good Afternoon";
+    if (hour < 12 && hour > 5) return "Good Morning";
+    if (hour < 18 && hour > 12) return "Good Afternoon";
     return "Good Evening";
   };
 
