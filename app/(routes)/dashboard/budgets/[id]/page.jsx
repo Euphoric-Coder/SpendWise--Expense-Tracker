@@ -191,7 +191,7 @@ const ExpensesDashboard = () => {
         <h1 className="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-tl from-blue-600 to-teal-400 dark:from-purple-400 dark:to-pink-400 mb-10">
           Latest Expenses ({expensesList.length} Items)
         </h1>
-        <div className="bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 rounded-2xl shadow-md px-2 py-8 border border-blue-200 dark:border-gray-600">
+        <div>
           <ExpenseTable
             expenseList={expensesList}
             refreshData={() => getBudgetInfo()}

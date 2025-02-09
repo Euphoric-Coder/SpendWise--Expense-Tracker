@@ -9,14 +9,13 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { formatCurrencyDashboard } from "@/utils/utilities";
 import { DollarSign, TrendingUp, CheckCircle } from "lucide-react";
 import { Button } from "../ui/button";
@@ -31,7 +30,7 @@ const ExpenseDialog = ({ budget, expenses, onClose }) => {
 
   return (
     <Dialog open={!!budget} onOpenChange={onClose}>
-      <DialogContent className="w-full max-w-4xl xl:max-w-6xl border-2 border-blue-200 p-6 md:p-8 rounded-3xl bg-gradient-to-b from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 shadow-2xl overflow-hidden">
+      <DialogContent className="w-full h-[90%] max-w-4xl xl:max-w-6xl border-2 border-blue-200 p-6 md:p-8 rounded-3xl bg-gradient-to-b from-cyan-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 shadow-2xl overflow-hidden">
         {/* Background Effects */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute -top-10 -left-10 w-40 h-40 bg-gradient-to-r from-cyan-400 via-blue-300 to-indigo-400 dark:from-gray-700 dark:via-gray-800 dark:to-gray-900 opacity-25 blur-3xl animate-spin-slow"></div>
@@ -46,15 +45,13 @@ const ExpenseDialog = ({ budget, expenses, onClose }) => {
           <DialogDescription className="text-sm md:text-base text-gray-600 dark:text-gray-300 flex items-center justify-between mt-2">
             View detailed expenses for this budget.
             <Link href={`/dashboard/expenses/${budget.id}`}>
-              <Button className="rounded-3xl text-sm md:text-base px-4 py-2">
-                Manage Expenses
-              </Button>
+              <Button className="budg-btn3 ">Manage Expenses</Button>
             </Link>
           </DialogDescription>
         </DialogHeader>
 
         {/* Budget Overview */}
-        <div className="relative z-10 bg-gradient-to-b from-blue-50 via-blue-100 to-blue-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 shadow-xl rounded-2xl p-4 md:p-6 space-y-6 backdrop-blur-xl bg-opacity-80 dark:bg-opacity-50 border border-blue-300 dark:border-gray-700">
+        <div className="hidden md:block relative z-10 bg-gradient-to-b from-blue-50 via-blue-100 to-blue-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 shadow-xl rounded-2xl p-4 md:p-6 space-y-6 backdrop-blur-xl bg-opacity-80 dark:bg-opacity-50 border border-blue-300 dark:border-gray-700">
           <h2 className="text-xl md:text-2xl font-extrabold text-gray-800 dark:text-gray-200">
             Budget Overview
           </h2>
@@ -110,10 +107,70 @@ const ExpenseDialog = ({ budget, expenses, onClose }) => {
           </div>
         </div>
 
+        {/* Ultra-Compact Mobile Budget Overview */}
+        <div className="md:hidden bg-gradient-to-b from-blue-50 via-blue-100 to-blue-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 shadow-md rounded-lg p-2 space-y-2 backdrop-blur-md bg-opacity-70 dark:bg-opacity-40 border border-blue-200 dark:border-gray-700">
+          <h2 className="text-base font-bold text-gray-800 dark:text-gray-200">
+            Budget Overview
+          </h2>
+
+          <div className="flex items-center justify-between text-[10px] font-medium">
+            <div className="flex items-center gap-1 text-blue-600 dark:text-blue-400">
+              <DollarSign className="w-3 h-3" />
+              <span>Allocated:</span>
+            </div>
+            <span className="text-gray-700 dark:text-gray-300">
+              {allocatedBudget
+                ? formatCurrencyDashboard(allocatedBudget)
+                : "N/A"}
+            </span>
+          </div>
+
+          <div className="flex items-center justify-between text-[10px] font-medium">
+            <div className="flex items-center gap-1 text-red-600 dark:text-red-400">
+              <TrendingUp className="w-3 h-3" />
+              <span>Spend:</span>
+            </div>
+            <span className="text-gray-700 dark:text-gray-300">
+              {totalSpend ? formatCurrencyDashboard(totalSpend) : "N/A"}
+            </span>
+          </div>
+
+          <div className="flex items-center justify-between text-[10px] font-medium">
+            <div className="flex items-center gap-1 text-green-600 dark:text-green-400">
+              <CheckCircle className="w-3 h-3" />
+              <span>Remaining:</span>
+            </div>
+            <span className="text-gray-700 dark:text-gray-300">
+              {remainingBudget >= 0
+                ? formatCurrencyDashboard(remainingBudget)
+                : "N/A"}
+            </span>
+          </div>
+
+          {/* Ultra-Compact Progress Bar */}
+          <div className="mt-2">
+            <div className="w-full bg-gray-300 dark:bg-gray-700 rounded-lg h-[4px] relative overflow-hidden">
+              <div
+                className={`h-[4px] rounded-lg transition-all duration-1000 ease-in-out ${
+                  budgetUtilization >= 90
+                    ? "bg-gradient-to-r from-red-600 to-pink-600 animate-pulse"
+                    : "bg-gradient-to-r from-blue-500 to-indigo-500"
+                }`}
+                style={{ width: `${budgetUtilization}%` }}
+              ></div>
+            </div>
+            <p className="text-[8px] text-gray-600 dark:text-gray-400 mt-1 text-center">
+              {budgetUtilization.toFixed(2)}% utilized
+            </p>
+          </div>
+        </div>
+
         {/* Expense List */}
         <h2 className="mt-2 text-xl md:text-2xl font-extrabold text-gray-800 dark:text-gray-200">
           Latest Expenses ({expenses.length})
         </h2>
+
+        {/* Expense Table */}
         <div className="overflow-hidden hidden md:block rounded-xl border border-gray-300 dark:border-gray-700 shadow-lg">
           <div className="overflow-x-auto max-h-[300px] md:max-h-[400px]">
             <table className="w-full border-collapse text-sm md:text-base">
@@ -160,7 +217,7 @@ const ExpenseDialog = ({ budget, expenses, onClose }) => {
                         {expense.createdAt}
                       </td>
                       <td className="px-4 md:px-6 py-3 text-gray-600 dark:text-gray-400">
-                        {expense.description}
+                        {expense.description || "No description provided"}
                       </td>
                     </tr>
                   ))
@@ -177,6 +234,44 @@ const ExpenseDialog = ({ budget, expenses, onClose }) => {
               </tbody>
             </table>
           </div>
+        </div>
+
+        {/* Ultra-Compact Mobile Expense List */}
+        <div className="md:hidden overflow-y-auto max-h-[200px] space-y-2">
+          {expenses.length > 0 ? (
+            expenses.map((expense, index) => (
+              <Card
+                key={index}
+                className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-2"
+              >
+                <CardHeader className="flex items-center justify-between">
+                  <CardTitle className="text-sm font-bold text-gray-800 dark:text-gray-200">
+                    {expense.name}
+                  </CardTitle>
+                  <CardDescription className="text-xs text-blue-600 dark:text-blue-400 font-semibold">
+                    ₹{expense.amount.toLocaleString()}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-1">
+                  <p className="text-[10px] text-gray-700 dark:text-gray-300">
+                    <strong>Date:</strong> {expense.createdAt}
+                  </p>
+                  <p className="text-[10px] text-gray-600 dark:text-gray-400 truncate">
+                    <strong>Description:</strong>{" "}
+                    {expense.description || "No description provided"}
+                  </p>
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            <Card className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-2">
+              <CardContent className="text-center py-4">
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  No expenses found.
+                </p>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </DialogContent>
     </Dialog>

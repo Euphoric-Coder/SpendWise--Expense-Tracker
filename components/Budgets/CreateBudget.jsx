@@ -318,7 +318,7 @@ const CreateBudget = ({ refreshData }) => {
           </div>
         )}
 
-        {/* Recurring Income Section */}
+        {/* Recurring Budget Section */}
         <div
           className="flex items-center justify-between p-4 rounded-3xl 
       bg-gradient-to-r from-cyan-50 via-blue-100 to-indigo-100 

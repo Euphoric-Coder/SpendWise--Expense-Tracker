@@ -34,6 +34,8 @@ import {
   nextRecurringDate,
 } from "@/utils/utilities";
 import { incomeCategories } from "@/utils/data";
+import { Switch } from "../ui/switch";
+import { Badge } from "../ui/badge";
 
 function CreateIncomes({ refreshData }) {
   const [emojiIcon, setEmojiIcon] = useState("😀");
@@ -242,18 +244,32 @@ function CreateIncomes({ refreshData }) {
         </div>
 
         {/* Recurring Income Section */}
-        <div className="mt-6 flex items-center space-x-2">
-          <Checkbox
-            id="recurring"
+        <div
+          className="flex items-center justify-between p-4 rounded-3xl 
+      bg-gradient-to-r from-cyan-50 via-blue-100 to-indigo-100 
+      dark:bg-gradient-to-r dark:from-[#243089] dark:via-[#3a6aa4] dark:to-[#76b2e6] 
+      border border-blue-300 dark:border-0 transition-all"
+        >
+          <div>
+            <h3 className="flex gap-2 items-center text-sm font-extrabold tracking-wide text-gray-900 dark:text-white">
+              Recurring Income
+              {isRecurring && (
+                <Badge className="border-0 bg-gradient-to-r from-green-400 to-green-600 text-white px-2 rounded-3xl text-xs dark:from-green-500 dark:to-green-700">
+                  Active
+                </Badge>
+              )}
+            </h3>
+            <p className="mt-2 text-xs text-gray-900 dark:text-blue-100">
+              Enable to automatically allocate a recurring budget each cycle.
+            </p>
+          </div>
+
+          <Switch
             checked={isRecurring}
-            onCheckedChange={(value) => setIsRecurring(value)}
+            onCheckedChange={(e) => setIsRecurring(e)}
+            className="data-[state=checked]:bg-blue-600 data-[state=unchecked]:bg-gray-400 
+        dark:data-[state=checked]:bg-white dark:data-[state=unchecked]:bg-blue-300 border-2 border-blue-400 dark:border-indigo-200"
           />
-          <label
-            htmlFor="recurring"
-            className="text-gray-700 dark:text-gray-300 font-medium text-sm"
-          >
-            Recurring Income
-          </label>
         </div>
         {isRecurring && (
           <div className="mt-4">
