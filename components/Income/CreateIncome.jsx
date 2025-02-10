@@ -11,6 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -33,7 +34,7 @@ import {
   isSameDate,
   nextRecurringDate,
 } from "@/utils/utilities";
-import { incomeCategories } from "@/utils/data";
+import { frequencyTypes, incomeCategoriesList } from "@/utils/data";
 import { Switch } from "../ui/switch";
 import { Badge } from "../ui/badge";
 
@@ -128,6 +129,7 @@ function CreateIncomes({ refreshData }) {
         if (!isOpen) {
           setName("");
           setAmount("");
+          setCategory("salary");
           setIsRecurring(false);
           setFrequency("monthly");
           setStartDate("");
@@ -198,7 +200,7 @@ function CreateIncomes({ refreshData }) {
           <Input
             type="text"
             placeholder="e.g. Freelance Work"
-            className="w-full p-4 border rounded-lg shadow-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200"
+            className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
             onChange={(e) => setName(e.target.value)}
           />
         </div>
@@ -209,36 +211,38 @@ function CreateIncomes({ refreshData }) {
           <Input
             type="number"
             placeholder="e.g. Rs.8000"
-            className="w-full p-4 border rounded-lg shadow-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200"
+            className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
             onChange={(e) => setAmount(e.target.value)}
           />
         </div>
 
-        <div className="mt-4">
+        {/* Categories  */}
+        <div className="mt-1">
           <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
             Category
           </h2>
           <Select
-            value={category}
-            onValueChange={(e) => setCategory(e)}
-            // className="block w-full p-2 mb-2 border border-gray-300 rounded-full"
+            value={category.toLowerCase()}
+            onValueChange={(e) => {
+              setCategory(e);
+              console.log(e.toLowerCase().split(" ")[0]);
+            }}
           >
-            <SelectTrigger className="w-full p-4 border rounded-lg shadow-md text-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200">
-              <SelectValue
-              // placeholder={category}
-              // className="text-lg font-bold"
-              />
+            <SelectTrigger className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]">
+              <SelectValue />
             </SelectTrigger>
-            <SelectContent className="w-full p-4 border rounded-lg shadow-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200">
-              {incomeCategories.map((category, index) => (
-                <SelectItem
-                  key={index}
-                  value={category.id}
-                  className="text-lg rounded-xl bg-gradient-to-r hover:from-cyan-100 hover:to-blue-100 dark:hover:from-gray-700 dark:hover:to-gray-600"
-                >
-                  {category.name}
-                </SelectItem>
-              ))}
+            <SelectContent className="budg-select-content mt-2">
+              <ScrollArea className="max-h-60 overflow-auto">
+                {incomeCategoriesList.map((category, index) => (
+                  <SelectItem
+                    key={index}
+                    value={category.toLowerCase().split(" ")[0]}
+                    className="budg-select-item"
+                  >
+                    {category}
+                  </SelectItem>
+                ))}
+              </ScrollArea>
             </SelectContent>
           </Select>
         </div>
@@ -271,21 +275,30 @@ function CreateIncomes({ refreshData }) {
         dark:data-[state=checked]:bg-white dark:data-[state=unchecked]:bg-blue-300 border-2 border-blue-400 dark:border-indigo-200"
           />
         </div>
+
         {isRecurring && (
-          <div className="mt-4">
-            <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-              Frequency
-            </h2>
-            <select
-              value={frequency}
-              onChange={(e) => setFrequency(e.target.value)}
-              className="block w-full p-2 border border-gray-300 rounded-md"
-            >
-              <option value="daily">Daily</option>
-              <option value="weekly">Weekly</option>
-              <option value="monthly">Monthly</option>
-              <option value="yearly">Yearly</option>
-            </select>
+          <div className="mt-1">
+            <div className="mt-1">
+              <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                Frequency
+              </h2>
+              <Select value={frequency} onValueChange={(e) => setFrequency(e)}>
+                <SelectTrigger className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="budg-select-content">
+                  {frequencyTypes.map((frequency, index) => (
+                    <SelectItem
+                      key={index}
+                      value={frequency}
+                      className="budg-select-item"
+                    >
+                      {frequency.replace(/^./, (char) => char.toUpperCase())}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             <div className="mt-4">
               <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
                 Start Date
@@ -295,7 +308,7 @@ function CreateIncomes({ refreshData }) {
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="w-full p-4 border rounded-lg shadow-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200"
+                className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
               />
             </div>
           </div>
@@ -309,7 +322,7 @@ function CreateIncomes({ refreshData }) {
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="w-full p-4 border rounded-lg shadow-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200"
+              className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
             />
           </div>
         )}

@@ -48,12 +48,20 @@ export const incomeCategories = [
     icon: Home,
   },
   {
-    id: "other-income",
+    id: "other",
     name: "Other Income",
     color: "#94a3b8", // Slate-400, neutral and professional gray-blue
     textColor: "#ffffff", // White text for contrast
     icon: Plus,
   },
+];
+
+export const incomeCategoriesList = ["Salary",
+  "Freelance",
+  "Investments",
+  "Business",
+  "Rental",
+  "Other Income",
 ];
 
 export const expenseCategoriesList = [

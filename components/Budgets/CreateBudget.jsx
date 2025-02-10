@@ -212,14 +212,10 @@ const CreateBudget = ({ refreshData }) => {
             value={category.toLowerCase()}
             onValueChange={(e) => {
               setCategory(e);
-              setSelectedSubCategories("");
             }}
-            // className="block w-full p-2 mb-2 border border-gray-300 rounded-full"
           >
             <SelectTrigger className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]">
               <SelectValue
-              // placeholder={category}
-              // className="text-lg font-bold"
               />
             </SelectTrigger>
             <SelectContent className="budg-select-content mt-2">
