@@ -29,6 +29,7 @@ import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 import {
   addOneMonth,
+  formatToIndianCurrency,
   getISTDate,
   getISTDateTime,
   isSameDate,
@@ -37,15 +38,20 @@ import {
 import { frequencyTypes, incomeCategoriesList } from "@/utils/data";
 import { Switch } from "../ui/switch";
 import { Badge } from "../ui/badge";
+import { set } from "date-fns";
 
-function CreateIncomes({ refreshData }) {
+function RegularIncome({ refreshData }) {
   const [emojiIcon, setEmojiIcon] = useState("😀");
-  const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
 
   const [name, setName] = useState("");
+  const [basicPay, setBasicPay] = useState();
+  const [netIncome, setNetIncome] = useState();
+  const [da, setDa] = useState();
+  const [hra, setHra] = useState();
+  const [otherAllowances, setOtherAllowances] = useState();
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("salary");
-  const [isRecurring, setIsRecurring] = useState(false); // Toggle for recurring
+  const [isNewRegime, setIsNewRegime] = useState(false); // Toggle for recurring
   const [frequency, setFrequency] = useState("monthly"); // Default frequency
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState(""); // Optional end date for non-recurring
@@ -62,20 +68,20 @@ function CreateIncomes({ refreshData }) {
       amount: amount,
       createdBy: user?.primaryEmailAddress?.emailAddress,
       icon: emojiIcon,
-      incomeType: isRecurring ? "recurring" : "non-recurring",
+      incomeType: isNewRegime ? "recurring" : "non-recurring",
       category: category,
-      status: isRecurring
+      status: isNewRegime
         ? isSameDate(startDate ? startDate : getISTDate(), getISTDate())
           ? "current"
           : "upcoming"
         : "current",
-      frequency: isRecurring ? frequency : null,
-      startDate: isRecurring
+      frequency: isNewRegime ? frequency : null,
+      startDate: isNewRegime
         ? startDate
           ? startDate
           : getISTDate()
         : getISTDate(), // Default to today for non-recurring
-      endDate: !isRecurring ? endDate || addOneMonth(getISTDate()) : null,
+      endDate: !isNewRegime ? endDate || addOneMonth(getISTDate()) : null,
       createdAt: getISTDateTime(),
     };
     try {
@@ -90,9 +96,9 @@ function CreateIncomes({ refreshData }) {
           referenceId: result[0].insertedId,
           type: "income",
           category: category,
-          isRecurring: isRecurring,
-          frequency: isRecurring ? frequency : null,
-          nextRecurringDate: isRecurring
+          isNewRegime: isNewRegime,
+          frequency: isNewRegime ? frequency : null,
+          nextRecurringDate: isNewRegime
             ? nextRecurringDate(startDate, frequency)
             : null,
           lastProcessed: isSameDate(
@@ -101,7 +107,7 @@ function CreateIncomes({ refreshData }) {
           )
             ? getISTDate()
             : null,
-          status: isRecurring
+          status: isNewRegime
             ? isSameDate(startDate ? startDate : getISTDate(), getISTDate())
               ? "active"
               : "upcoming"
@@ -123,19 +129,71 @@ function CreateIncomes({ refreshData }) {
     }
   };
 
+  function calculateNetIncome(basicPay, da, hra, otherAllowances, isNewRegime) {
+    const totalIncome = basicPay + da + hra + otherAllowances;
+    let tax = 0;
+
+    if (isNewRegime) {
+      // New Tax Regime (2025) slabs
+      if (totalIncome <= 400000) {
+        tax = 0;
+      } else if (totalIncome <= 800000) {
+        tax = (totalIncome - 400000) * 0.05;
+      } else if (totalIncome <= 1200000) {
+        tax = 20000 + (totalIncome - 800000) * 0.1;
+      } else if (totalIncome <= 1600000) {
+        tax = 60000 + (totalIncome - 1200000) * 0.15;
+      } else if (totalIncome <= 2000000) {
+        tax = 120000 + (totalIncome - 1600000) * 0.2;
+      } else if (totalIncome <= 2400000) {
+        tax = 200000 + (totalIncome - 2000000) * 0.25;
+      } else {
+        tax = 300000 + (totalIncome - 2400000) * 0.3;
+      }
+
+      // Apply rebate for income up to Rs. 12,00,000
+      if (totalIncome <= 1200000) {
+        tax = 0;
+      }
+    } else {
+      // Old Tax Regime slabs
+      const standardDeduction = 75000; // Standard deduction under Old Regime for salaried individuals
+      const exemptHRA = Math.min(hra, totalIncome * 0.4); // HRA exemption calculation
+      const taxableIncome = totalIncome - standardDeduction - exemptHRA;
+
+      if (taxableIncome <= 250000) {
+        tax = 0;
+      } else if (taxableIncome <= 500000) {
+        tax = (taxableIncome - 250000) * 0.05;
+      } else if (taxableIncome <= 1000000) {
+        tax = 12500 + (taxableIncome - 500000) * 0.2;
+      } else {
+        tax = 112500 + (taxableIncome - 1000000) * 0.3;
+      }
+    }
+
+    // Add 4% health and education cess to the tax
+    tax = tax + tax * 0.04;
+
+    // Calculate net income
+    const netIncome = totalIncome - tax;
+    return {
+      totalIncome: totalIncome,
+      tax: tax.toFixed(2),
+      netIncome: netIncome.toFixed(2),
+    };
+  }
 
   return (
     <Dialog
       onOpenChange={(isOpen) => {
         if (!isOpen) {
-          setName("");
-          setAmount("");
-          setCategory("salary");
-          setOpenEmojiPicker(false);
-          setIsRecurring(false);
-          setFrequency("monthly");
-          setStartDate("");
-          setEndDate("");
+          setBasicPay("");
+          setNetIncome("");
+          setDa("");
+          setHra("");
+          setOtherAllowances("");
+          setIsNewRegime(false);
         }
       }}
     >
@@ -145,7 +203,7 @@ function CreateIncomes({ refreshData }) {
             +
           </h2>
           <h2 className="text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400">
-            Create New Income
+            Add Regular Income
           </h2>
         </div>
       </DialogTrigger>
@@ -160,93 +218,81 @@ function CreateIncomes({ refreshData }) {
         {/* Dialog Header */}
         <DialogHeader>
           <DialogTitle className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 dark:from-blue-400 dark:via-cyan-400 dark:to-indigo-400">
-            Create New Income Source
+            Add Regular Income
           </DialogTitle>
           <DialogDescription className="text-sm text-gray-600 dark:text-gray-400">
             Fill in the details below to add your income source.
           </DialogDescription>
         </DialogHeader>
 
-        {/* Emoji Picker Section */}
-        <div>
-          <Button
-            variant="outline"
-            size="lg"
-            className="border-2 border-blue-300 dark:border-blue-600 rounded-full p-4 bg-gradient-to-r from-white to-blue-50 dark:from-gray-800 dark:to-gray-700 shadow-md hover:shadow-lg hover:scale-105 transition-transform"
-            onClick={() => setOpenEmojiPicker(!openEmojiPicker)}
-          >
-            {emojiIcon}
-          </Button>
-
-          {/* Emoji Picker */}
-          {openEmojiPicker && (
-            <div
-              className="absolute z-20 space-y-4"
-              style={{ minWidth: "250px" }}
-            >
-              <EmojiPicker
-                onEmojiClick={(e) => {
-                  setEmojiIcon(e.emoji);
-                  setOpenEmojiPicker(false);
-                }}
-              />
-            </div>
-          )}
-        </div>
-
         {/* Input Fields */}
-        <div className="mt-4">
+        <div className="mt-1">
           <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-            Income Source Name
+            Basic Pay
           </h2>
           <Input
             type="text"
-            placeholder="e.g. Freelance Work"
+            placeholder="Rs. 1,50,000"
             className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
-            onChange={(e) => setName(e.target.value)}
+            value={basicPay}
+            onChange={(e) => {
+              let inputValue = e.target.value;
+              // Remove commas and non-numeric characters, then format
+              inputValue = inputValue.replace(/[^0-9]/g, "");
+              setBasicPay(formatToIndianCurrency(inputValue));
+            }}
           />
         </div>
-        <div className="mt-6">
+        <div className="mt-1">
           <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-            Monthly Amount
+            Dearness Allowance (DA)
           </h2>
           <Input
             type="number"
             placeholder="e.g. Rs.8000"
             className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
-            onChange={(e) => setAmount(e.target.value)}
+            value={da}
+            onChange={(e) => {
+              let inputValue = e.target.value;
+              // Remove commas and non-numeric characters, then format
+              inputValue = inputValue.replace(/[^0-9]/g, "");
+              setDa(formatToIndianCurrency(inputValue));
+            }}
           />
         </div>
-
-        {/* Categories  */}
         <div className="mt-1">
           <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-            Category
+            House Rent Allowance (HRA)
           </h2>
-          <Select
-            value={category.toLowerCase()}
-            onValueChange={(e) => {
-              setCategory(e);
-              console.log(e.toLowerCase().split(" ")[0]);
+          <Input
+            type="number"
+            placeholder="e.g. Rs.8000"
+            className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
+            value={hra}
+            onChange={(e) => {
+              let inputValue = e.target.value;
+              // Remove commas and non-numeric characters, then format
+              inputValue = inputValue.replace(/[^0-9]/g, "");
+              setHra(formatToIndianCurrency(inputValue));
             }}
-          >
-            <SelectTrigger className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="budg-select-content mt-2">
-              <ScrollArea className="max-h-60 overflow-auto">
-                {incomeCategoriesList.map((category, index) => (
-                  <SelectItem
-                    key={index}
-                    value={category.toLowerCase().split(" ")[0]}
-                    className="budg-select-item"
-                  >
-                    {category}
-                  </SelectItem>
-                ))}
-              </ScrollArea>
-            </SelectContent>
-          </Select>
+          />
+        </div>
+        <div className="mt-1">
+          <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+            Other Allowances
+          </h2>
+          <Input
+            type="number"
+            placeholder="e.g. Rs.8000"
+            className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
+            value={otherAllowances}
+            onChange={(e) => {
+              let inputValue = e.target.value;
+              // Remove commas and non-numeric characters, then format
+              inputValue = inputValue.replace(/[^0-9]/g, "");
+              setOtherAllowances(formatToIndianCurrency(inputValue));
+            }}
+          />
         </div>
 
         {/* Recurring Income Section */}
@@ -258,76 +304,27 @@ function CreateIncomes({ refreshData }) {
         >
           <div>
             <h3 className="flex gap-2 items-center text-sm font-extrabold tracking-wide text-gray-900 dark:text-white">
-              Recurring Income
-              {isRecurring && (
+              New Income Regime
+              {isNewRegime && (
                 <Badge className="border-0 bg-gradient-to-r from-green-400 to-green-600 text-white px-2 rounded-3xl text-xs dark:from-green-500 dark:to-green-700">
                   Active
                 </Badge>
               )}
             </h3>
             <p className="mt-2 text-xs text-gray-900 dark:text-blue-100">
-              Enable to automatically allocate a recurring budget each cycle.
+              New regime will be effective from the start date.
             </p>
           </div>
 
           <Switch
-            checked={isRecurring}
-            onCheckedChange={(e) => setIsRecurring(e)}
+            checked={isNewRegime}
+            onCheckedChange={(e) => setIsNewRegime(e)}
             className="data-[state=checked]:bg-blue-600 data-[state=unchecked]:bg-gray-400 
         dark:data-[state=checked]:bg-white dark:data-[state=unchecked]:bg-blue-300 border-2 border-blue-400 dark:border-indigo-200"
           />
         </div>
 
-        {isRecurring && (
-          <div className="mt-1">
-            <div className="mt-1">
-              <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                Frequency
-              </h2>
-              <Select value={frequency} onValueChange={(e) => setFrequency(e)}>
-                <SelectTrigger className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="budg-select-content">
-                  {frequencyTypes.map((frequency, index) => (
-                    <SelectItem
-                      key={index}
-                      value={frequency}
-                      className="budg-select-item"
-                    >
-                      {frequency.replace(/^./, (char) => char.toUpperCase())}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="mt-4">
-              <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                Start Date
-              </h2>
-              <Input
-                required
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
-              />
-            </div>
-          </div>
-        )}
-        {!isRecurring && (
-          <div className="mt-4">
-            <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-              End Date
-            </h2>
-            <Input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
-            />
-          </div>
-        )}
+        {isNewRegime && <div className="mt-1">Lorem ipsum dolor sit amet.</div>}
 
         {/* Footer Section */}
         <DialogFooter className="mt-6">
@@ -346,4 +343,4 @@ function CreateIncomes({ refreshData }) {
   );
 }
 
-export default CreateIncomes;
+export default RegularIncome;

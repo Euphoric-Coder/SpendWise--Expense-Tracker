@@ -1,5 +1,11 @@
 import { format } from "date-fns";
 
+// Function to format the number in Indian currency format
+export const formatToIndianCurrency = (value) => {
+  if (!value) return "";
+  return new Intl.NumberFormat("en-IN").format(value.replace(/,/g, ""));
+};
+
 const formatCurrency = (amount) => {
   let formattedAmount;
 
@@ -16,7 +22,6 @@ const formatCurrency = (amount) => {
     // Less than 1,000
     formattedAmount = amount.toFixed(2);
   }
-  
 
   // Add currency symbol manually
   return `₹${formattedAmount}`;
@@ -212,43 +217,43 @@ export function calculateNonRecurringProgress(startDate, endDate) {
 }
 
 export function nextRecurringDate(date, frequency) {
-  console.log(date, frequency)
+  console.log(date, frequency);
   if (date !== null && frequency !== null) {
-  const next = new Date(date);
+    const next = new Date(date);
 
-  switch (frequency?.toLowerCase()) {
-    case "daily":
-      next.setDate(next.getDate() + 1);
-      break;
+    switch (frequency?.toLowerCase()) {
+      case "daily":
+        next.setDate(next.getDate() + 1);
+        break;
 
-    case "weekly":
-      next.setDate(next.getDate() + 7);
-      break;
+      case "weekly":
+        next.setDate(next.getDate() + 7);
+        break;
 
-    case "monthly":
-      next.setMonth(next.getMonth() + 1);
-      break;
+      case "monthly":
+        next.setMonth(next.getMonth() + 1);
+        break;
 
-    case "yearly":
-      next.setFullYear(next.getFullYear() + 1);
-      break;
+      case "yearly":
+        next.setFullYear(next.getFullYear() + 1);
+        break;
 
-    default:
-      console.log("error")
+      default:
+        console.log("error");
+    }
+
+    // Convert to IST (GMT +5:30) and format the date
+    const istFormatter = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Asia/Kolkata",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+
+    const [day, month, year] = istFormatter.format(next).split("/");
+
+    return `${year}-${month}-${day}`;
   }
-
-  // Convert to IST (GMT +5:30) and format the date
-  const istFormatter = new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Asia/Kolkata",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
-
-  const [day, month, year] = istFormatter.format(next).split("/");
-
-  return `${year}-${month}-${day}`;
-}
 }
 
 export function calculateRecurringProgress(startDate, frequency) {
@@ -296,9 +301,7 @@ export function calculateRecurringProgress(startDate, frequency) {
       }
       break;
     default:
-      console.log(
-        "Invalid frequency. Use daily, weekly, monthly, or yearly."
-      );
+      console.log("Invalid frequency. Use daily, weekly, monthly, or yearly.");
   }
 
   // Calculate days remaining until the next recurring date
@@ -337,7 +340,7 @@ export function calculateRecurringProgress(startDate, frequency) {
 
   // Calculate progress within the current period
   const progress = (timeSincePeriodStart / periodDuration) * 100;
-  
+
   return {
     progress: progress.toFixed(2), // Progress percentage
     nextRecurringDate: nextRecurringDate.toISOString().split("T")[0], // Date of next recurring

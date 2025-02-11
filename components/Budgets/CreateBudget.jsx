@@ -105,6 +105,7 @@ const CreateBudget = ({ refreshData }) => {
     <Dialog
       onOpenChange={() => {
         setIsRecurring(false);
+        setOpenEmojiPicker(false);
         setFrequency("monthly");
         setCategory("housing");
         setSelectedSubCategories("");

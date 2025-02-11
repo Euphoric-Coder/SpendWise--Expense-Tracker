@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/tooltip";
 import Link from "next/link";
 import { RefreshCcw } from "lucide-react";
+import RegularIncome from "./RegularIncome";
 
 function IncomeList() {
   const [incomelist, setIncomelist] = useState([]);
@@ -85,6 +86,7 @@ function IncomeList() {
         </div>
       </div>
       <div className="mb-7 grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-5">
+        <RegularIncome refreshData={() => getIncomelist()} />
         <CreateIncomes refreshData={() => getIncomelist()} />
       </div>
       <h2 className="mb-5 p-2 font-extrabold text-3xl md:text-4xl text-transparent bg-clip-text bg-gradient-to-tr from-cyan-600 via-blue-600 to-sky-500 dark:from-blue-400 dark:via-cyan-400 dark:to-teal-400">

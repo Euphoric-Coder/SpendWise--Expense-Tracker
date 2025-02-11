@@ -1,4 +1,3 @@
-import { sub } from "date-fns";
 import {
   boolean,
   date,
@@ -10,7 +9,6 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
-import next from "next";
 
 const { v4: uuidv4 } = require("uuid");
 
@@ -18,6 +16,19 @@ export const Users = pgTable("users", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name").notNull(),
   email: varchar("email").notNull().unique(),
+});
+
+export const RegularIncome = pgTable("regularIncome", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: varchar("name").notNull(),
+  grossIncome: numeric("grossIncome").notNull(),
+  netIncome: numeric("netIncome").notNull(),
+  da: numeric("da").notNull(), // Dearness Allowance
+  hra: numeric("hra").notNull(), // House Rent Allowance
+  otherAllowances: numeric("otherAllowances").notNull(),
+  taxDeductions: numeric("taxDeductions").notNull(),
+  monthlyPay: numeric("monthlyPay").notNull(),
+  createdBy: varchar("createdBy").notNull().unique(), // Ensures only one entry per user
 });
 
 export const Budgets = pgTable("budgets", {
@@ -57,7 +68,6 @@ export const Expenses = pgTable("expenses", {
 /**
  * Planning for expense que 
  * Implementation of expense que by creating a table expenseQue
- * 
  */
 
 export const ExpenseQue = pgTable("expenseQue", {
@@ -121,7 +131,7 @@ export const Notifications = pgTable("notifications", {
 });
 
 export const Feedback = pgTable("feedback", {
-  id: varchar("id", { length: 191 }).primaryKey().default(uuidv4()),
+  id: uuid("id").defaultRandom().primaryKey(),
   username: varchar("username").notNull(),
   avatar: varchar("avatar"),
   rating: numeric("rating").notNull(),
