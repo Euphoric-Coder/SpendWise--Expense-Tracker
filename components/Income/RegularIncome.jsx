@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogClose,
@@ -24,7 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { db } from "@/utils/dbConfig";
-import { Incomes, Transactions } from "@/utils/schema";
+import { Incomes, Settings, Transactions } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 import {
@@ -57,7 +57,31 @@ function RegularIncome({ refreshData }) {
   const [endDate, setEndDate] = useState(""); // Optional end date for non-recurring
   const { user } = useUser();
 
-  // console.log(incomeCategories.filter((item) => item.id === "salary"));
+  useEffect(() => {
+      const fetchOrCreateRegularIncome = async () => {
+        if (!user?.primaryEmailAddress?.emailAddress) return;
+  
+        const result = await db
+          .select()
+          .from(Settings)
+          .where(eq(Settings.createdBy, user.primaryEmailAddress.emailAddress));
+  
+        if (result.length === 0) {
+          // If no entry exists, insert a new one with default `showcsvimport` value
+          await db.insert(Settings).values({
+            id: uuidv4(),
+            createdBy: user.primaryEmailAddress.emailAddress,
+            showcsvimport: true, // Default to showing the tutorial
+          });
+          setShowCSVImport(true); // Set the state to match the default value
+        } else {
+          // If entry exists, set `showCSVImport` based on the fetched value
+          setShowCSVImport(result[0].showcsvimport);
+        }
+      };
+  
+      fetchOrCreateSettings();
+    }, [user]);
 
   /**
    * To Create New Source of Income
@@ -248,7 +272,7 @@ function RegularIncome({ refreshData }) {
             Dearness Allowance (DA)
           </h2>
           <Input
-            type="number"
+            type="text"
             placeholder="e.g. Rs.8000"
             className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
             value={da}
@@ -265,7 +289,7 @@ function RegularIncome({ refreshData }) {
             House Rent Allowance (HRA)
           </h2>
           <Input
-            type="number"
+            type="text"
             placeholder="e.g. Rs.8000"
             className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
             value={hra}
@@ -282,7 +306,7 @@ function RegularIncome({ refreshData }) {
             Other Allowances
           </h2>
           <Input
-            type="number"
+            type="text"
             placeholder="e.g. Rs.8000"
             className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
             value={otherAllowances}
