@@ -24,11 +24,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { db } from "@/utils/dbConfig";
-import { Incomes, Settings, Transactions } from "@/utils/schema";
+import { Incomes, RegularIncome, Transactions } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 import {
   addOneMonth,
+  formatCurrency,
   formatToIndianCurrency,
   getISTDate,
   getISTDateTime,
@@ -39,9 +40,25 @@ import { frequencyTypes, incomeCategoriesList } from "@/utils/data";
 import { Switch } from "../ui/switch";
 import { Badge } from "../ui/badge";
 import { set } from "date-fns";
+import { eq } from "drizzle-orm";
 
-function RegularIncome({ refreshData }) {
+function addRegularIncome({ refreshData }) {
   const [emojiIcon, setEmojiIcon] = useState("😀");
+  const [regularIncomeData, setRegularIncomeData] = useState([
+    {
+      id: 1,
+      name: "Software Engineer Salary",
+      grossIncome: 180000,
+      netIncome: 150000,
+      da: 20000, // Dearness Allowance
+      hra: 30000, // House Rent Allowance
+      otherAllowances: 15000,
+      taxDeductions: 25000,
+      monthlyPay: 150000,
+      lastUpdated: "2024-12-03",
+      createdBy: "john.doe@gmail.com",
+    },
+  ]);
 
   const [name, setName] = useState("");
   const [basicPay, setBasicPay] = useState();
@@ -55,38 +72,37 @@ function RegularIncome({ refreshData }) {
   const [frequency, setFrequency] = useState("monthly"); // Default frequency
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState(""); // Optional end date for non-recurring
+  const [showDetails, setShowDetails] = useState(false);
   const { user } = useUser();
 
   useEffect(() => {
-      const fetchOrCreateRegularIncome = async () => {
-        if (!user?.primaryEmailAddress?.emailAddress) return;
-  
-        const result = await db
-          .select()
-          .from(Settings)
-          .where(eq(Settings.createdBy, user.primaryEmailAddress.emailAddress));
-  
-        if (result.length === 0) {
-          // If no entry exists, insert a new one with default `showcsvimport` value
-          await db.insert(Settings).values({
-            id: uuidv4(),
-            createdBy: user.primaryEmailAddress.emailAddress,
-            showcsvimport: true, // Default to showing the tutorial
-          });
-          setShowCSVImport(true); // Set the state to match the default value
-        } else {
-          // If entry exists, set `showCSVImport` based on the fetched value
-          setShowCSVImport(result[0].showcsvimport);
-        }
-      };
-  
-      fetchOrCreateSettings();
-    }, [user]);
+    const fetchOrCreateRegularIncome = async () => {
+      if (!user?.primaryEmailAddress?.emailAddress) return;
+
+      // Check if an entry already exists for the user
+      const result = await db
+        .select()
+        .from(RegularIncome)
+        .where(
+          eq(RegularIncome.createdBy, user.primaryEmailAddress.emailAddress)
+        );
+
+      if (result.length === 0) {
+        // There is no entry for the user, so the state is an empty array
+        // setRegularIncomeData([]);
+      } else {
+        // If entry exists, you can fetch and use it if necessary
+        console.log("Entry already exists:", result[0]);
+      }
+    };
+
+    fetchOrCreateRegularIncome();
+  }, [user]);
 
   /**
    * To Create New Source of Income
    */
-  const onCreateIncomes = async () => {
+  const createRegularIncome = async () => {
     const incomeData = {
       name: name,
       amount: amount,
@@ -209,162 +225,262 @@ function RegularIncome({ refreshData }) {
   }
 
   return (
-    <Dialog
-      onOpenChange={(isOpen) => {
-        if (!isOpen) {
-          setBasicPay("");
-          setNetIncome("");
-          setDa("");
-          setHra("");
-          setOtherAllowances("");
-          setIsNewRegime(false);
-        }
-      }}
-    >
-      <DialogTrigger>
-        <div className="bg-gradient-to-b from-white via-cyan-50 to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 p-10 rounded-2xl items-center flex flex-col border-2 border-dashed border-blue-300 dark:border-blue-600 cursor-pointer hover:shadow-[0_4px_20px_rgba(0,150,255,0.5)] hover:scale-105 transition-transform transform">
-          <h2 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 dark:from-blue-400 dark:via-cyan-400 dark:to-indigo-400">
-            +
-          </h2>
-          <h2 className="text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400">
-            Add Regular Income
-          </h2>
-        </div>
-      </DialogTrigger>
+    <div>
+      {regularIncomeData.length === 0 ? (
+        <Dialog
+          onOpenChange={(isOpen) => {
+            if (!isOpen) {
+              setBasicPay("");
+              setNetIncome("");
+              setDa("");
+              setHra("");
+              setOtherAllowances("");
+              setIsNewRegime(false);
+            }
+          }}
+        >
+          <DialogTrigger asChild>
+            <div className="bg-gradient-to-b from-white via-cyan-50 to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 p-10 rounded-2xl items-center flex flex-col border-2 border-dashed border-blue-300 dark:border-blue-600 cursor-pointer hover:shadow-[0_4px_20px_rgba(0,150,255,0.5)] hover:scale-105 transition-transform transform">
+              <h2 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 dark:from-blue-400 dark:via-cyan-400 dark:to-indigo-400">
+                +
+              </h2>
+              <h2 className="text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400">
+                Add Regular Income
+              </h2>
+            </div>
+          </DialogTrigger>
 
-      <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-br from-white via-cyan-50 to-blue-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 p-8 rounded-3xl shadow-[0_0_40px_rgba(0,150,255,0.3)] w-[95%] max-w-lg max-h-[90vh] overflow-y-auto">
-        {/* Background Effects */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute -top-10 -left-10 w-60 h-60 bg-gradient-radial from-blue-400 via-cyan-400 to-transparent dark:from-blue-800 dark:via-cyan-800 dark:to-gray-800 opacity-25 blur-3xl animate-spin-slow"></div>
-          <div className="absolute bottom-20 right-10 w-80 h-80 bg-gradient-radial from-cyan-300 via-blue-300 to-transparent dark:from-cyan-800 dark:via-blue-800 dark:to-gray-800 opacity-30 blur-[120px]"></div>
-        </div>
+          <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-br from-white via-cyan-50 to-blue-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 p-8 rounded-3xl shadow-[0_0_40px_rgba(0,150,255,0.3)] w-[95%] max-w-lg max-h-[90vh] overflow-y-auto">
+            {/* Background Effects */}
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute -top-10 -left-10 w-60 h-60 bg-gradient-radial from-blue-400 via-cyan-400 to-transparent dark:from-blue-800 dark:via-cyan-800 dark:to-gray-800 opacity-25 blur-3xl animate-spin-slow"></div>
+              <div className="absolute bottom-20 right-10 w-80 h-80 bg-gradient-radial from-cyan-300 via-blue-300 to-transparent dark:from-cyan-800 dark:via-blue-800 dark:to-gray-800 opacity-30 blur-[120px]"></div>
+            </div>
 
-        {/* Dialog Header */}
-        <DialogHeader>
-          <DialogTitle className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 dark:from-blue-400 dark:via-cyan-400 dark:to-indigo-400">
-            Add Regular Income
-          </DialogTitle>
-          <DialogDescription className="text-sm text-gray-600 dark:text-gray-400">
-            Fill in the details below to add your income source.
-          </DialogDescription>
-        </DialogHeader>
+            {/* Dialog Header */}
+            <DialogHeader>
+              <DialogTitle className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 dark:from-blue-400 dark:via-cyan-400 dark:to-indigo-400">
+                Add Regular Income
+              </DialogTitle>
+              <DialogDescription className="text-sm text-gray-600 dark:text-gray-400">
+                Fill in the details below to add your income source.
+              </DialogDescription>
+            </DialogHeader>
 
-        {/* Input Fields */}
-        <div className="mt-1">
-          <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-            Basic Pay
-          </h2>
-          <Input
-            type="text"
-            placeholder="Rs. 1,50,000"
-            className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
-            value={basicPay}
-            onChange={(e) => {
-              let inputValue = e.target.value;
-              // Remove commas and non-numeric characters, then format
-              inputValue = inputValue.replace(/[^0-9]/g, "");
-              setBasicPay(formatToIndianCurrency(inputValue));
-            }}
-          />
-        </div>
-        <div className="mt-1">
-          <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-            Dearness Allowance (DA)
-          </h2>
-          <Input
-            type="text"
-            placeholder="e.g. Rs.8000"
-            className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
-            value={da}
-            onChange={(e) => {
-              let inputValue = e.target.value;
-              // Remove commas and non-numeric characters, then format
-              inputValue = inputValue.replace(/[^0-9]/g, "");
-              setDa(formatToIndianCurrency(inputValue));
-            }}
-          />
-        </div>
-        <div className="mt-1">
-          <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-            House Rent Allowance (HRA)
-          </h2>
-          <Input
-            type="text"
-            placeholder="e.g. Rs.8000"
-            className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
-            value={hra}
-            onChange={(e) => {
-              let inputValue = e.target.value;
-              // Remove commas and non-numeric characters, then format
-              inputValue = inputValue.replace(/[^0-9]/g, "");
-              setHra(formatToIndianCurrency(inputValue));
-            }}
-          />
-        </div>
-        <div className="mt-1">
-          <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-            Other Allowances
-          </h2>
-          <Input
-            type="text"
-            placeholder="e.g. Rs.8000"
-            className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
-            value={otherAllowances}
-            onChange={(e) => {
-              let inputValue = e.target.value;
-              // Remove commas and non-numeric characters, then format
-              inputValue = inputValue.replace(/[^0-9]/g, "");
-              setOtherAllowances(formatToIndianCurrency(inputValue));
-            }}
-          />
-        </div>
+            {/* Input Fields */}
+            <div className="mt-1">
+              <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                Basic Pay
+              </h2>
+              <Input
+                type="text"
+                placeholder="Rs. 1,50,000"
+                className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
+                value={basicPay}
+                onChange={(e) => {
+                  let inputValue = e.target.value;
+                  // Remove commas and non-numeric characters, then format
+                  inputValue = inputValue.replace(/[^0-9]/g, "");
+                  setBasicPay(formatToIndianCurrency(inputValue));
+                }}
+              />
+            </div>
+            <div className="mt-1">
+              <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                Dearness Allowance (DA)
+              </h2>
+              <Input
+                type="text"
+                placeholder="e.g. Rs.8000"
+                className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
+                value={da}
+                onChange={(e) => {
+                  let inputValue = e.target.value;
+                  // Remove commas and non-numeric characters, then format
+                  inputValue = inputValue.replace(/[^0-9]/g, "");
+                  setDa(formatToIndianCurrency(inputValue));
+                }}
+              />
+            </div>
+            <div className="mt-1">
+              <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                House Rent Allowance (HRA)
+              </h2>
+              <Input
+                type="text"
+                placeholder="e.g. Rs.8000"
+                className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
+                value={hra}
+                onChange={(e) => {
+                  let inputValue = e.target.value;
+                  // Remove commas and non-numeric characters, then format
+                  inputValue = inputValue.replace(/[^0-9]/g, "");
+                  setHra(formatToIndianCurrency(inputValue));
+                }}
+              />
+            </div>
+            <div className="mt-1">
+              <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                Other Allowances
+              </h2>
+              <Input
+                type="text"
+                placeholder="e.g. Rs.8000"
+                className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
+                value={otherAllowances}
+                onChange={(e) => {
+                  let inputValue = e.target.value;
+                  // Remove commas and non-numeric characters, then format
+                  inputValue = inputValue.replace(/[^0-9]/g, "");
+                  setOtherAllowances(formatToIndianCurrency(inputValue));
+                }}
+              />
+            </div>
 
-        {/* Recurring Income Section */}
-        <div
-          className="flex items-center justify-between p-4 rounded-3xl 
+            {/* Recurring Income Section */}
+            <div
+              className="flex items-center justify-between p-4 rounded-3xl 
       bg-gradient-to-r from-cyan-50 via-blue-100 to-indigo-100 
       dark:bg-gradient-to-r dark:from-[#243089] dark:via-[#3a6aa4] dark:to-[#76b2e6] 
       border border-blue-300 dark:border-0 transition-all"
+            >
+              <div>
+                <h3 className="flex gap-2 items-center text-sm font-extrabold tracking-wide text-gray-900 dark:text-white">
+                  New Income Regime
+                  {isNewRegime && (
+                    <Badge className="border-0 bg-gradient-to-r from-green-400 to-green-600 text-white px-2 rounded-3xl text-xs dark:from-green-500 dark:to-green-700">
+                      Active
+                    </Badge>
+                  )}
+                </h3>
+                <p className="mt-2 text-xs text-gray-900 dark:text-blue-100">
+                  New regime will be effective from the start date.
+                </p>
+              </div>
+
+              <Switch
+                checked={isNewRegime}
+                onCheckedChange={(e) => setIsNewRegime(e)}
+                className="data-[state=checked]:bg-blue-600 data-[state=unchecked]:bg-gray-400 
+        dark:data-[state=checked]:bg-white dark:data-[state=unchecked]:bg-blue-300 border-2 border-blue-400 dark:border-indigo-200"
+              />
+            </div>
+
+            {isNewRegime && (
+              <div className="mt-1">Lorem ipsum dolor sit amet.</div>
+            )}
+
+            {/* Footer Section */}
+            <DialogFooter className="mt-6">
+              <DialogClose asChild>
+                <Button
+                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 dark:from-blue-600 dark:via-cyan-500 dark:to-teal-500 text-white font-bold shadow-lg hover:shadow-[0_0_30px_rgba(0,100,255,0.5)] transition-transform transform hover:scale-105 disabled:opacity-50"
+                  onClick={() => createRegularIncome()}
+                  disabled={!(name && amount)}
+                >
+                  Create Income Source
+                </Button>
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      ) : (
+        <div
+          className={`relative p-6 mb-6 border-2 rounded-3xl bg-gradient-to-b from-white via-cyan-50 to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 shadow-lg transition-transform transform hover:scale-105`}
         >
-          <div>
-            <h3 className="flex gap-2 items-center text-sm font-extrabold tracking-wide text-gray-900 dark:text-white">
-              New Income Regime
-              {isNewRegime && (
-                <Badge className="border-0 bg-gradient-to-r from-green-400 to-green-600 text-white px-2 rounded-3xl text-xs dark:from-green-500 dark:to-green-700">
-                  Active
-                </Badge>
-              )}
-            </h3>
-            <p className="mt-2 text-xs text-gray-900 dark:text-blue-100">
-              New regime will be effective from the start date.
-            </p>
+          {/* Title and Monthly Pay */}
+          <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+            <h2 className="font-extrabold text-xl sm:text-2xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 dark:from-blue-400 dark:via-cyan-400 dark:to-indigo-400">
+              {regularIncomeData[0].name}
+            </h2>
+            <h2
+              className={`font-bold text-lg sm:text-xl text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-blue-500 dark:from-green-400 dark:to-cyan-400`}
+            >
+              {formatCurrency(regularIncomeData[0].monthlyPay)} / month
+            </h2>
           </div>
 
-          <Switch
-            checked={isNewRegime}
-            onCheckedChange={(e) => setIsNewRegime(e)}
-            className="data-[state=checked]:bg-blue-600 data-[state=unchecked]:bg-gray-400 
-        dark:data-[state=checked]:bg-white dark:data-[state=unchecked]:bg-blue-300 border-2 border-blue-400 dark:border-indigo-200"
-          />
-        </div>
-
-        {isNewRegime && <div className="mt-1">Lorem ipsum dolor sit amet.</div>}
-
-        {/* Footer Section */}
-        <DialogFooter className="mt-6">
-          <DialogClose asChild>
-            <Button
-              className="w-full py-4 rounded-2xl bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 dark:from-blue-600 dark:via-cyan-500 dark:to-teal-500 text-white font-bold shadow-lg hover:shadow-[0_0_30px_rgba(0,100,255,0.5)] transition-transform transform hover:scale-105 disabled:opacity-50"
-              onClick={() => onCreateIncomes()}
-              disabled={!(name && amount)}
+          {/* View Details Button */}
+          <div className="text-right">
+            <button
+              onClick={() => setShowDetails(!showDetails)}
+              className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
+                showDetails
+                  ? "bg-red-500 text-white hover:bg-red-600"
+                  : "bg-blue-500 text-white hover:bg-blue-600"
+              }`}
             >
-              Create Income Source
-            </Button>
-          </DialogClose>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+              {showDetails ? "Hide Details" : "View Details"}
+            </button>
+          </div>
+
+          {/* Collapsible Details Section */}
+          {showDetails && (
+            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
+                <h3 className="text-gray-700 dark:text-gray-300 font-medium">
+                  Gross Income
+                </h3>
+                <p className="font-bold text-gray-900 dark:text-gray-100">
+                  {formatCurrency(regularIncomeData[0].grossIncome)}
+                </p>
+              </div>
+              <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
+                <h3 className="text-gray-700 dark:text-gray-300 font-medium">
+                  Net Income
+                </h3>
+                <p className="font-bold text-gray-900 dark:text-gray-100">
+                  {formatCurrency(regularIncomeData[0].netIncome)}
+                </p>
+              </div>
+              <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
+                <h3 className="text-gray-700 dark:text-gray-300 font-medium">
+                  Dearness Allowance (DA)
+                </h3>
+                <p className="font-bold text-gray-900 dark:text-gray-100">
+                  {formatCurrency(regularIncomeData[0].da)}
+                </p>
+              </div>
+              <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
+                <h3 className="text-gray-700 dark:text-gray-300 font-medium">
+                  House Rent Allowance (HRA)
+                </h3>
+                <p className="font-bold text-gray-900 dark:text-gray-100">
+                  {formatCurrency(regularIncomeData[0].hra)}
+                </p>
+              </div>
+              <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
+                <h3 className="text-gray-700 dark:text-gray-300 font-medium">
+                  Other Allowances
+                </h3>
+                <p className="font-bold text-gray-900 dark:text-gray-100">
+                  {formatCurrency(regularIncomeData[0].otherAllowances)}
+                </p>
+              </div>
+              <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
+                <h3 className="text-gray-700 dark:text-gray-300 font-medium">
+                  Tax Deductions
+                </h3>
+                <p className="font-bold text-red-600 dark:text-red-400">
+                  -{formatCurrency(regularIncomeData[0].taxDeductions)}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Footer Section for Last Updated */}
+          <div className="mt-6 text-right border-t pt-4">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              <span className="font-medium text-gray-700 dark:text-gray-300">
+                Last Updated:
+              </span>{" "}
+              {regularIncomeData[0].lastUpdated || "Not available"}
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
-export default RegularIncome;
+export default addRegularIncome;

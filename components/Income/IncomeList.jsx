@@ -85,7 +85,7 @@ function IncomeList() {
           </TooltipProvider>
         </div>
       </div>
-      <div className="mb-7 grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-5">
+      <div className="mb-7 grid grid-cols-1 xl:grid-cols-2 gap-7">
         <RegularIncome refreshData={() => getIncomelist()} />
         <CreateIncomes refreshData={() => getIncomelist()} />
       </div>
