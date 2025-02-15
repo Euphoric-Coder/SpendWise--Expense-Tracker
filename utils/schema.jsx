@@ -21,6 +21,7 @@ export const Users = pgTable("users", {
 export const RegularIncome = pgTable("regularIncome", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name").notNull(),
+  basicPay: numeric("basicPay").notNull(),
   grossIncome: numeric("grossIncome").notNull(),
   netIncome: numeric("netIncome").notNull(),
   da: numeric("da").notNull(), // Dearness Allowance

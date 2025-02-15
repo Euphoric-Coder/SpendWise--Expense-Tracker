@@ -11,24 +11,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import EmojiPicker from "emoji-picker-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import { db } from "@/utils/dbConfig";
 import { Incomes, RegularIncome, Transactions } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 import {
-  addOneMonth,
   formatCurrency,
   formatToIndianCurrency,
   getISTDate,
@@ -36,11 +25,11 @@ import {
   isSameDate,
   nextRecurringDate,
 } from "@/utils/utilities";
-import { frequencyTypes, incomeCategoriesList } from "@/utils/data";
 import { Switch } from "../ui/switch";
 import { Badge } from "../ui/badge";
-import { set } from "date-fns";
 import { eq } from "drizzle-orm";
+import Image from "next/image";
+import { History, NotepadTextIcon, ShieldCloseIcon } from "lucide-react";
 
 function addRegularIncome({ refreshData }) {
   const [emojiIcon, setEmojiIcon] = useState("😀");
@@ -103,31 +92,23 @@ function addRegularIncome({ refreshData }) {
    * To Create New Source of Income
    */
   const createRegularIncome = async () => {
-    const incomeData = {
+    const regularIncome = {
       name: name,
-      amount: amount,
-      createdBy: user?.primaryEmailAddress?.emailAddress,
-      icon: emojiIcon,
-      incomeType: isNewRegime ? "recurring" : "non-recurring",
-      category: category,
-      status: isNewRegime
-        ? isSameDate(startDate ? startDate : getISTDate(), getISTDate())
-          ? "current"
-          : "upcoming"
-        : "current",
-      frequency: isNewRegime ? frequency : null,
-      startDate: isNewRegime
-        ? startDate
-          ? startDate
-          : getISTDate()
-        : getISTDate(), // Default to today for non-recurring
-      endDate: !isNewRegime ? endDate || addOneMonth(getISTDate()) : null,
+      basicPay: basicPay,
+      grossIncome: basicPay + da + hra + otherAllowances,
+      netIncome: netIncome,
+      da: da,
+      hra: hra,
+      otherAllowances: otherAllowances,
+      taxDeductions: 0,
+      monthlyPay: netIncome/12,
+      createdBy: user.primaryEmailAddress.emailAddress,
       createdAt: getISTDateTime(),
     };
     try {
       const result = await db
-        .insert(Incomes)
-        .values(incomeData)
+        .insert(RegularIncome)
+        .values(regularIncome)
         .returning({ insertedId: Incomes.id });
 
       const transaction = await db
@@ -135,7 +116,7 @@ function addRegularIncome({ refreshData }) {
         .values({
           referenceId: result[0].insertedId,
           type: "income",
-          category: category,
+          category: "salary",
           isNewRegime: isNewRegime,
           frequency: isNewRegime ? frequency : null,
           nextRecurringDate: isNewRegime
@@ -386,92 +367,119 @@ function addRegularIncome({ refreshData }) {
         </Dialog>
       ) : (
         <div
-          className={`relative p-6 mb-6 border-2 rounded-3xl bg-gradient-to-b from-white via-cyan-50 to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 shadow-lg transition-transform transform hover:scale-105`}
+          className={`relative p-8 mb-8 border-2 rounded-3xl bg-gradient-to-b from-white via-cyan-50 to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 shadow-2xl transition-transform transform hover:scale-105`}
         >
-          {/* Title and Monthly Pay */}
-          <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
-            <h2 className="font-extrabold text-xl sm:text-2xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 dark:from-blue-400 dark:via-cyan-400 dark:to-indigo-400">
-              {regularIncomeData[0].name}
-            </h2>
+          <div className="flex flex-col sm:flex-row justify-between items-center">
+            {/* Header Section with Gradient Title */}
+            <div className="flex items-center gap-4">
+              <div className="p-4 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 shadow-md">
+                <Image
+                  src={"/salary.png"}
+                  alt=""
+                  width={40}
+                  height={40}
+                  draggable={false}
+                />
+              </div>
+              <div>
+                <h2 className="font-extrabold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
+                  {regularIncomeData[0].name}
+                </h2>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">
+                  Detailed breakdown of your monthly income.
+                </p>
+              </div>
+            </div>
+
+            {/* Monthly Pay */}
             <h2
-              className={`font-bold text-lg sm:text-xl text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-blue-500 dark:from-green-400 dark:to-cyan-400`}
+              className={`font-bold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-blue-500 dark:from-green-300 dark:to-cyan-300`}
             >
               {formatCurrency(regularIncomeData[0].monthlyPay)} / month
             </h2>
           </div>
 
-          {/* View Details Button */}
-          <div className="text-right">
-            <button
+          {/* View, Edit and Delete Buttons */}
+          <div className="flex items-center justify-end gap-3 mt-1">
+            <Button
               onClick={() => setShowDetails(!showDetails)}
-              className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
+              className={`px-6 py-3 [&_svg]:size-6 text-sm font-bold uppercase rounded-xl transition-all focus:outline-none shadow-md ${
                 showDetails
                   ? "bg-red-500 text-white hover:bg-red-600"
-                  : "bg-blue-500 text-white hover:bg-blue-600"
+                  : "bg-blue-600 text-white hover:bg-blue-700"
               }`}
             >
+              {showDetails ? <ShieldCloseIcon /> : <NotepadTextIcon />}
               {showDetails ? "Hide Details" : "View Details"}
-            </button>
+            </Button>
+            <Button>Edit</Button>
+            <Button>Delete</Button>
           </div>
 
           {/* Collapsible Details Section */}
           {showDetails && (
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
-                <h3 className="text-gray-700 dark:text-gray-300 font-medium">
+            <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {/* Detail Box with Frosted Glass Effect */}
+              <div className="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-blue-200 to-blue-100 dark:from-gray-800 dark:to-gray-900 backdrop-blur-lg border border-gray-200 dark:border-gray-700">
+                <h3 className="text-gray-700 dark:text-gray-300 font-semibold text-xs uppercase tracking-widest">
                   Gross Income
                 </h3>
-                <p className="font-bold text-gray-900 dark:text-gray-100">
+                <p className="font-extrabold text-lg text-gray-900 dark:text-gray-100">
                   {formatCurrency(regularIncomeData[0].grossIncome)}
                 </p>
               </div>
-              <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
-                <h3 className="text-gray-700 dark:text-gray-300 font-medium">
+
+              <div className="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-blue-200 to-blue-100 dark:from-gray-800 dark:to-gray-900 backdrop-blur-lg border border-gray-200 dark:border-gray-700">
+                <h3 className="text-gray-700 dark:text-gray-300 font-semibold text-xs uppercase tracking-widest">
                   Net Income
                 </h3>
-                <p className="font-bold text-gray-900 dark:text-gray-100">
+                <p className="font-extrabold text-lg text-gray-900 dark:text-gray-100">
                   {formatCurrency(regularIncomeData[0].netIncome)}
                 </p>
               </div>
-              <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
-                <h3 className="text-gray-700 dark:text-gray-300 font-medium">
+
+              <div className="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-blue-200 to-blue-100 dark:from-gray-800 dark:to-gray-900 backdrop-blur-lg border border-gray-200 dark:border-gray-700">
+                <h3 className="text-gray-700 dark:text-gray-300 font-semibold text-xs uppercase tracking-widest">
                   Dearness Allowance (DA)
                 </h3>
-                <p className="font-bold text-gray-900 dark:text-gray-100">
+                <p className="font-extrabold text-lg text-gray-900 dark:text-gray-100">
                   {formatCurrency(regularIncomeData[0].da)}
                 </p>
               </div>
-              <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
-                <h3 className="text-gray-700 dark:text-gray-300 font-medium">
+
+              <div className="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-blue-200 to-blue-100 dark:from-gray-800 dark:to-gray-900 backdrop-blur-lg border border-gray-200 dark:border-gray-700">
+                <h3 className="text-gray-700 dark:text-gray-300 font-semibold text-xs uppercase tracking-widest">
                   House Rent Allowance (HRA)
                 </h3>
-                <p className="font-bold text-gray-900 dark:text-gray-100">
+                <p className="font-extrabold text-lg text-gray-900 dark:text-gray-100">
                   {formatCurrency(regularIncomeData[0].hra)}
                 </p>
               </div>
-              <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
-                <h3 className="text-gray-700 dark:text-gray-300 font-medium">
+
+              <div className="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-blue-200 to-blue-100 dark:from-gray-800 dark:to-gray-900 backdrop-blur-lg border border-gray-200 dark:border-gray-700">
+                <h3 className="text-gray-700 dark:text-gray-300 font-semibold text-xs uppercase tracking-widest">
                   Other Allowances
                 </h3>
-                <p className="font-bold text-gray-900 dark:text-gray-100">
+                <p className="font-extrabold text-lg text-gray-900 dark:text-gray-100">
                   {formatCurrency(regularIncomeData[0].otherAllowances)}
                 </p>
               </div>
-              <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
-                <h3 className="text-gray-700 dark:text-gray-300 font-medium">
+
+              <div className="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-blue-200 to-blue-100 dark:from-gray-800 dark:to-gray-900 backdrop-blur-lg border border-gray-200 dark:border-gray-700">
+                <h3 className="text-gray-700 dark:text-gray-300 font-semibold text-xs uppercase tracking-widest">
                   Tax Deductions
                 </h3>
-                <p className="font-bold text-red-600 dark:text-red-400">
+                <p className="font-extrabold text-lg text-red-600 dark:text-red-400">
                   -{formatCurrency(regularIncomeData[0].taxDeductions)}
                 </p>
               </div>
             </div>
           )}
 
-          {/* Footer Section for Last Updated */}
-          <div className="mt-6 text-right border-t pt-4">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              <span className="font-medium text-gray-700 dark:text-gray-300">
+          {/* Last Updated Section */}
+          <div className="mt-8 border-t pt-4 text-right">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              <span className="font-semibold text-gray-700 dark:text-gray-300">
                 Last Updated:
               </span>{" "}
               {regularIncomeData[0].lastUpdated || "Not available"}
