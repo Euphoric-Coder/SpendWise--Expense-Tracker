@@ -17,8 +17,10 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider>
-      <html lang="en">
+    <ClerkProvider
+      afterSignOutUrl="/sign-in" // Redirect to the Sign-In Page after sign out
+    >
+      <html lang="en" suppressHydrationWarning>
         <body className={`${outfit.className}`}>
           <ThemeProvider
             attribute="class"
