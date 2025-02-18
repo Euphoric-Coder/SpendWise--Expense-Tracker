@@ -24,6 +24,7 @@ import {
   getISTDateTime,
   isSameDate,
   nextRecurringDate,
+  normalizeAmount,
 } from "@/utils/utilities";
 import { Switch } from "../ui/switch";
 import { Badge } from "../ui/badge";
@@ -33,66 +34,26 @@ import { History, NotepadTextIcon, ShieldCloseIcon } from "lucide-react";
 
 function addRegularIncome({ refreshData }) {
   const [emojiIcon, setEmojiIcon] = useState("😀");
-  const [regularIncomeData, setRegularIncomeData] = useState([
-    {
-      id: 1,
-      name: "Software Engineer Salary",
-      grossIncome: 180000,
-      netIncome: 150000,
-      basicPay: 150000,
-      da: 20000, // Dearness Allowance
-      hra: 30000, // House Rent Allowance
-      otherAllowances: 15000,
-      taxDeductions: 25000,
-      monthlyPay: 150000,
-      isNewRegime: true,
-      lastUpdated: "2024-12-03",
-      createdBy: "john.doe@gmail.com",
-    },
-  ]);
-
+  const [regularIncomeData, setRegularIncomeData] = useState([]);
   const [name, setName] = useState("");
-  const [basicPay, setBasicPay] = useState();
-  const [netIncome, setNetIncome] = useState();
-  const [da, setDa] = useState();
-  const [hra, setHra] = useState();
-  const [otherAllowances, setOtherAllowances] = useState();
+  const [basicPay, setBasicPay] = useState("");
+  const [da, setDa] = useState("");
+  const [hra, setHra] = useState("");
+  const [otherAllowances, setOtherAllowances] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("salary");
   const [isNewRegime, setIsNewRegime] = useState(false); // Toggle for recurring
   const [frequency, setFrequency] = useState("monthly"); // Default frequency
   const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState(""); // Optional end date for non-recurring
   const [showDetails, setShowDetails] = useState(false);
   const { user } = useUser();
 
   useEffect(() => {
-    const fetchOrCreateRegularIncome = async () => {
-      if (!user?.primaryEmailAddress?.emailAddress) return;
-
-      // Check if an entry already exists for the user
-      const result = await db
-        .select()
-        .from(RegularIncome)
-        .where(
-          eq(RegularIncome.createdBy, user.primaryEmailAddress.emailAddress)
-        );
-
-      if (result.length === 0) {
-        // There is no entry for the user, so the state is an empty array
-        // setRegularIncomeData([]);
-      } else {
-        // If entry exists, you can fetch and use it if necessary
-        console.log("Entry already exists:", result[0]);
-      }
-    };
-
-    fetchOrCreateRegularIncome();
+    user && fetchOrCreateRegularIncome();
   }, [user]);
 
   const startEditing = (income) => {
     setName(income.name);
-    setNetIncome(income.netIncome);
     setBasicPay(income.basicPay);
     setIsNewRegime(income.isNewRegime);
     setDa(income.da);
@@ -101,22 +62,55 @@ function addRegularIncome({ refreshData }) {
     setIsNewRegime(income.isNewRegime);
   };
 
+  const { netIncome, grossIncome, tax } = calculateNetIncome(
+    normalizeAmount(basicPay),
+    normalizeAmount(da),
+    normalizeAmount(hra),
+    normalizeAmount(otherAllowances),
+    isNewRegime
+  );
+
+  const fetchOrCreateRegularIncome = async () => {
+    if (!user?.primaryEmailAddress?.emailAddress) return;
+
+    // Check if an entry already exists for the user
+    const result = await db
+      .select()
+      .from(RegularIncome)
+      .where(
+        eq(RegularIncome.createdBy, user.primaryEmailAddress.emailAddress)
+      );
+
+    if (result.length === 0) {
+      // There is no entry for the user, so the state is an empty array
+      setRegularIncomeData([]);
+    } else {
+      // If entry exists, you can fetch and use it if necessary
+      setRegularIncomeData(result);
+      console.log("Entry already exists:", result[0]);
+    }
+  };
+
   /**
    * To Create New Source of Income
    */
   const createRegularIncome = async () => {
     const regularIncome = {
       name: name,
-      basicPay: basicPay,
-      grossIncome: basicPay + da + hra + otherAllowances,
+      basicPay: normalizeAmount(basicPay),
+      grossIncome:
+        normalizeAmount(basicPay) +
+        normalizeAmount(da) +
+        normalizeAmount(hra) +
+        normalizeAmount(otherAllowances),
       netIncome: netIncome,
-      da: da,
-      hra: hra,
-      otherAllowances: otherAllowances,
-      taxDeductions: 0,
+      da: normalizeAmount(da),
+      hra: normalizeAmount(hra),
+      otherAllowances: normalizeAmount(otherAllowances),
+      taxDeductions: tax,
+      isNewRegime: isNewRegime,
       monthlyPay: netIncome / 12,
       createdBy: user.primaryEmailAddress.emailAddress,
-      createdAt: getISTDateTime(),
     };
     try {
       const result = await db
@@ -124,37 +118,37 @@ function addRegularIncome({ refreshData }) {
         .values(regularIncome)
         .returning({ insertedId: Incomes.id });
 
-      const transaction = await db
-        .insert(Transactions)
-        .values({
-          referenceId: result[0].insertedId,
-          type: "income",
-          category: "salary",
-          isNewRegime: isNewRegime,
-          frequency: isNewRegime ? frequency : null,
-          nextRecurringDate: isNewRegime
-            ? nextRecurringDate(startDate, frequency)
-            : null,
-          lastProcessed: isSameDate(
-            startDate ? startDate : getISTDate(),
-            getISTDate()
-          )
-            ? getISTDate()
-            : null,
-          status: isNewRegime
-            ? isSameDate(startDate ? startDate : getISTDate(), getISTDate())
-              ? "active"
-              : "upcoming"
-            : "active",
-          name: name,
-          amount: amount,
-          createdBy: incomeData.createdBy,
-          createdAt: incomeData.createdAt,
-        })
-        .returning({ insertedId: Transactions.id });
+      // const transaction = await db
+      //   .insert(Transactions)
+      //   .values({
+      //     referenceId: result[0].insertedId,
+      //     type: "income",
+      //     category: "salary",
+      //     isNewRegime: isNewRegime,
+      //     frequency: isNewRegime ? frequency : null,
+      //     nextRecurringDate: isNewRegime
+      //       ? nextRecurringDate(startDate, frequency)
+      //       : null,
+      //     lastProcessed: isSameDate(
+      //       startDate ? startDate : getISTDate(),
+      //       getISTDate()
+      //     )
+      //       ? getISTDate()
+      //       : null,
+      //     status: isNewRegime
+      //       ? isSameDate(startDate ? startDate : getISTDate(), getISTDate())
+      //         ? "active"
+      //         : "upcoming"
+      //       : "active",
+      //     name: name,
+      //     amount: amount,
+      //     createdBy: incomeData.createdBy,
+      //     createdAt: incomeData.createdAt,
+      //   })
+      //   .returning({ insertedId: Transactions.id });
 
-      if (result && transaction) {
-        refreshData();
+      if (result) {
+        fetchOrCreateRegularIncome();
         toast.success("New Source of Income has been Created!");
       }
     } catch (error) {
@@ -164,11 +158,47 @@ function addRegularIncome({ refreshData }) {
   };
 
   const updateRegularIncome = async () => {
-    toast.success("Income Source Updated Successfully!");
+    const regularIncome = {
+      name: name,
+      basicPay: normalizeAmount(basicPay),
+      grossIncome:
+        normalizeAmount(basicPay) +
+        normalizeAmount(da) +
+        normalizeAmount(hra) +
+        normalizeAmount(otherAllowances),
+      netIncome: netIncome,
+      da: normalizeAmount(da),
+      hra: normalizeAmount(hra),
+      otherAllowances: normalizeAmount(otherAllowances),
+      taxDeductions: tax,
+      isNewRegime: isNewRegime,
+      monthlyPay: netIncome / 12,
+      createdBy: user.primaryEmailAddress.emailAddress,
+    };
+    const result = await db
+      .update(RegularIncome)
+      .set(regularIncome)
+      .where(eq(RegularIncome.createdBy, user.primaryEmailAddress.emailAddress))
+      .returning();
+    
+        if (result) {
+          fetchOrCreateRegularIncome();
+          toast("Budget Updated!");
+        }
+  };
+
+  const deleteRegularIncome = async () => {
+    await db
+      .delete(RegularIncome)
+      .where(eq(RegularIncome.createdBy, user.primaryEmailAddress.emailAddress))
+      .returning();
+    fetchOrCreateRegularIncome();
+    toast.success("Income Source Deleted Successfully!");
   };
 
   function calculateNetIncome(basicPay, da, hra, otherAllowances, isNewRegime) {
-    const totalIncome = basicPay + da + hra + otherAllowances;
+    const totalIncome =
+      Number(basicPay) + Number(da) + Number(hra) + Number(otherAllowances);
     let tax = 0;
 
     if (isNewRegime) {
@@ -215,10 +245,11 @@ function addRegularIncome({ refreshData }) {
 
     // Calculate net income
     const netIncome = totalIncome - tax;
+
     return {
-      totalIncome: totalIncome,
-      tax: tax.toFixed(2),
-      netIncome: netIncome.toFixed(2),
+      netIncome: netIncome,
+      grossIncome: totalIncome,
+      tax: tax,
     };
   }
 
@@ -229,7 +260,6 @@ function addRegularIncome({ refreshData }) {
           onOpenChange={(isOpen) => {
             if (!isOpen) {
               setBasicPay("");
-              setNetIncome("");
               setDa("");
               setHra("");
               setOtherAllowances("");
@@ -374,7 +404,7 @@ function addRegularIncome({ refreshData }) {
                 <Button
                   className="w-full py-4 rounded-2xl bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 dark:from-blue-600 dark:via-cyan-500 dark:to-teal-500 text-white font-bold shadow-lg hover:shadow-[0_0_30px_rgba(0,100,255,0.5)] transition-transform transform hover:scale-105 disabled:opacity-50"
                   onClick={() => createRegularIncome()}
-                  disabled={!(name && amount)}
+                  disabled={!(basicPay && da && hra && otherAllowances)}
                 >
                   Create Income Source
                 </Button>
@@ -468,7 +498,7 @@ function addRegularIncome({ refreshData }) {
                       let inputValue = e.target.value;
                       // Remove commas and non-numeric characters, then format
                       inputValue = inputValue.replace(/[^0-9]/g, "");
-                      setBasicPay(formatToIndianCurrency(inputValue));
+                      setBasicPay(inputValue);
                     }}
                   />
                 </div>
@@ -485,7 +515,7 @@ function addRegularIncome({ refreshData }) {
                       let inputValue = e.target.value;
                       // Remove commas and non-numeric characters, then format
                       inputValue = inputValue.replace(/[^0-9]/g, "");
-                      setDa(formatToIndianCurrency(inputValue));
+                      setDa(inputValue);
                     }}
                   />
                 </div>
@@ -502,7 +532,7 @@ function addRegularIncome({ refreshData }) {
                       let inputValue = e.target.value;
                       // Remove commas and non-numeric characters, then format
                       inputValue = inputValue.replace(/[^0-9]/g, "");
-                      setHra(formatToIndianCurrency(inputValue));
+                      setHra(inputValue);
                     }}
                   />
                 </div>
@@ -519,7 +549,7 @@ function addRegularIncome({ refreshData }) {
                       let inputValue = e.target.value;
                       // Remove commas and non-numeric characters, then format
                       inputValue = inputValue.replace(/[^0-9]/g, "");
-                      setOtherAllowances(formatToIndianCurrency(inputValue));
+                      setOtherAllowances(inputValue);
                     }}
                   />
                 </div>
@@ -556,13 +586,30 @@ function addRegularIncome({ refreshData }) {
                 {isNewRegime && (
                   <div className="mt-1">Lorem ipsum dolor sit amet.</div>
                 )}
+                <div>
+                  Gross Income (Before Taxes):{" "}
+                  {formatToIndianCurrency(grossIncome)}
+                  <br />
+                  Net Income After taxes: {formatToIndianCurrency(netIncome)}
+                  <br />
+                  Tax Levied: {formatToIndianCurrency(tax)}
+                </div>
 
                 {/* Footer Section */}
                 <DialogFooter className="mt-6">
                   <DialogClose asChild>
                     <Button
                       className="w-full py-4 rounded-2xl bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 dark:from-blue-600 dark:via-cyan-500 dark:to-teal-500 text-white font-bold shadow-lg hover:shadow-[0_0_30px_rgba(0,100,255,0.5)] transition-transform transform hover:scale-105 disabled:opacity-50"
-                      onClick={() => updateRegularIncome()}
+                      onClick={() => {
+                        calculateNetIncome(
+                          basicPay,
+                          da,
+                          hra,
+                          otherAllowances,
+                          isNewRegime
+                        );
+                        updateRegularIncome();
+                      }}
                       disabled={!(basicPay && da && hra && otherAllowances)}
                     >
                       Edit Monthly Income
@@ -572,7 +619,7 @@ function addRegularIncome({ refreshData }) {
               </DialogContent>
             </Dialog>
 
-            <Button>Delete</Button>
+            <Button onClick={deleteRegularIncome}>Delete</Button>
           </div>
 
           {/* Collapsible Details Section */}

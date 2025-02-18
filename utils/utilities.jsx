@@ -6,6 +6,10 @@ export const formatToIndianCurrency = (value) => {
   return new Intl.NumberFormat("en-IN").format(value.toString().replace(/,/g, ""));
 };
 
+export const normalizeAmount = (amount) => {
+  return Number(amount?.toString().replace(/[^0-9]/g, ""));
+}
+
 const formatCurrency = (amount) => {
   let formattedAmount;
 
