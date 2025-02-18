@@ -28,6 +28,7 @@ export const RegularIncome = pgTable("regularIncome", {
   hra: numeric("hra").notNull(), // House Rent Allowance
   otherAllowances: numeric("otherAllowances").notNull(),
   taxDeductions: numeric("taxDeductions").notNull(),
+  isNewRegime: boolean("isNewRegime").notNull().default(false),
   monthlyPay: numeric("monthlyPay").notNull(),
   lastUpdated: varchar("lastUpdated"),
   createdBy: varchar("createdBy").notNull().unique(), // Ensures only one entry per user

@@ -3,7 +3,7 @@ import { format } from "date-fns";
 // Function to format the number in Indian currency format
 export const formatToIndianCurrency = (value) => {
   if (!value) return "";
-  return new Intl.NumberFormat("en-IN").format(value.replace(/,/g, ""));
+  return new Intl.NumberFormat("en-IN").format(value.toString().replace(/,/g, ""));
 };
 
 const formatCurrency = (amount) => {

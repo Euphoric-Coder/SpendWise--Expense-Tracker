@@ -39,11 +39,13 @@ function addRegularIncome({ refreshData }) {
       name: "Software Engineer Salary",
       grossIncome: 180000,
       netIncome: 150000,
+      basicPay: 150000,
       da: 20000, // Dearness Allowance
       hra: 30000, // House Rent Allowance
       otherAllowances: 15000,
       taxDeductions: 25000,
       monthlyPay: 150000,
+      isNewRegime: true,
       lastUpdated: "2024-12-03",
       createdBy: "john.doe@gmail.com",
     },
@@ -88,6 +90,17 @@ function addRegularIncome({ refreshData }) {
     fetchOrCreateRegularIncome();
   }, [user]);
 
+  const startEditing = (income) => {
+    setName(income.name);
+    setNetIncome(income.netIncome);
+    setBasicPay(income.basicPay);
+    setIsNewRegime(income.isNewRegime);
+    setDa(income.da);
+    setHra(income.hra);
+    setOtherAllowances(income.otherAllowances);
+    setIsNewRegime(income.isNewRegime);
+  };
+
   /**
    * To Create New Source of Income
    */
@@ -101,7 +114,7 @@ function addRegularIncome({ refreshData }) {
       hra: hra,
       otherAllowances: otherAllowances,
       taxDeductions: 0,
-      monthlyPay: netIncome/12,
+      monthlyPay: netIncome / 12,
       createdBy: user.primaryEmailAddress.emailAddress,
       createdAt: getISTDateTime(),
     };
@@ -148,6 +161,10 @@ function addRegularIncome({ refreshData }) {
       toast.error("Failed to create income. Please try again.");
       console.error("Error creating income:", error);
     }
+  };
+
+  const updateRegularIncome = async () => {
+    toast.success("Income Source Updated Successfully!");
   };
 
   function calculateNetIncome(basicPay, da, hra, otherAllowances, isNewRegime) {
@@ -412,20 +429,11 @@ function addRegularIncome({ refreshData }) {
               {showDetails ? <ShieldCloseIcon /> : <NotepadTextIcon />}
               {showDetails ? "Hide Details" : "View Details"}
             </Button>
-            <Dialog
-              onOpenChange={(isOpen) => {
-                if (!isOpen) {
-                  setBasicPay("");
-                  setNetIncome("");
-                  setDa("");
-                  setHra("");
-                  setOtherAllowances("");
-                  setIsNewRegime(false);
-                }
-              }}
-            >
+            <Dialog>
               <DialogTrigger asChild>
-                <Button>Edit</Button>
+                <Button onClick={() => startEditing(regularIncomeData[0])}>
+                  Edit
+                </Button>
               </DialogTrigger>
 
               <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-br from-white via-cyan-50 to-blue-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 p-8 rounded-3xl shadow-[0_0_40px_rgba(0,150,255,0.3)] w-[95%] max-w-lg max-h-[90vh] overflow-y-auto">
@@ -454,8 +462,9 @@ function addRegularIncome({ refreshData }) {
                     type="text"
                     placeholder="Rs. 1,50,000"
                     className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
-                    value={regularIncomeData[0].basicPay}
+                    value={formatToIndianCurrency(basicPay)}
                     onChange={(e) => {
+                      toString;
                       let inputValue = e.target.value;
                       // Remove commas and non-numeric characters, then format
                       inputValue = inputValue.replace(/[^0-9]/g, "");
@@ -471,7 +480,7 @@ function addRegularIncome({ refreshData }) {
                     type="text"
                     placeholder="e.g. Rs.8000"
                     className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
-                    value={regularIncomeData[0].da}
+                    value={formatToIndianCurrency(da)}
                     onChange={(e) => {
                       let inputValue = e.target.value;
                       // Remove commas and non-numeric characters, then format
@@ -488,7 +497,7 @@ function addRegularIncome({ refreshData }) {
                     type="text"
                     placeholder="e.g. Rs.8000"
                     className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
-                    value={regularIncomeData[0].hra}
+                    value={formatToIndianCurrency(hra)}
                     onChange={(e) => {
                       let inputValue = e.target.value;
                       // Remove commas and non-numeric characters, then format
@@ -505,7 +514,7 @@ function addRegularIncome({ refreshData }) {
                     type="text"
                     placeholder="e.g. Rs.8000"
                     className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
-                    value={regularIncomeData[0].otherAllowances}
+                    value={formatToIndianCurrency(otherAllowances)}
                     onChange={(e) => {
                       let inputValue = e.target.value;
                       // Remove commas and non-numeric characters, then format
@@ -552,9 +561,9 @@ function addRegularIncome({ refreshData }) {
                 <DialogFooter className="mt-6">
                   <DialogClose asChild>
                     <Button
-                      className=""
-                      onClick={() => createRegularIncome()}
-                      disabled={!(name && amount)}
+                      className="w-full py-4 rounded-2xl bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 dark:from-blue-600 dark:via-cyan-500 dark:to-teal-500 text-white font-bold shadow-lg hover:shadow-[0_0_30px_rgba(0,100,255,0.5)] transition-transform transform hover:scale-105 disabled:opacity-50"
+                      onClick={() => updateRegularIncome()}
+                      disabled={!(basicPay && da && hra && otherAllowances)}
                     >
                       Edit Monthly Income
                     </Button>
