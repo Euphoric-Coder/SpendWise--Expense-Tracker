@@ -1,16 +1,12 @@
 import {
   boolean,
   date,
-  integer,
   numeric,
   pgTable,
-  serial,
   timestamp,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
-
-const { v4: uuidv4 } = require("uuid");
 
 export const Users = pgTable("users", {
   id: uuid("id").defaultRandom().primaryKey(),

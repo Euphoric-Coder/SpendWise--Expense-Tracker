@@ -114,7 +114,13 @@ body {
 }
 
 .budg-btn3 {
-  @apply w-full py-4 rounded-2xl bg-gradient-to-r from-blue-400 via-sky-500 to-purple-500 dark:from-indigo-600 dark:via-blue-700 dark:to-teal-600 text-white font-bold hover:shadow-lg hover:dark:shadow-gray-700 hover:bg-gradient-to-r hover:from-blue-500 hover:via-sky-600 hover:to-purple-600 dark:hover:bg-gradient-to-r dark:hover:from-indigo-700 dark:hover:via-blue-800 dark:hover:to-teal-700 transition-transform transform md:hover:scale-105 hover:backdrop-brightness-125;
+  @apply w-full py-4 rounded-2xl bg-gradient-to-r from-blue-400 via-sky-500 to-purple-500 dark:from-indigo-600 dark:via-blue-700 dark:to-teal-600 text-white font-bold hover:shadow-lg hover:dark:shadow-gray-700 hover:bg-gradient-to-r hover:from-blue-500 hover:via-sky-600 hover:to-purple-600 dark:hover:bg-gradient-to-r dark:hover:from-indigo-700 dark:hover:via-blue-800 dark:hover:to-teal-700 transition-transform transform md:hover:scale-105 hover:backdrop-brightness-125
+}
+
+/* Income Tab CSS */
+
+.inc-btn1 {
+  @apply rounded-full bg-gradient-to-r from-cyan-400 via-blue-400 to-sky-400 dark:from-blue-600 dark:via-cyan-500 dark:to-teal-500 text-white px-6 py-3 font-semibold shadow-md hover:shadow-lg md:hover:scale-105 transition-transform hover:backdrop-brightness-125
 }
 
 

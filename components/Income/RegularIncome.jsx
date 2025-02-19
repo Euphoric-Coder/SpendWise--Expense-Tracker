@@ -14,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { db } from "@/utils/dbConfig";
-import { Incomes, RegularIncome, Transactions } from "@/utils/schema";
+import { RegularIncome, Transactions } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 import {
@@ -33,9 +33,11 @@ import Image from "next/image";
 import { History, NotepadTextIcon, ShieldCloseIcon } from "lucide-react";
 
 function addRegularIncome({ refreshData }) {
-  const [emojiIcon, setEmojiIcon] = useState("😀");
-  const [regularIncomeData, setRegularIncomeData] = useState([]);
+  const maxLength = 20;
   const [name, setName] = useState("");
+  const [remainingChars, setRemainingChars] = useState(maxLength);
+  const [warning, setWarning] = useState(false);
+  const [regularIncomeData, setRegularIncomeData] = useState([]);
   const [basicPay, setBasicPay] = useState("");
   const [da, setDa] = useState("");
   const [hra, setHra] = useState("");
@@ -51,6 +53,12 @@ function addRegularIncome({ refreshData }) {
   useEffect(() => {
     user && fetchOrCreateRegularIncome();
   }, [user]);
+
+  // Update remainingChars when input field is loaded with data
+  useEffect(() => {
+    setRemainingChars(maxLength - name.length);
+    setWarning(name.length > maxLength);
+  }, [name]); // Runs whenever `name` is updated (including on input field load)
 
   const startEditing = (income) => {
     setName(income.name);
@@ -116,7 +124,7 @@ function addRegularIncome({ refreshData }) {
       const result = await db
         .insert(RegularIncome)
         .values(regularIncome)
-        .returning({ insertedId: Incomes.id });
+        .returning({ insertedId: RegularIncome.id });
 
       // const transaction = await db
       //   .insert(Transactions)
@@ -174,17 +182,18 @@ function addRegularIncome({ refreshData }) {
       isNewRegime: isNewRegime,
       monthlyPay: netIncome / 12,
       createdBy: user.primaryEmailAddress.emailAddress,
+      lastUpdated: getISTDateTime(),
     };
     const result = await db
       .update(RegularIncome)
       .set(regularIncome)
       .where(eq(RegularIncome.createdBy, user.primaryEmailAddress.emailAddress))
       .returning();
-    
-        if (result) {
-          fetchOrCreateRegularIncome();
-          toast("Budget Updated!");
-        }
+
+    if (result) {
+      fetchOrCreateRegularIncome();
+      toast.success("Budget Updated!");
+    }
   };
 
   const deleteRegularIncome = async () => {
@@ -253,17 +262,32 @@ function addRegularIncome({ refreshData }) {
     };
   }
 
+  const charLimit = (e) => {
+    const value = e.target.value;
+
+    if (value.length > maxLength) {
+      setWarning(true);
+    } else {
+      setWarning(false);
+    }
+
+    setName(value.slice(0, maxLength + 1)); // Ensure input is always within limit
+    setRemainingChars(Math.max(0, maxLength - value.length));
+  };
+
   return (
     <div>
       {regularIncomeData.length === 0 ? (
         <Dialog
           onOpenChange={(isOpen) => {
             if (!isOpen) {
+              setName("");
               setBasicPay("");
               setDa("");
               setHra("");
               setOtherAllowances("");
               setIsNewRegime(false);
+              setRemainingChars(maxLength);
             }
           }}
         >
@@ -296,6 +320,34 @@ function addRegularIncome({ refreshData }) {
             </DialogHeader>
 
             {/* Input Fields */}
+            <div className="mt-1">
+              <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                Source of Income
+              </h2>
+              <div className="relative">
+                <Input
+                  type="text"
+                  placeholder="e.g. Freelance Work"
+                  className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px] pr-12"
+                  value={name}
+                  onChange={charLimit} // Using the fixed charLimit function
+                />
+                <span
+                  className={`absolute right-3 top-1/2 -translate-y-1/2 text-sm ${
+                    warning
+                      ? "text-red-500"
+                      : "text-gray-500 dark:text-gray-400"
+                  }`}
+                >
+                  {remainingChars > 0 ? remainingChars : 0} Characters Left
+                </span>
+              </div>
+              {warning && name.length >= maxLength && (
+                <p className="text-red-500 text-sm mt-1">
+                  Character limit exceeded!
+                </p>
+              )}
+            </div>
             <div className="mt-1">
               <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
                 Basic Pay
@@ -484,6 +536,38 @@ function addRegularIncome({ refreshData }) {
                 </DialogHeader>
 
                 {/* Input Fields */}
+                <div className="mt-1">
+                  <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                    Source of Income
+                  </h2>
+                  <div className="relative">
+                    <Input
+                      type="text"
+                      placeholder="e.g. Freelance Work"
+                      className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px] pr-12"
+                      value={name}
+                      onChange={charLimit} // Using the fixed charLimit function
+                    />
+                    <span
+                      className={`absolute right-3 top-1/2 -translate-y-1/2 text-sm ${
+                        warning
+                          ? "text-red-500"
+                          : "text-gray-500 dark:text-gray-400"
+                      }`}
+                    >
+                      {remainingChars > 0 ? (
+                        <>{remainingChars} Character(s) Left</>
+                      ) : (
+                        <>0</>
+                      )}
+                    </span>
+                  </div>
+                  {warning && name.length >= maxLength && (
+                    <p className="text-red-500 text-sm mt-1">
+                      Character limit exceeded!
+                    </p>
+                  )}
+                </div>
                 <div className="mt-1">
                   <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
                     Basic Pay
