@@ -10,9 +10,11 @@ import {
   getISTDate,
   getISTDateTime,
   isSameDate,
+  nextRecurringDate,
 } from "@/utils/utilities";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -50,7 +52,7 @@ import { Incomes, Transactions } from "@/utils/schema";
 import { db } from "@/utils/dbConfig";
 import { eq } from "drizzle-orm";
 import { toast } from "sonner";
-import { parseISO, format } from "date-fns";
+import { parseISO, format, set } from "date-fns";
 import EmojiPicker from "emoji-picker-react";
 import {
   Select,
@@ -60,16 +62,24 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Calendar } from "../ui/calendar";
-import { incomeCategories } from "@/utils/data";
+import {
+  frequencyTypes,
+  incomeCategories,
+  incomeCategoriesList,
+} from "@/utils/data";
+import { ScrollArea } from "../ui/scroll-area";
+import { Switch } from "../ui/switch";
+import { Input } from "../ui/input";
+import { Badge } from "../ui/badge";
 
 function IncomeItem({ income, refreshData }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [openEmojiPicker, setopenEmojiPicker] = useState(false);
   const [frequency, setFrequency] = useState("monthly");
   const [editedName, setEditedName] = useState("");
-  const [editedCategory, setEditedCategory] = useState("salary");
   const [editedAmount, setEditedAmount] = useState("");
-  const [editedIcon, setEditedIcon] = useState();
+  const [editedCategory, setEditedCategory] = useState("salary");
+  const [editedIcon, setEditedIcon] = useState("");
   const [isRecurring, setIsRecurring] = useState(false);
   const [editedStartDate, setEditedStartDate] = useState(null);
   const [editedEndDate, setEditedEndDate] = useState(null);
@@ -94,18 +104,14 @@ function IncomeItem({ income, refreshData }) {
     setEditedAmount(income.amount);
     setEditedCategory(income.category);
     setIsRecurring(income.incomeType === "recurring");
-    setEditedStartDate(income.startDate ? parseISO(income.startDate) : null);
+    // setEditedStartDate(income.startDate ? parseISO(income.startDate) : null);
+    setEditedStartDate(income.startDate);
     setEditedEndDate(income.endDate ? parseISO(income.endDate) : null);
     setEditedIcon(income.icon);
     setIsDialogOpen(true); // Opens up the dialog when editing starts
   };
 
   const saveEditedIncome = async () => {
-    const defaultEndDate = new Date(
-      new Date().setMonth(new Date().getMonth() + 1)
-    )
-      .toISOString()
-      .split("T")[0];
     const updatedValues = {
       name: editedName,
       amount: editedAmount,
@@ -113,8 +119,12 @@ function IncomeItem({ income, refreshData }) {
       icon: editedIcon,
       incomeType: isRecurring ? "recurring" : "non-recurring",
       frequency: isRecurring ? frequency : null,
-      startDate: isRecurring ? editedStartDate : null,
-      endDate: isRecurring ? null : editedEndDate || defaultEndDate,
+      startDate: isRecurring
+        ? editedStartDate
+          ? editedStartDate
+          : getISTDate()
+        : null,
+      endDate: isRecurring ? null : editedEndDate || getISTDate(),
       status: isRecurring
         ? isSameDate(formatDate(editedStartDate), getISTDate())
           ? "current"
@@ -141,7 +151,10 @@ function IncomeItem({ income, refreshData }) {
           ? nextRecurringDate(editedStartDate, frequency)
           : null,
         status: isRecurring
-          ? isSameDate(startDate ? startDate : getISTDate(), getISTDate())
+          ? isSameDate(
+              editedStartDate ? editedStartDate : getISTDate(),
+              getISTDate()
+            )
             ? "active"
             : "upcoming"
           : "active",
@@ -330,7 +343,20 @@ function IncomeItem({ income, refreshData }) {
         </div>
       </div>
       <div className="flex items-center gap-1 justify-end">
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <Dialog
+          onOpenChange={(isOpen) => {
+            if (!isOpen) {
+              setEditedName("");
+              setEditedAmount("");
+              setEditedCategory("salary");
+              setopenEmojiPicker(false);
+              setIsRecurring(false);
+              setFrequency("monthly");
+              setEditedStartDate("");
+              setEditedEndDate("");
+            }
+          }}
+        >
           <DialogTrigger>
             <TooltipProvider>
               <Tooltip>
@@ -352,221 +378,202 @@ function IncomeItem({ income, refreshData }) {
               <div className="absolute -top-10 -left-10 w-60 h-60 bg-gradient-radial from-blue-400 via-cyan-400 to-transparent dark:from-blue-800 dark:via-cyan-800 dark:to-gray-800 opacity-25 blur-3xl animate-spin-slow"></div>
               <div className="absolute bottom-20 right-10 w-80 h-80 bg-gradient-radial from-cyan-300 via-blue-300 to-transparent dark:from-cyan-800 dark:via-blue-800 dark:to-gray-800 opacity-30 blur-[120px]"></div>
             </div>
+
+            {/* Dialog Header */}
             <DialogHeader>
               <DialogTitle className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 dark:from-blue-400 dark:via-cyan-400 dark:to-indigo-400">
-                Edit Income
+                Create New Income Source
               </DialogTitle>
               <DialogDescription className="text-sm text-gray-600 dark:text-gray-400">
-                Update the details for this income.
+                Fill in the details below to add your income source.
               </DialogDescription>
             </DialogHeader>
 
-            <div className="flex flex-col gap-6 mt-6">
+            {/* Emoji Picker Section */}
+            <div>
+              <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                Choose an Emoji
+              </h2>
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-2 border-blue-300 dark:border-blue-600 rounded-full p-4 bg-gradient-to-r from-white to-blue-50 dark:from-gray-800 dark:to-gray-700 shadow-md hover:shadow-lg hover:scale-105 transition-transform"
+                onClick={() => setopenEmojiPicker(!openEmojiPicker)}
+              >
+                {editedIcon}
+              </Button>
+
               {/* Emoji Picker */}
-              <div className="flex space-y-11">
-                <Button
-                  variant="outline"
-                  className="text-2xl sm:text-3xl p-3 sm:p-4 px-4 sm:px-5 bg-gradient-to-r from-cyan-200 via-blue-200 to-indigo-200 dark:from-blue-500 dark:via-cyan-500 dark:to-indigo-500 rounded-full text-cyan-600 dark:text-cyan-300 shadow-inner"
-                  onClick={() => setopenEmojiPicker(!openEmojiPicker)}
+              {openEmojiPicker && (
+                <div
+                  className="absolute z-20 space-y-4"
+                  style={{ minWidth: "250px" }}
                 >
-                  {editedIcon}
-                </Button>
-                <div className="absolute z-20">
                   <EmojiPicker
-                    open={openEmojiPicker}
                     onEmojiClick={(e) => {
-                      setEditedIcon(e.emoji);
+                      setEmojiIcon(e.emoji);
                       setopenEmojiPicker(false);
                     }}
                   />
                 </div>
-              </div>
-              {/* Income Name */}
-              <div>
-                <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                  Income Name
-                </h2>
-                <input
-                  type="text"
-                  value={editedName}
-                  onChange={(e) => setEditedName(e.target.value)}
-                  placeholder="Name"
-                  className="w-full p-4 border rounded-lg shadow-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200"
-                />
-              </div>
+              )}
+            </div>
 
-              {/* Amount */}
-              <div>
-                <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                  Amount
-                </h2>
-                <input
-                  type="number"
-                  value={editedAmount}
-                  onChange={(e) => setEditedAmount(e.target.value)}
-                  placeholder="Amount"
-                  className="w-full p-4 border rounded-lg shadow-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200"
-                />
-              </div>
+            {/* Input Fields */}
+            <div className="mt-1">
+              <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                Income Source Name
+              </h2>
+              <Input
+                type="text"
+                placeholder="e.g. Freelance Work"
+                className="budg-input-field focus-visible:ring-cyan-400 dark:focus-visible:ring-blue-400 focus-visible:ring-[2px]"
+                value={editedName}
+                onChange={(e) => setEditedName(e.target.value)}
+              />
+            </div>
+            <div className="mt-1">
+              <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                Monthly Amount
+              </h2>
+              <Input
+                type="number"
+                placeholder="e.g. Rs.8000"
+                className="budg-input-field focus-visible:ring-cyan-400 dark:focus-visible:ring-blue-400 focus-visible:ring-[2px]"
+                value={editedAmount}
+                onChange={(e) => setEditedAmount(e.target.value)}
+              />
+            </div>
 
-              {/* Category */}
-              <div className="mt-4">
-                <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                  Category
-                </h2>
-                <Select
-                  value={editedCategory}
-                  onValueChange={(e) => setEditedCategory(e)}
-                  // className="block w-full p-2 mb-2 border border-gray-300 rounded-full"
-                >
-                  <SelectTrigger className="w-full p-4 border rounded-lg shadow-md text-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200">
-                    <SelectValue
-                    // placeholder={category}
-                    // className="text-lg font-bold"
-                    />
-                  </SelectTrigger>
-                  <SelectContent className="w-full p-4 border rounded-lg shadow-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200">
-                    {incomeCategories.map((category, index) => (
+            {/* Categories  */}
+            <div className="mt-1">
+              <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                Category
+              </h2>
+              <Select
+                value={editedCategory.toLowerCase()}
+                onValueChange={(e) => {
+                  setEditedCategory(e);
+                  console.log(e.toLowerCase().split(" ")[0]);
+                }}
+              >
+                <SelectTrigger className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="budg-select-content mt-2">
+                  <ScrollArea className="max-h-60 overflow-auto">
+                    {incomeCategoriesList.map((category, index) => (
                       <SelectItem
                         key={index}
-                        value={category.id}
-                        className="text-lg rounded-xl bg-gradient-to-r hover:from-cyan-100 hover:to-blue-100 dark:hover:from-gray-700 dark:hover:to-gray-600"
+                        value={category.toLowerCase().split(" ")[0]}
+                        className="budg-select-item"
                       >
-                        {category.name}
+                        {category}
                       </SelectItem>
                     ))}
-                  </SelectContent>
-                </Select>
-              </div>
+                  </ScrollArea>
+                </SelectContent>
+              </Select>
+            </div>
 
-              {/* Recurring Checkbox */}
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="recurring"
-                  checked={isRecurring}
-                  onCheckedChange={(checked) => setIsRecurring(checked)}
-                />
-                <label
-                  htmlFor="recurring"
-                  className="text-gray-700 dark:text-gray-300 font-medium text-sm"
-                >
+            {/* Recurring Income Section */}
+            <div
+              className="flex items-center justify-between p-4 rounded-3xl 
+      bg-gradient-to-r from-cyan-50 via-blue-100 to-indigo-100 
+      dark:bg-gradient-to-r dark:from-[#243089] dark:via-[#3a6aa4] dark:to-[#76b2e6] 
+      border border-blue-300 dark:border-0 transition-all"
+            >
+              <div>
+                <h3 className="flex gap-2 items-center text-sm font-extrabold tracking-wide text-gray-900 dark:text-white">
                   Recurring Income
-                </label>
+                  {isRecurring && (
+                    <Badge className="border-0 bg-gradient-to-r from-green-400 to-green-600 text-white px-2 rounded-3xl text-xs dark:from-green-500 dark:to-green-700">
+                      Active
+                    </Badge>
+                  )}
+                </h3>
+                <p className="mt-2 text-xs text-gray-900 dark:text-blue-100">
+                  Enable to automatically allocate a recurring budget each
+                  cycle.
+                </p>
               </div>
 
-              {/* Conditional Fields Based on Recurrence */}
-              {isRecurring ? (
-                <div className="mt-4">
+              <Switch
+                checked={isRecurring}
+                onCheckedChange={(e) => setIsRecurring(e)}
+                className="data-[state=checked]:bg-blue-600 data-[state=unchecked]:bg-gray-400 
+        dark:data-[state=checked]:bg-white dark:data-[state=unchecked]:bg-blue-300 border-2 border-blue-400 dark:border-indigo-200"
+              />
+            </div>
+
+            {isRecurring && (
+              <div>
+                <div className="mt-1">
                   <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
                     Frequency
                   </h2>
                   <Select
-                    // defaultValue={income.frequency}
                     value={frequency}
                     onValueChange={(e) => setFrequency(e)}
-                    // className="block w-full p-2 mb-2 border border-gray-300 rounded-full"
                   >
-                    <SelectTrigger className="w-full p-4 border rounded-lg shadow-md text-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200">
-                      <SelectValue
-                        placeholder={frequency}
-                        // className="text-lg font-bold"
-                      />
+                    <SelectTrigger className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]">
+                      <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="w-full p-4 border rounded-lg shadow-md bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 text-gray-800 dark:text-gray-200 focus:ring focus:ring-blue-400 dark:focus:ring-blue-500 transition duration-200">
-                      <SelectItem
-                        value="daily"
-                        className="text-lg rounded-xl bg-gradient-to-r hover:from-cyan-100 hover:to-blue-100 dark:hover:from-gray-700 dark:hover:to-gray-600
-"
-                      >
-                        Daily
-                      </SelectItem>
-                      <SelectItem
-                        value="weekly"
-                        className="text-lg rounded-xl bg-gradient-to-r hover:from-cyan-100 hover:to-blue-100 dark:hover:from-gray-700 dark:hover:to-gray-600
-"
-                      >
-                        Weekly
-                      </SelectItem>
-                      <SelectItem
-                        value="monthly"
-                        className="text-lg rounded-xl bg-gradient-to-r hover:from-cyan-100 hover:to-blue-100 dark:hover:from-gray-700 dark:hover:to-gray-600
-"
-                      >
-                        Monthly
-                      </SelectItem>
-                      <SelectItem
-                        value="yearly"
-                        className="text-lg rounded-xl bg-gradient-to-r hover:from-cyan-100 hover:to-blue-100 dark:hover:from-gray-700 dark:hover:to-gray-600
-"
-                      >
-                        Yearly
-                      </SelectItem>
+                    <SelectContent className="budg-select-content">
+                      {frequencyTypes.map((frequency, index) => (
+                        <SelectItem
+                          key={index}
+                          value={frequency}
+                          className="budg-select-item"
+                        >
+                          {frequency.replace(/^./, (char) =>
+                            char.toUpperCase()
+                          )}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
-                  <h2 className="mt-4 text-gray-700 dark:text-gray-300 font-medium mb-2">
+                </div>
+                <div className="mt-1">
+                  <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
                     Start Date
                   </h2>
-                  <Popover modal>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="w-full justify-start text-left font-normal"
-                      >
-                        {editedStartDate ? (
-                          format(editedStartDate, "PPP")
-                        ) : (
-                          <span>Pick a start date</span>
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent align="start" className="w-auto p-0">
-                      <Calendar
-                        mode="single"
-                        selected={editedStartDate}
-                        onSelect={setEditedStartDate}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
+                  <Input
+                    required
+                    type="date"
+                    value={editedStartDate}
+                    onChange={(e) => setEditedStartDate(e.target.value)}
+                    className="budg-input-field focus-visible:ring-cyan-400 dark:focus-visible:ring-blue-400 focus-visible:ring-[2px]"
+                  />
                 </div>
-              ) : (
-                <div>
-                  <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                    End Date
-                  </h2>
-                  <Popover modal>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="w-full justify-start text-left font-normal"
-                      >
-                        {editedEndDate ? (
-                          format(editedEndDate, "PPP")
-                        ) : (
-                          <span>Pick an end date</span>
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <Calendar
-                        mode="single"
-                        selected={editedEndDate}
-                        onSelect={setEditedEndDate}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-              )}
+              </div>
+            )}
+            {!isRecurring && (
+              <div className="mt-1">
+                <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+                  End Date
+                </h2>
+                <Input
+                  type="date"
+                  value={editedEndDate}
+                  onChange={(e) => setEditedEndDate(e.target.value)}
+                  className="budg-input-field focus-visible:ring-cyan-400 dark:focus-visible:ring-blue-400 focus-visible:ring-[2px]"
+                />
+              </div>
+            )}
 
-              {/* Save Button */}
-              <button
-                onClick={saveEditedIncome}
-                className="w-full py-4 rounded-2xl bg-gradient-to-r from-teal-500 via-green-500 to-cyan-500 text-white font-bold shadow-lg hover:shadow-[0_0_30px_rgba(0,200,150,0.5)] hover:scale-105 active:scale-95 transition-transform duration-300"
-              >
-                Save Changes
-              </button>
-            </div>
+            {/* Footer Section */}
+            <DialogFooter className="mt-6">
+              <DialogClose asChild>
+                <Button
+                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 dark:from-blue-600 dark:via-cyan-500 dark:to-teal-500 text-white font-bold shadow-lg hover:shadow-[0_0_30px_rgba(0,100,255,0.5)] transition-transform transform hover:scale-105 disabled:opacity-50"
+                  onClick={() => saveEditedIncome()}
+                  disabled={!(editedName && editedAmount)}
+                >
+                  Edit Income Source
+                </Button>
+              </DialogClose>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
         <TooltipProvider>

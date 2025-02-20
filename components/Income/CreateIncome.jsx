@@ -169,6 +169,9 @@ function CreateIncomes({ refreshData }) {
 
         {/* Emoji Picker Section */}
         <div>
+          <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+            Choose an Emoji
+          </h2>
           <Button
             variant="outline"
             size="lg"
@@ -195,25 +198,25 @@ function CreateIncomes({ refreshData }) {
         </div>
 
         {/* Input Fields */}
-        <div className="mt-4">
+        <div className="mt-1">
           <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
             Income Source Name
           </h2>
           <Input
             type="text"
             placeholder="e.g. Freelance Work"
-            className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
+            className="budg-input-field focus-visible:ring-cyan-400 dark:focus-visible:ring-blue-400 focus-visible:ring-[2px]"
             onChange={(e) => setName(e.target.value)}
           />
         </div>
-        <div className="mt-6">
+        <div className="mt-1">
           <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
             Monthly Amount
           </h2>
           <Input
             type="number"
             placeholder="e.g. Rs.8000"
-            className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
+            className="budg-input-field focus-visible:ring-cyan-400 dark:focus-visible:ring-blue-400 focus-visible:ring-[2px]"
             onChange={(e) => setAmount(e.target.value)}
           />
         </div>
@@ -279,7 +282,7 @@ function CreateIncomes({ refreshData }) {
         </div>
 
         {isRecurring && (
-          <div className="mt-1">
+          <div>
             <div className="mt-1">
               <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
                 Frequency
@@ -301,7 +304,7 @@ function CreateIncomes({ refreshData }) {
                 </SelectContent>
               </Select>
             </div>
-            <div className="mt-4">
+            <div className="mt-1">
               <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
                 Start Date
               </h2>
@@ -310,13 +313,13 @@ function CreateIncomes({ refreshData }) {
                 type="date"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
+                className="budg-input-field focus-visible:ring-cyan-400 dark:focus-visible:ring-blue-400 focus-visible:ring-[2px]"
               />
             </div>
           </div>
         )}
         {!isRecurring && (
-          <div className="mt-4">
+          <div className="mt-1">
             <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
               End Date
             </h2>
@@ -324,7 +327,7 @@ function CreateIncomes({ refreshData }) {
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
+              className="budg-input-field focus-visible:ring-cyan-400 dark:focus-visible:ring-blue-400 focus-visible:ring-[2px]"
             />
           </div>
         )}
