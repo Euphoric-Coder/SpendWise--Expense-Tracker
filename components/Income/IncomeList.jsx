@@ -60,7 +60,7 @@ function IncomeList() {
         </h2>
         <div className="flex gap-3 justify-center md:justify-between">
           <Link href="/dashboard/budgets">
-            <Button className="inc-btn1">
+            <Button className="inc-btn4">
               Go to Budget Tab
             </Button>
           </Link>

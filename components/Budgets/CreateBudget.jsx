@@ -99,6 +99,7 @@ const CreateBudget = ({ refreshData }) => {
     setSelectedSubCategories("");
     setname("");
     setamount("");
+    setEmojiIcon("😀");
   };
 
   return (
@@ -111,6 +112,7 @@ const CreateBudget = ({ refreshData }) => {
         setSelectedSubCategories("");
         setname("");
         setamount("");
+        setEmojiIcon("😀");
       }}
       className="ring-0 ring-offset-0"
     >

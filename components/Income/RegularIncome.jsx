@@ -11,6 +11,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogFooter,
+  AlertDialogDescription,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { db } from "@/utils/dbConfig";
@@ -30,7 +41,15 @@ import { Switch } from "../ui/switch";
 import { Badge } from "../ui/badge";
 import { eq } from "drizzle-orm";
 import Image from "next/image";
-import { History, NotepadTextIcon, ShieldCloseIcon } from "lucide-react";
+import {
+  Eraser,
+  History,
+  NotepadTextIcon,
+  PenBox,
+  PlusCircleIcon,
+  ShieldCloseIcon,
+  Trash,
+} from "lucide-react";
 
 function addRegularIncome({ refreshData }) {
   const maxLength = 20;
@@ -275,6 +294,16 @@ function addRegularIncome({ refreshData }) {
     setRemainingChars(Math.max(0, maxLength - value.length));
   };
 
+  const clearData = () => {
+    setName("");
+    setBasicPay("");
+    setDa("");
+    setHra("");
+    setOtherAllowances("");
+    setIsNewRegime(false);
+    setRemainingChars(maxLength);
+  };
+
   return (
     <div>
       {regularIncomeData.length === 0 ? (
@@ -314,9 +343,15 @@ function addRegularIncome({ refreshData }) {
               <DialogTitle className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 dark:from-blue-400 dark:via-cyan-400 dark:to-indigo-400">
                 Add Regular Income
               </DialogTitle>
-              <DialogDescription className="text-sm text-gray-600 dark:text-gray-400">
-                Fill in the details below to add your income source.
-              </DialogDescription>
+              <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+                <DialogDescription className="text-sm text-gray-600 dark:text-gray-400">
+                  Fill in the details below to add your income source.
+                </DialogDescription>
+                <Button onClick={clearData} size="sm" className="inc-btn2">
+                  <Eraser />
+                  Clear Data
+                </Button>
+              </div>
             </DialogHeader>
 
             {/* Input Fields */}
@@ -446,19 +481,58 @@ function addRegularIncome({ refreshData }) {
               />
             </div>
 
-            {isNewRegime && (
-              <div className="mt-1">Lorem ipsum dolor sit amet.</div>
+            {/* Income Overview  */}
+            {name && basicPay && da && hra && otherAllowances && (
+              <div
+                className="flex items-center justify-between p-4 rounded-3xl 
+    bg-gradient-to-r from-cyan-50 via-blue-100 to-indigo-100 
+    dark:bg-gradient-to-r dark:from-[#243089] dark:via-[#3a6aa4] dark:to-[#76b2e6] 
+    border border-blue-300 dark:border-0 transition-all"
+              >
+                <div>
+                  <h3 className="text-sm font-extrabold tracking-wide text-blue-900 dark:text-blue-200">
+                    Income Overview
+                  </h3>
+
+                  {/* Gross Income */}
+                  <p className="mt-2 text-xs text-blue-800 dark:text-blue-300">
+                    <strong>Gross Income (Before Taxes):</strong>{" "}
+                    {formatToIndianCurrency(grossIncome)}
+                  </p>
+
+                  {/* Net Income */}
+                  <p className="mt-2 text-xs text-blue-800 dark:text-blue-300">
+                    <strong>Net Income After Taxes:</strong>{" "}
+                    {formatToIndianCurrency(netIncome)}
+                  </p>
+
+                  {/* Tax Levied */}
+                  <p className="mt-2 text-xs text-blue-800 dark:text-blue-300">
+                    <strong>Tax Levied:</strong> {formatToIndianCurrency(tax)}
+                  </p>
+                </div>
+
+                {/* Badge for Tax Status */}
+                {tax > 0 && (
+                  <Badge className="border-0 bg-gradient-to-r from-red-400 to-red-600 text-white px-2 rounded-3xl text-xs dark:from-red-500 dark:to-red-700">
+                    Taxes Applied
+                  </Badge>
+                )}
+              </div>
             )}
 
             {/* Footer Section */}
             <DialogFooter className="mt-6">
               <DialogClose asChild>
                 <Button
-                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 dark:from-blue-600 dark:via-cyan-500 dark:to-teal-500 text-white font-bold shadow-lg hover:shadow-[0_0_30px_rgba(0,100,255,0.5)] transition-transform transform hover:scale-105 disabled:opacity-50"
+                  className="inc-btn3 disabled:opacity-50 [&_svg]:size-5"
                   onClick={() => createRegularIncome()}
                   disabled={!(basicPay && da && hra && otherAllowances)}
                 >
-                  Create Income Source
+                  <span className="flex gap-2">
+                    <PlusCircleIcon />
+                    <p>Create New Budget</p>
+                  </span>
                 </Button>
               </DialogClose>
             </DialogFooter>
@@ -504,16 +578,32 @@ function addRegularIncome({ refreshData }) {
               onClick={() => setShowDetails(!showDetails)}
               className={`px-6 py-3 [&_svg]:size-6 text-sm font-bold uppercase rounded-xl transition-all focus:outline-none shadow-md ${
                 showDetails
-                  ? "bg-red-500 text-white hover:bg-red-600"
-                  : "bg-blue-600 text-white hover:bg-blue-700"
+                  ? "del1"
+                  : "inc-btn2"
               }`}
             >
               {showDetails ? <ShieldCloseIcon /> : <NotepadTextIcon />}
               {showDetails ? "Hide Details" : "View Details"}
             </Button>
-            <Dialog>
+            <Dialog
+              onOpenChange={(isOpen) => {
+                if (!isOpen) {
+                  setName("");
+                  setBasicPay("");
+                  setDa("");
+                  setHra("");
+                  setOtherAllowances("");
+                  setIsNewRegime(false);
+                  setRemainingChars(maxLength);
+                }
+              }}
+            >
               <DialogTrigger asChild>
-                <Button onClick={() => startEditing(regularIncomeData[0])}>
+                <Button
+                  onClick={() => startEditing(regularIncomeData[0])}
+                  className="inc-btn2"
+                >
+                  <PenBox />
                   Edit
                 </Button>
               </DialogTrigger>
@@ -530,9 +620,15 @@ function addRegularIncome({ refreshData }) {
                   <DialogTitle className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 dark:from-blue-400 dark:via-cyan-400 dark:to-indigo-400">
                     Add Regular Income
                   </DialogTitle>
-                  <DialogDescription className="text-sm text-gray-600 dark:text-gray-400">
-                    Fill in the details below to add your income source.
-                  </DialogDescription>
+                  <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+                    <DialogDescription className="text-sm text-gray-600 dark:text-gray-400">
+                      Fill in the details below to add your income source.
+                    </DialogDescription>
+                    <Button onClick={clearData} size="sm" className="inc-btn2">
+                      <Eraser />
+                      Clear Data
+                    </Button>
+                  </div>
                 </DialogHeader>
 
                 {/* Input Fields */}
@@ -638,7 +734,7 @@ function addRegularIncome({ refreshData }) {
                   />
                 </div>
 
-                {/* Recurring Income Section */}
+                {/* New Income Regime Section */}
                 <div
                   className="flex items-center justify-between p-4 rounded-3xl 
       bg-gradient-to-r from-cyan-50 via-blue-100 to-indigo-100 
@@ -667,17 +763,46 @@ function addRegularIncome({ refreshData }) {
                   />
                 </div>
 
-                {isNewRegime && (
-                  <div className="mt-1">Lorem ipsum dolor sit amet.</div>
+                {/* Income Overview  */}
+                {name && basicPay && da && hra && otherAllowances && (
+                  <div
+                    className="flex items-center justify-between p-4 rounded-3xl 
+    bg-gradient-to-r from-cyan-50 via-blue-100 to-indigo-100 
+    dark:bg-gradient-to-r dark:from-[#243089] dark:via-[#3a6aa4] dark:to-[#76b2e6] 
+    border border-blue-300 dark:border-0 transition-all"
+                  >
+                    <div>
+                      <h3 className="text-sm font-extrabold tracking-wide text-blue-900 dark:text-blue-200">
+                        Income Overview
+                      </h3>
+
+                      {/* Gross Income */}
+                      <p className="mt-2 text-xs text-blue-800 dark:text-blue-300">
+                        <strong>Gross Income (Before Taxes):</strong>{" "}
+                        {formatToIndianCurrency(grossIncome)}
+                      </p>
+
+                      {/* Net Income */}
+                      <p className="mt-2 text-xs text-blue-800 dark:text-blue-300">
+                        <strong>Net Income After Taxes:</strong>{" "}
+                        {formatToIndianCurrency(netIncome)}
+                      </p>
+
+                      {/* Tax Levied */}
+                      <p className="mt-2 text-xs text-blue-800 dark:text-blue-300">
+                        <strong>Tax Levied:</strong>{" "}
+                        {formatToIndianCurrency(tax)}
+                      </p>
+                    </div>
+
+                    {/* Badge for Tax Status */}
+                    {tax > 0 && (
+                      <Badge className="border-0 bg-gradient-to-r from-red-400 to-red-600 text-white px-2 rounded-3xl text-xs dark:from-red-500 dark:to-red-700">
+                        Taxes Applied
+                      </Badge>
+                    )}
+                  </div>
                 )}
-                <div>
-                  Gross Income (Before Taxes):{" "}
-                  {formatToIndianCurrency(grossIncome)}
-                  <br />
-                  Net Income After taxes: {formatToIndianCurrency(netIncome)}
-                  <br />
-                  Tax Levied: {formatToIndianCurrency(tax)}
-                </div>
 
                 {/* Footer Section */}
                 <DialogFooter className="mt-6">
@@ -696,14 +821,53 @@ function addRegularIncome({ refreshData }) {
                       }}
                       disabled={!(basicPay && da && hra && otherAllowances)}
                     >
-                      Edit Monthly Income
+                      Update Monthly Income
                     </Button>
                   </DialogClose>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
 
-            <Button onClick={deleteRegularIncome}>Delete</Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button className="del1">
+                  <Trash className="w-7 h-7" />
+                  Delete
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-br from-white via-blue-50 to-cyan-200 dark:from-gray-800 dark:via-gray-900 dark:to-blue-800 p-8 rounded-3xl shadow-[0_0_40px_rgba(0,150,255,0.3)] dark:shadow-[0_0_40px_rgba(0,75,150,0.5)] w-[95%] max-w-lg">
+                {/* Background Effects */}
+                <div className="absolute inset-0 pointer-events-none">
+                  <div className="absolute -top-10 -left-10 w-60 h-60 bg-gradient-radial from-blue-500 via-blue-400 to-transparent dark:from-blue-900 dark:via-gray-800 dark:to-transparent opacity-25 blur-3xl"></div>
+                  <div className="absolute bottom-20 right-10 w-80 h-80 bg-gradient-radial from-cyan-400 via-blue-300 to-transparent dark:from-cyan-800 dark:via-blue-900 dark:to-transparent opacity-30 blur-[120px]"></div>
+                </div>
+
+                {/* Dialog Header */}
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-cyan-500 to-blue-400 dark:from-blue-300 dark:via-cyan-400 dark:to-blue-500">
+                    Are you absolutely sure to delete?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+                    This action cannot be undone. This will permanently delete
+                    your income "{regularIncomeData[0].name}" and all of its
+                    associated data.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+
+                {/* Dialog Footer */}
+                <AlertDialogFooter className="flex gap-4 mt-6">
+                  <AlertDialogCancel className="w-full py-3 rounded-2xl border border-blue-300 bg-gradient-to-r from-white to-blue-50 text-blue-600 font-semibold shadow-sm hover:shadow-md hover:bg-blue-100 transition-transform transform hover:scale-105 active:scale-95 dark:border-blue-500 dark:bg-gradient-to-r dark:from-gray-800 dark:to-blue-900 dark:text-blue-300 dark:hover:bg-blue-800 hover:text-indigo-500 dark:hover:text-indigo-200">
+                    Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => deleteRegularIncome()}
+                    className="w-full py-3 rounded-2xl bg-gradient-to-r from-red-500 via-red-600 to-red-700 text-white font-bold shadow-lg hover:shadow-[0_0_20px_rgba(255,100,100,0.5)] hover:scale-105 active:scale-95 transition-transform transform dark:bg-gradient-to-r dark:from-red-700 dark:via-red-800 dark:to-red-900 dark:shadow-[0_0_20px_rgba(200,50,50,0.5)] dark:hover:shadow-[0_0_30px_rgba(200,50,50,0.7)]"
+                  >
+                    Continue
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
 
           {/* Collapsible Details Section */}
