@@ -47,7 +47,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import React, { useState } from "react";
-import { CalendarIcon, Edit, Repeat, Trash } from "lucide-react";
+import { Calendar1, CalendarIcon, Edit, Repeat, Trash } from "lucide-react";
 import { Incomes, Transactions } from "@/utils/schema";
 import { db } from "@/utils/dbConfig";
 import { eq } from "drizzle-orm";
@@ -62,11 +62,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Calendar } from "../ui/calendar";
-import {
-  frequencyTypes,
-  incomeCategories,
-  incomeCategoriesList,
-} from "@/utils/data";
+import { frequencyTypes, incomeCategoriesList } from "@/utils/data";
 import { ScrollArea } from "../ui/scroll-area";
 import { Switch } from "../ui/switch";
 import { Input } from "../ui/input";
@@ -84,14 +80,13 @@ function IncomeItem({ income, refreshData }) {
   const [editedStartDate, setEditedStartDate] = useState(null);
   const [editedEndDate, setEditedEndDate] = useState(null);
 
-  console.log(getISTDateTime());
   const nonrecurringProgress = calculateNonRecurringProgress(
     getISTCustomDate(income.createdAt),
     income.endDate
   );
 
   const recurringProgress = calculateRecurringProgress(
-    getISTCustomDate(income.createdAt),
+    getISTCustomDate(income.startDate),
     income.frequency
   );
 
@@ -104,8 +99,7 @@ function IncomeItem({ income, refreshData }) {
     setEditedAmount(income.amount);
     setEditedCategory(income.category);
     setIsRecurring(income.incomeType === "recurring");
-    // setEditedStartDate(income.startDate ? parseISO(income.startDate) : null);
-    setEditedStartDate(income.startDate);
+    setEditedStartDate(income.startDate ? parseISO(income.startDate) : null);
     setEditedEndDate(income.endDate ? parseISO(income.endDate) : null);
     setEditedIcon(income.icon);
     setIsDialogOpen(true); // Opens up the dialog when editing starts
@@ -538,27 +532,30 @@ function IncomeItem({ income, refreshData }) {
                   <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
                     Start Date
                   </h2>
-                  <Input
-                    required
-                    type="date"
-                    value={editedStartDate}
-                    onChange={(e) => setEditedStartDate(e.target.value)}
-                    className="budg-input-field focus-visible:ring-cyan-400 dark:focus-visible:ring-blue-400 focus-visible:ring-[2px]"
-                  />
+                  <Popover modal>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="budg-input-field justify-start"
+                      >
+                        <CalendarIcon />
+                        {editedStartDate ? (
+                          format(editedStartDate, "PPP")
+                        ) : (
+                          <span>Pick a start date</span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent align="start" className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        selected={editedStartDate}
+                        onSelect={setEditedStartDate}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
-              </div>
-            )}
-            {!isRecurring && (
-              <div className="mt-1">
-                <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                  End Date
-                </h2>
-                <Input
-                  type="date"
-                  value={editedEndDate}
-                  onChange={(e) => setEditedEndDate(e.target.value)}
-                  className="budg-input-field focus-visible:ring-cyan-400 dark:focus-visible:ring-blue-400 focus-visible:ring-[2px]"
-                />
               </div>
             )}
 

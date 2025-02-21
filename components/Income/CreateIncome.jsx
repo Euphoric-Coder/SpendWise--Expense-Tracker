@@ -45,13 +45,10 @@ function CreateIncomes({ refreshData }) {
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("salary");
-  const [isRecurring, setIsRecurring] = useState(false); // Toggle for recurring
+  const [isRecurring, setIsRecurring] = useState(false); // Toggle for recurring income
   const [frequency, setFrequency] = useState("monthly"); // Default frequency
   const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState(""); // Optional end date for non-recurring
   const { user } = useUser();
-
-  // console.log(incomeCategories.filter((item) => item.id === "salary"));
 
   /**
    * To Create New Source of Income
@@ -75,7 +72,7 @@ function CreateIncomes({ refreshData }) {
           ? startDate
           : getISTDate()
         : getISTDate(), // Default to today for non-recurring
-      endDate: !isRecurring ? endDate || addOneMonth(getISTDate()) : null,
+      endDate: !isRecurring ? addOneMonth(getISTDate()) : null,
       createdAt: getISTDateTime(),
     };
     try {
@@ -135,7 +132,6 @@ function CreateIncomes({ refreshData }) {
           setIsRecurring(false);
           setFrequency("monthly");
           setStartDate("");
-          setEndDate("");
         }
       }}
     >
@@ -316,19 +312,6 @@ function CreateIncomes({ refreshData }) {
                 className="budg-input-field focus-visible:ring-cyan-400 dark:focus-visible:ring-blue-400 focus-visible:ring-[2px]"
               />
             </div>
-          </div>
-        )}
-        {!isRecurring && (
-          <div className="mt-1">
-            <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-              End Date
-            </h2>
-            <Input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="budg-input-field focus-visible:ring-cyan-400 dark:focus-visible:ring-blue-400 focus-visible:ring-[2px]"
-            />
           </div>
         )}
 
