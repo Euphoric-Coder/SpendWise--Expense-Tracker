@@ -145,7 +145,7 @@ body {
 
 /* Delete Button CSS  */
 .del1 {
-  @apply px-4 py-2 rounded-full bg-gradient-to-r from-red-500 via-red-600 to-red-700 text-white font-bold shadow-md hover:shadow-lg hover:scale-105 transition-transform dark:from-red-700 dark:via-red-800 dark:to-red-900
+  @apply py-3 rounded-2xl bg-gradient-to-r from-red-500 via-red-600 to-red-700 text-white font-bold shadow-lg hover:shadow-[0_0_20px_rgba(255,100,100,0.5)] hover:scale-105 active:scale-95 transition-transform transform dark:bg-gradient-to-r dark:from-red-700 dark:via-red-800 dark:to-red-900 dark:shadow-[0_0_20px_rgba(200,50,50,0.5)] dark:hover:shadow-[0_0_30px_rgba(200,50,50,0.7)]
 }
 
 /* Individual Budget (Expense) Tab CSS */

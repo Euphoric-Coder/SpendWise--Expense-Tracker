@@ -56,7 +56,7 @@ function IncomeList() {
     <div className="mt-7">
       <div className="my-5 flex justify-between items-center">
         <h2 className="p-2 font-extrabold text-3xl md:text-4xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-blue-600 to-sky-500 dark:from-blue-400 dark:via-cyan-400 dark:to-teal-400">
-          My Income Category Sources
+          My Incomes
         </h2>
         <div className="flex gap-3 justify-center md:justify-between">
           <Link href="/dashboard/budgets">

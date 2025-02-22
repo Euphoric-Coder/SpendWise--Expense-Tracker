@@ -46,8 +46,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import React, { useState } from "react";
-import { Calendar1, CalendarIcon, Edit, Repeat, Trash } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import {
+  AlertCircle,
+  Calendar1,
+  CalendarIcon,
+  Edit,
+  Repeat,
+  Trash,
+} from "lucide-react";
 import { Incomes, Transactions } from "@/utils/schema";
 import { db } from "@/utils/dbConfig";
 import { eq } from "drizzle-orm";
@@ -61,6 +68,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { Calendar } from "../ui/calendar";
 import { frequencyTypes, incomeCategoriesList } from "@/utils/data";
 import { ScrollArea } from "../ui/scroll-area";
@@ -70,6 +78,7 @@ import { Badge } from "../ui/badge";
 
 function IncomeItem({ income, refreshData }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [invalidDate, setInvalidDate] = useState(false);
   const [openEmojiPicker, setopenEmojiPicker] = useState(false);
   const [frequency, setFrequency] = useState("monthly");
   const [editedName, setEditedName] = useState("");
@@ -77,8 +86,12 @@ function IncomeItem({ income, refreshData }) {
   const [editedCategory, setEditedCategory] = useState("salary");
   const [editedIcon, setEditedIcon] = useState("");
   const [isRecurring, setIsRecurring] = useState(false);
-  const [editedStartDate, setEditedStartDate] = useState(null);
+  const [editedStartDate, setEditedStartDate] = useState(getISTDate());
   const [editedEndDate, setEditedEndDate] = useState(null);
+
+  useEffect(() => {
+    setInvalidDate(pastDate(editedStartDate));
+  }, [editedStartDate]);
 
   const nonrecurringProgress = calculateNonRecurringProgress(
     getISTCustomDate(income.createdAt),
@@ -99,13 +112,18 @@ function IncomeItem({ income, refreshData }) {
     setEditedAmount(income.amount);
     setEditedCategory(income.category);
     setIsRecurring(income.incomeType === "recurring");
-    setEditedStartDate(income.startDate ? parseISO(income.startDate) : null);
+    setEditedStartDate(
+      income.startDate ? parseISO(income.startDate) : getISTDate()
+    );
     setEditedEndDate(income.endDate ? parseISO(income.endDate) : null);
     setEditedIcon(income.icon);
-    setIsDialogOpen(true); // Opens up the dialog when editing starts
   };
 
   const saveEditedIncome = async () => {
+    if (pastDate(startDate)) {
+      toast.error("Start Date cannot be in the past.");
+      return;
+    }
     const updatedValues = {
       name: editedName,
       amount: editedAmount,
@@ -118,7 +136,7 @@ function IncomeItem({ income, refreshData }) {
           ? editedStartDate
           : getISTDate()
         : null,
-      endDate: isRecurring ? null : editedEndDate || getISTDate(),
+      endDate: !isRecurring ? addOneMonth(getISTDate()) : null,
       status: isRecurring
         ? isSameDate(formatDate(editedStartDate), getISTDate())
           ? "current"
@@ -159,9 +177,6 @@ function IncomeItem({ income, refreshData }) {
 
     if (result && transactionResult) {
       toast.success(`Income "${editedName}" has been updated!`);
-      setIsDialogOpen(false); // Close the dialog
-      // setFrequency("monthly")
-
       refreshData(); // Refresh data
     }
   };
@@ -185,6 +200,10 @@ function IncomeItem({ income, refreshData }) {
     } catch (error) {
       toast.error("Failed to delete the income");
     }
+  };
+
+  const pastDate = (date) => {
+    return (date ? formatDate(date) : getISTDate()) < getISTDate();
   };
 
   return (
@@ -532,35 +551,65 @@ function IncomeItem({ income, refreshData }) {
                   <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
                     Start Date
                   </h2>
-                  <Popover modal>
-                    <PopoverTrigger asChild>
+                  <div className="flex items-center gap-2">
+                    <Popover modal>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="budg-input-field justify-start"
+                        >
+                          <CalendarIcon />
+                          {editedStartDate ? (
+                            format(editedStartDate, "PPP")
+                          ) : (
+                            <span>Pick a start date</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent align="start" className="w-auto p-0">
+                        <Calendar
+                          mode="single"
+                          selected={editedStartDate}
+                          onSelect={setEditedStartDate}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    {invalidDate && (
                       <Button
-                        variant="outline"
-                        className="budg-input-field justify-start"
+                        size={"sm"}
+                        className="del1"
+                        onClick={() => setEditedStartDate(getISTDate())}
                       >
-                        <CalendarIcon />
-                        {editedStartDate ? (
-                          format(editedStartDate, "PPP")
-                        ) : (
-                          <span>Pick a start date</span>
-                        )}
+                        Clear Date
                       </Button>
-                    </PopoverTrigger>
-                    <PopoverContent align="start" className="w-auto p-0">
-                      <Calendar
-                        mode="single"
-                        selected={editedStartDate}
-                        onSelect={setEditedStartDate}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
+                    )}
+                  </div>
                 </div>
               </div>
             )}
 
+            {/* Invalid Date Alert */}
+            {invalidDate && (
+              <Alert
+                variant="destructive"
+                className="mt-1 bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-gray-800 dark:to-gray-700 border border-blue-400 dark:border-gray-600 shadow-lg p-4 rounded-xl flex items-center transition-transform transform"
+              >
+                <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-3" />
+                <div>
+                  <AlertTitle className="text-blue-700 dark:text-blue-300 font-bold">
+                    Invalid Data
+                  </AlertTitle>
+                  <AlertDescription className="text-blue-600 dark:text-blue-400">
+                    Start Date cannot be in the past.
+                  </AlertDescription>
+                  <div className="w-full mt-2"></div>
+                </div>
+              </Alert>
+            )}
+
             {/* Footer Section */}
-            <DialogFooter className="mt-6">
+            <DialogFooter className="mt-1">
               <DialogClose asChild>
                 <Button
                   className="w-full py-4 rounded-2xl bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 dark:from-blue-600 dark:via-cyan-500 dark:to-teal-500 text-white font-bold shadow-lg hover:shadow-[0_0_30px_rgba(0,100,255,0.5)] transition-transform transform hover:scale-105 disabled:opacity-50"
@@ -606,7 +655,7 @@ function IncomeItem({ income, refreshData }) {
                   </AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() => deleteIncome()}
-                    className="w-full py-3 rounded-2xl bg-gradient-to-r from-red-500 via-red-600 to-red-700 text-white font-bold shadow-lg hover:shadow-[0_0_20px_rgba(255,100,100,0.5)] hover:scale-105 active:scale-95 transition-transform transform dark:bg-gradient-to-r dark:from-red-700 dark:via-red-800 dark:to-red-900 dark:shadow-[0_0_20px_rgba(200,50,50,0.5)] dark:hover:shadow-[0_0_30px_rgba(200,50,50,0.7)]"
+                    className="w-full del1"
                   >
                     Continue
                   </AlertDialogAction>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogClose,
@@ -13,12 +13,18 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import EmojiPicker from "emoji-picker-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,6 +35,7 @@ import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 import {
   addOneMonth,
+  formatDate,
   getISTDate,
   getISTDateTime,
   isSameDate,
@@ -37,23 +44,34 @@ import {
 import { frequencyTypes, incomeCategoriesList } from "@/utils/data";
 import { Switch } from "../ui/switch";
 import { Badge } from "../ui/badge";
+import { Calendar } from "../ui/calendar";
+import { AlertCircle, CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
 
 function CreateIncomes({ refreshData }) {
   const [emojiIcon, setEmojiIcon] = useState("😀");
   const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
-
+  const [invalidDate, setInvalidDate] = useState(false);
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("salary");
   const [isRecurring, setIsRecurring] = useState(false); // Toggle for recurring income
   const [frequency, setFrequency] = useState("monthly"); // Default frequency
-  const [startDate, setStartDate] = useState("");
+  const [startDate, setStartDate] = useState(getISTDate());
   const { user } = useUser();
+
+  useEffect(() => {
+    setInvalidDate(pastDate(startDate));
+  }, [startDate]);
 
   /**
    * To Create New Source of Income
    */
   const onCreateIncomes = async () => {
+    if (pastDate(startDate)) {
+      toast.error("Start Date cannot be in the past.");
+      return;
+    }
     const incomeData = {
       name: name,
       amount: amount,
@@ -93,7 +111,7 @@ function CreateIncomes({ refreshData }) {
             ? nextRecurringDate(startDate, frequency)
             : null,
           lastProcessed: isSameDate(
-            startDate ? startDate : getISTDate(),
+            startDate ? formatDate(startDate) : getISTDate(),
             getISTDate()
           )
             ? getISTDate()
@@ -120,6 +138,9 @@ function CreateIncomes({ refreshData }) {
     }
   };
 
+  const pastDate = (date) => {
+    return (date ? formatDate(date) : getISTDate()) < getISTDate();
+  };
 
   return (
     <Dialog
@@ -302,21 +323,85 @@ function CreateIncomes({ refreshData }) {
             </div>
             <div className="mt-1">
               <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                Start Date
+                Start Date (Optional)
               </h2>
-              <Input
-                required
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="budg-input-field focus-visible:ring-cyan-400 dark:focus-visible:ring-blue-400 focus-visible:ring-[2px]"
-              />
+              <div className="flex items-center gap-2">
+                <Popover modal>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="budg-input-field justify-start"
+                    >
+                      <CalendarIcon />
+                      {startDate ? (
+                        format(startDate, "PPP")
+                      ) : (
+                        <span>Pick a start date</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent align="start" className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={startDate}
+                      onSelect={setStartDate}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                {invalidDate && (
+                  <Button
+                    size={"sm"}
+                    className="del1"
+                    onClick={() => setStartDate(getISTDate())}
+                  >
+                    Clear Date
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         )}
 
+        {!isRecurring && (
+          <Alert
+            variant="destructive"
+            className="mt-1 bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-gray-800 dark:to-gray-700 border border-blue-400 dark:border-gray-600 shadow-lg p-4 rounded-xl flex items-center transition-transform transform"
+          >
+            <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-3" />
+            <div>
+              <AlertTitle className="text-red-700 dark:text-red-300 font-bold">
+                Non-Recurring Income Expiration
+              </AlertTitle>
+              <AlertDescription className="text-blue-600 dark:text-blue-400">
+                Please be aware that non-recurring incomes will automatically
+                expire after 1 month.
+              </AlertDescription>
+            </div>
+          </Alert>
+        )}
+
+        {/* Invalid Date Alert */}
+        {invalidDate && (
+          <Alert
+            variant="destructive"
+            className="mt-1 bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-gray-800 dark:to-gray-700 border border-blue-400 dark:border-gray-600 shadow-lg p-4 rounded-xl flex items-center transition-transform transform"
+          >
+            <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-3" />
+            <div>
+              <AlertTitle className="text-blue-700 dark:text-blue-300 font-bold">
+                Invalid Date
+              </AlertTitle>
+              <AlertDescription className="text-blue-600 dark:text-blue-400">
+                Start Date cannot be in the past.
+              </AlertDescription>
+              <div className="w-full mt-2"></div>
+            </div>
+          </Alert>
+        )}
+
         {/* Footer Section */}
-        <DialogFooter className="mt-6">
+        <DialogFooter className="mt-2">
           <DialogClose asChild>
             <Button
               className="w-full py-4 rounded-2xl bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 dark:from-blue-600 dark:via-cyan-500 dark:to-teal-500 text-white font-bold shadow-lg hover:shadow-[0_0_30px_rgba(0,100,255,0.5)] transition-transform transform hover:scale-105 disabled:opacity-50"
