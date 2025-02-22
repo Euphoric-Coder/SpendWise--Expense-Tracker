@@ -154,7 +154,8 @@ const CreateBudget = ({ refreshData }) => {
           </div>
         </DialogHeader>
         {/* Emoji Picker Section */}
-        <div className="">
+        <div>
+          <h2 className="budg-text1">Choose an Emoji</h2>
           <Button
             variant="outline"
             size="sm"
@@ -182,9 +183,7 @@ const CreateBudget = ({ refreshData }) => {
         </div>
         {/* Input Fields */}
         <div className="mt-1">
-          <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-            Budget Name
-          </h2>
+          <h2 className="budg-text1">Budget Name</h2>
           <Input
             type="text"
             placeholder="e.g. Home Decor"
@@ -194,7 +193,7 @@ const CreateBudget = ({ refreshData }) => {
           />
         </div>
         <div className="mt-1">
-          <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+          <h2 className="budg-text1">
             Budget Amount
           </h2>
           <Input
@@ -208,7 +207,7 @@ const CreateBudget = ({ refreshData }) => {
 
         {/* Categories  */}
         <div className="mt-1">
-          <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+          <h2 className="budg-text1">
             Category
           </h2>
           <Select
@@ -218,8 +217,7 @@ const CreateBudget = ({ refreshData }) => {
             }}
           >
             <SelectTrigger className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]">
-              <SelectValue
-              />
+              <SelectValue />
             </SelectTrigger>
             <SelectContent className="budg-select-content mt-2">
               <ScrollArea className="max-h-60 overflow-auto">
@@ -248,7 +246,7 @@ const CreateBudget = ({ refreshData }) => {
             <div className="flex items-center justify-between">
               {/* Title & Selected Badge */}
               <div className="flex items-center gap-2">
-                <label className="block text-sm font-medium text-gray-800 dark:text-white">
+                <label className="budg-text1">
                   Sub-Categories (
                   {new Set(expenseSubcategories[category] || []).size})
                 </label>
@@ -325,7 +323,7 @@ const CreateBudget = ({ refreshData }) => {
       border border-blue-300 dark:border-0 transition-all"
         >
           <div>
-            <h3 className="flex gap-2 items-center text-sm font-extrabold tracking-wide text-gray-900 dark:text-white">
+            <h3 className="flex gap-2 items-center budg-text1 text-sm font-extrabold tracking-wide">
               Recurring Budget
               {isRecurring && (
                 <Badge className="border-0 bg-gradient-to-r from-green-400 to-green-600 text-white px-2 rounded-3xl text-xs dark:from-green-500 dark:to-green-700">
@@ -347,7 +345,7 @@ const CreateBudget = ({ refreshData }) => {
         </div>
         {isRecurring && (
           <div className="mt-1">
-            <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
+            <h2 className="budg-text1">
               Frequency
             </h2>
             <Select value={frequency} onValueChange={(e) => setFrequency(e)}>
@@ -384,7 +382,10 @@ const CreateBudget = ({ refreshData }) => {
                 {!isRecurring && (
                   <>
                     Your budget <strong>"{name}"</strong> will expire on{" "}
-                    <strong>{format(nextRecurringDate(expiryDate, "monthly"), "PPP")}</strong>.
+                    <strong>
+                      {format(nextRecurringDate(expiryDate, "monthly"), "PPP")}
+                    </strong>
+                    .
                   </>
                 )}
                 {isRecurring && (
@@ -392,10 +393,9 @@ const CreateBudget = ({ refreshData }) => {
                     Your budget is{" "}
                     <span className="border-0 p-[2px] bg-gradient-to-r from-green-400 to-green-600 text-white px-2 rounded-3xl text-xs dark:from-green-500 dark:to-green-700">
                       Recurring
-                    </span>
-                    {" "}
-                     and will renew on a <strong>{frequency}</strong>{" "}
-                    basis. Next renewal date: <strong>{format(renewDate, "PPP")}</strong>.
+                    </span>{" "}
+                    and will renew on a <strong>{frequency}</strong> basis. Next
+                    renewal date: <strong>{format(renewDate, "PPP")}</strong>.
                   </>
                 )}
               </AlertDescription>

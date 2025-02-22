@@ -108,7 +108,7 @@ function EditBudget({ budgetInfo, refreshData }) {
 
             {/* Budget Name */}
             <div>
-              <h2 className="text-blue-700 dark:text-blue-300 font-medium mb-2">
+              <h2 className="budg-text">
                 Budget Name
               </h2>
               <Input
@@ -121,7 +121,7 @@ function EditBudget({ budgetInfo, refreshData }) {
 
             {/* Budget Amount */}
             <div>
-              <h2 className="text-blue-700 dark:text-blue-300 font-medium mb-2">
+              <h2 className="budg-text">
                 Budget Amount
               </h2>
               <Input

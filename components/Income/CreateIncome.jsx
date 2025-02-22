@@ -176,8 +176,13 @@ function CreateIncomes({ refreshData }) {
 
         {/* Dialog Header */}
         <DialogHeader>
-          <DialogTitle className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 dark:from-blue-400 dark:via-cyan-400 dark:to-indigo-400">
+          <DialogTitle className="inline-flex gap-2 items-center text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 dark:from-blue-400 dark:via-cyan-400 dark:to-indigo-400">
             Create New Income Source
+            {isRecurring && (
+              <Badge className="border-0 bg-gradient-to-r from-green-400 to-green-600 text-white px-4 rounded-3xl text-sm dark:from-green-500 dark:to-green-700">
+                Recurring Income
+              </Badge>
+            )}
           </DialogTitle>
           <DialogDescription className="text-sm text-gray-600 dark:text-gray-400">
             Fill in the details below to add your income source.
@@ -186,9 +191,7 @@ function CreateIncomes({ refreshData }) {
 
         {/* Emoji Picker Section */}
         <div>
-          <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-            Choose an Emoji
-          </h2>
+          <h2 className="budg-text1">Choose an Emoji</h2>
           <Button
             variant="outline"
             size="lg"
@@ -216,9 +219,7 @@ function CreateIncomes({ refreshData }) {
 
         {/* Input Fields */}
         <div className="mt-1">
-          <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-            Income Source Name
-          </h2>
+          <h2 className="budg-text1">Income Source Name</h2>
           <Input
             type="text"
             placeholder="e.g. Freelance Work"
@@ -227,9 +228,7 @@ function CreateIncomes({ refreshData }) {
           />
         </div>
         <div className="mt-1">
-          <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-            Monthly Amount
-          </h2>
+          <h2 className="budg-text1">Monthly Amount</h2>
           <Input
             type="number"
             placeholder="e.g. Rs.8000"
@@ -240,9 +239,7 @@ function CreateIncomes({ refreshData }) {
 
         {/* Categories  */}
         <div className="mt-1">
-          <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-            Category
-          </h2>
+          <h2 className="budg-text1">Category</h2>
           <Select
             value={category.toLowerCase()}
             onValueChange={(e) => {
@@ -277,7 +274,7 @@ function CreateIncomes({ refreshData }) {
       border border-blue-300 dark:border-0 transition-all"
         >
           <div>
-            <h3 className="flex gap-2 items-center text-sm font-extrabold tracking-wide text-gray-900 dark:text-white">
+            <h3 className="flex gap-2 items-center budg-text1 text-sm font-extrabold tracking-wide text-gray-900 dark:text-white">
               Recurring Income
               {isRecurring && (
                 <Badge className="border-0 bg-gradient-to-r from-green-400 to-green-600 text-white px-2 rounded-3xl text-xs dark:from-green-500 dark:to-green-700">
@@ -301,9 +298,7 @@ function CreateIncomes({ refreshData }) {
         {isRecurring && (
           <div>
             <div className="mt-1">
-              <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                Frequency
-              </h2>
+              <h2 className="budg-text1">Frequency</h2>
               <Select value={frequency} onValueChange={(e) => setFrequency(e)}>
                 <SelectTrigger className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]">
                   <SelectValue />
@@ -321,10 +316,8 @@ function CreateIncomes({ refreshData }) {
                 </SelectContent>
               </Select>
             </div>
-            <div className="mt-1">
-              <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                Start Date (Optional)
-              </h2>
+            <div className="mt-2">
+              <h2 className="budg-text1">Start Date (Optional)</h2>
               <div className="flex items-center gap-2">
                 <Popover modal>
                   <PopoverTrigger asChild>

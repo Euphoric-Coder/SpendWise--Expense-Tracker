@@ -92,7 +92,7 @@ function IncomeList() {
       <h2 className="mb-5 p-2 font-extrabold text-3xl md:text-4xl text-transparent bg-clip-text bg-gradient-to-tr from-cyan-600 via-blue-600 to-sky-500 dark:from-blue-400 dark:via-cyan-400 dark:to-teal-400">
         Ongoing Incomes
       </h2>
-      <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6 mb-10">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-10">
         {loading ? (
           // Show skeletons while loading
           [1, 2, 3, 4, 5].map((item, index) => (

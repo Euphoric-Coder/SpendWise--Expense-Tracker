@@ -165,7 +165,7 @@ const AddExpense = ({
 
       {/* Expense Name Input */}
       <div className="mt-6">
-        <h3 className="text-blue-700 dark:text-blue-300 font-medium mb-2">
+        <h3 className="budg-text">
           Expense Name
         </h3>
         <Input
@@ -179,7 +179,7 @@ const AddExpense = ({
 
       {/* Expense Amount Input */}
       <div className="mt-6">
-        <h3 className="text-blue-700 dark:text-blue-300 font-medium mb-2">
+        <h3 className="budg-text">
           Expense Amount
         </h3>
         <Input
@@ -193,7 +193,7 @@ const AddExpense = ({
 
       {/* Expense Description Input */}
       <div className="mt-6">
-        <h3 className="text-blue-700 dark:text-blue-300 font-medium mb-2">
+        <h3 className="budg-text">
           Expense Description (Optional)
         </h3>
         <Input
@@ -207,7 +207,7 @@ const AddExpense = ({
 
       {isRecurringBudget && (
         <div className="mt-6">
-          <h3 className="text-blue-700 dark:text-blue-300 font-medium mb-2">
+          <h3 className="budg-text">
             Due Date (Optional)
           </h3>
           <Popover modal>
