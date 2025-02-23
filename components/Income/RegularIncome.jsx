@@ -53,12 +53,13 @@ import {
   PenBox,
   PlusCircleIcon,
   ShieldCloseIcon,
+  Sparkle,
   Trash,
 } from "lucide-react";
 import { getSuggestions } from "@/utils/aiSuggest";
 
 function addRegularIncome({ refreshData }) {
-  const maxLength = 20;
+  const maxLength = 25;
   const [name, setName] = useState("");
   const [remainingChars, setRemainingChars] = useState(maxLength);
   const [warning, setWarning] = useState(false);
@@ -382,67 +383,10 @@ function addRegularIncome({ refreshData }) {
                 <Input
                   type="text"
                   placeholder="e.g. Freelance Work"
-                  className="budg-select-field focus-visible:ring-cyan-400 dark:focus-visible:ring-blue-400 focus-visible:ring-[3px] pr-12"
+                  className="budg-input-field focus-visible:ring-cyan-400 dark:focus-visible:ring-blue-400 focus-visible:ring-[3px] pr-12"
                   value={name}
                   onChange={charLimit}
                 />
-
-                <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="link"
-                      className="mt-2 text-blue-600 dark:text-blue-400"
-                    >
-                      Get AI Suggestions
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-72 p-4">
-                    <p className="text-gray-500 text-sm mb-2">
-                      Describe your income source:
-                    </p>
-                    <Input
-                      type="text"
-                      placeholder="e.g. Content Writing"
-                      value={incomeDescription}
-                      onChange={(e) => setIncomeDescription(e.target.value)}
-                      className="mb-2"
-                    />
-                    <Button
-                      onClick={fetchSuggestions}
-                      className="w-full mb-3"
-                      disabled={loading}
-                    >
-                      {loading ? "Generating..." : "Get Suggestions"}
-                    </Button>
-
-                    {suggestions.length > 0 && (
-                      <ul className="space-y-1">
-                        {suggestions.map((suggestion, index) => (
-                          <li
-                            key={index}
-                            className="flex items-center justify-between p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
-                          >
-                            <span>{suggestion}</span>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => {
-                                setName(suggestion);
-                                setRemainingChars(
-                                  maxLength - suggestion.length
-                                );
-                                setPopoverOpen(false);
-                              }}
-                            >
-                              Add
-                            </Button>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </PopoverContent>
-                </Popover>
-
                 <span
                   className={`absolute right-3 top-1/2 -translate-y-1/2 text-sm ${
                     warning
@@ -458,8 +402,69 @@ function addRegularIncome({ refreshData }) {
                   Character limit exceeded!
                 </p>
               )}
+
+              <Popover
+                open={popoverOpen}
+                onOpenChange={() => {
+                  setPopoverOpen(!popoverOpen);
+                  setIncomeDescription("");
+                  setSuggestions([]);
+                }}
+              >
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="link"
+                    className="p-0 m-0 text-blue-600 dark:text-blue-400"
+                  >
+                    Get AI Suggestions
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="p-4 w-72 rounded-3xl">
+                  <p className="text-gray-500 text-sm mb-2">
+                    Describe your income source:
+                  </p>
+                  <Input
+                    type="text"
+                    placeholder="e.g. Content Writing"
+                    value={incomeDescription}
+                    onChange={(e) => setIncomeDescription(e.target.value)}
+                    className="exp-input-field focus-visible:ring-blue-500 dark:focus-visible:ring-blue-400 focus-visible:ring-[3px] mb-3"
+                  />
+                  <Button
+                    onClick={fetchSuggestions}
+                    className="expense-btn2 w-full rounded-3xl mb-3"
+                    disabled={loading || !incomeDescription}
+                  >
+                    {loading ? "Generating..." : "Get Suggestions"}
+                  </Button>
+
+                  {suggestions.length > 0 && (
+                    <ul className="space-y-1">
+                      {suggestions.map((suggestion, index) => (
+                        <li
+                          key={index}
+                          className="flex items-center justify-between p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
+                        >
+                          <span>{suggestion}</span>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              setName(suggestion);
+                              setRemainingChars(maxLength - suggestion.length);
+                              setPopoverOpen(false);
+                            }}
+                          >
+                            Add
+                          </Button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </PopoverContent>
+              </Popover>
             </div>
-            <div className="mt-1">
+            <div className="-mt-4">
               <h2 className="budg-text1">Basic Pay</h2>
               <Input
                 type="text"
@@ -699,14 +704,12 @@ function addRegularIncome({ refreshData }) {
 
                 {/* Input Fields */}
                 <div className="mt-1">
-                  <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                    Source of Income
-                  </h2>
+                  <h2 className="budg-text1">Source of Income</h2>
                   <div className="relative">
                     <Input
                       type="text"
                       placeholder="e.g. Freelance Work"
-                      className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px] pr-12"
+                      className="budg-select-field focus-visible:ring-blue-500 dark:focus-visible:ring-blue-400 focus-visible:ring-[3px] mb-3 pr-12"
                       value={name}
                       onChange={charLimit} // Using the fixed charLimit function
                     />
@@ -729,11 +732,73 @@ function addRegularIncome({ refreshData }) {
                       Character limit exceeded!
                     </p>
                   )}
+                  <Popover
+                    open={popoverOpen}
+                    onOpenChange={() => {
+                      setPopoverOpen(!popoverOpen);
+                      setIncomeDescription("");
+                      setSuggestions([]);
+                    }}
+                  >
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="link"
+                        className="p-0 m-0 text-blue-600 dark:text-blue-400 animate-pulse transition-all duration-[2000ms]"
+                      >
+                        <Sparkle className="animate-out" />
+                        Get AI Suggestions
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="p-4 w-72 rounded-3xl">
+                      <p className="text-gray-500 text-sm mb-2">
+                        Describe your income source:
+                      </p>
+                      <Input
+                        type="text"
+                        placeholder="e.g. Content Writing"
+                        value={incomeDescription}
+                        onChange={(e) => setIncomeDescription(e.target.value)}
+                        className="exp-input-field focus-visible:ring-blue-500 dark:focus-visible:ring-blue-400 focus-visible:ring-[3px] mb-3"
+                      />
+                      <Button
+                        onClick={fetchSuggestions}
+                        className="expense-btn2 w-full rounded-3xl mb-3"
+                        disabled={loading || !incomeDescription}
+                      >
+                        {loading ? "Generating..." : "Get Suggestions"}
+                      </Button>
+
+                      {suggestions.length > 0 && (
+                        <ul className="space-y-1">
+                          {suggestions.map((suggestion, index) => (
+                            <li
+                              key={index}
+                              className="flex items-center justify-between p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
+                            >
+                              <span>{suggestion}</span>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => {
+                                  setName(suggestion);
+                                  setRemainingChars(
+                                    maxLength - suggestion.length
+                                  );
+                                  setPopoverOpen(false);
+                                }}
+                              >
+                                Add
+                              </Button>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </PopoverContent>
+                  </Popover>
                 </div>
-                <div className="mt-1">
-                  <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                    Basic Pay
-                  </h2>
+
+                <div className="-mt-4">
+                  <h2 className="budg-text1">Basic Pay</h2>
                   <Input
                     type="text"
                     placeholder="Rs. 1,50,000"
@@ -749,9 +814,7 @@ function addRegularIncome({ refreshData }) {
                   />
                 </div>
                 <div className="mt-1">
-                  <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                    Dearness Allowance (DA)
-                  </h2>
+                  <h2 className="budg-text1">Dearness Allowance (DA)</h2>
                   <Input
                     type="text"
                     placeholder="e.g. Rs.8000"
@@ -766,9 +829,7 @@ function addRegularIncome({ refreshData }) {
                   />
                 </div>
                 <div className="mt-1">
-                  <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                    House Rent Allowance (HRA)
-                  </h2>
+                  <h2 className="budg-text1">House Rent Allowance (HRA)</h2>
                   <Input
                     type="text"
                     placeholder="e.g. Rs.8000"
@@ -783,9 +844,7 @@ function addRegularIncome({ refreshData }) {
                   />
                 </div>
                 <div className="mt-1">
-                  <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                    Other Allowances
-                  </h2>
+                  <h2 className="budg-text1">Other Allowances</h2>
                   <Input
                     type="text"
                     placeholder="e.g. Rs.8000"
@@ -857,7 +916,9 @@ function addRegularIncome({ refreshData }) {
                       {/* Tax Levied */}
                       <p className="mt-2 text-xs text-blue-800 dark:text-blue-300">
                         <strong>Tax Levied:</strong>{" "}
-                        {formatToIndianCurrency(tax)}
+                        {formatToIndianCurrency(tax) === ""
+                          ? "0"
+                          : formatToIndianCurrency(tax)}
                       </p>
                     </div>
 

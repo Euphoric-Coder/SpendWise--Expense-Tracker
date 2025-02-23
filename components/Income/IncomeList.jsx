@@ -54,9 +54,9 @@ function IncomeList() {
 
   return (
     <div className="mt-7">
-      <div className="my-5 flex justify-between items-center">
-        <h2 className="p-2 font-extrabold text-3xl md:text-4xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-blue-600 to-sky-500 dark:from-blue-400 dark:via-cyan-400 dark:to-teal-400">
-          My Incomes
+      <div className="my-5 flex flex-col md:flex-row gap-4 justify-between items-center">
+        <h2 className="p-2 font-extrabold text-3xl md:text-5xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-blue-600 to-sky-500 dark:from-blue-400 dark:via-cyan-400 dark:to-teal-400">
+          My Income List
         </h2>
         <div className="flex gap-3 justify-center md:justify-between">
           <Link href="/dashboard/budgets">
@@ -144,7 +144,7 @@ function IncomeList() {
           // Show message when no data is available
           <div className="col-span-3">
             <div className="flex justify-center items-center">
-              <p className="p-2 text-3xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-blue-600 to-sky-500 animate-pulse">
+              <p className="p-2 text-3xl text-center font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-blue-600 to-sky-500 animate-pulse">
                 No Upcoming Recurring Income available...
               </p>
             </div>
