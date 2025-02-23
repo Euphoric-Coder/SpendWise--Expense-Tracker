@@ -193,9 +193,7 @@ const CreateBudget = ({ refreshData }) => {
           />
         </div>
         <div className="mt-1">
-          <h2 className="budg-text1">
-            Budget Amount
-          </h2>
+          <h2 className="budg-text1">Budget Amount</h2>
           <Input
             type="number"
             placeholder="e.g. Rs.5000"
@@ -207,13 +205,12 @@ const CreateBudget = ({ refreshData }) => {
 
         {/* Categories  */}
         <div className="mt-1">
-          <h2 className="budg-text1">
-            Category
-          </h2>
+          <h2 className="budg-text1">Category</h2>
           <Select
             value={category.toLowerCase()}
             onValueChange={(e) => {
               setCategory(e);
+              setSelectedSubCategories("");
             }}
           >
             <SelectTrigger className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]">
@@ -345,9 +342,7 @@ const CreateBudget = ({ refreshData }) => {
         </div>
         {isRecurring && (
           <div className="mt-1">
-            <h2 className="budg-text1">
-              Frequency
-            </h2>
+            <h2 className="budg-text1">Frequency</h2>
             <Select value={frequency} onValueChange={(e) => setFrequency(e)}>
               <SelectTrigger className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]">
                 <SelectValue />

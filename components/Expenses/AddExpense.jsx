@@ -30,9 +30,9 @@ const AddExpense = ({
   frequency,
 }) => {
   const { user } = useUser();
-  const [name, setname] = useState();
-  const [amount, setamount] = useState();
-  const [description, setDescription] = useState();
+  const [name, setname] = useState("");
+  const [amount, setamount] = useState("");
+  const [description, setDescription] = useState("");
   const [overBudget, setOverBudget] = useState(false);
   const [overBudgetAmount, setOverBudgetAmount] = useState(0);
   const [dueDate, setDueDate] = useState(getISTDate());

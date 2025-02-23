@@ -22,6 +22,11 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { db } from "@/utils/dbConfig";
@@ -50,6 +55,7 @@ import {
   ShieldCloseIcon,
   Trash,
 } from "lucide-react";
+import { getSuggestions } from "@/utils/aiSuggest";
 
 function addRegularIncome({ refreshData }) {
   const maxLength = 20;
@@ -67,6 +73,10 @@ function addRegularIncome({ refreshData }) {
   const [frequency, setFrequency] = useState("monthly"); // Default frequency
   const [startDate, setStartDate] = useState("");
   const [showDetails, setShowDetails] = useState(false);
+  const [incomeDescription, setIncomeDescription] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { user } = useUser();
 
   useEffect(() => {
@@ -304,6 +314,17 @@ function addRegularIncome({ refreshData }) {
     setRemainingChars(maxLength);
   };
 
+  const fetchSuggestions = async () => {
+    if (!incomeDescription.trim()) return;
+    setLoading(true);
+    const generatedSuggestions = await getSuggestions(
+      incomeDescription,
+      maxLength
+    );
+    setSuggestions(generatedSuggestions);
+    setLoading(false);
+  };
+
   return (
     <div>
       {regularIncomeData.length === 0 ? (
@@ -356,17 +377,72 @@ function addRegularIncome({ refreshData }) {
 
             {/* Input Fields */}
             <div className="mt-1">
-              <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                Source of Income
-              </h2>
+              <h2 className="budg-text1">Source of Income</h2>
               <div className="relative">
                 <Input
                   type="text"
                   placeholder="e.g. Freelance Work"
-                  className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px] pr-12"
+                  className="budg-select-field focus-visible:ring-cyan-400 dark:focus-visible:ring-blue-400 focus-visible:ring-[3px] pr-12"
                   value={name}
-                  onChange={charLimit} // Using the fixed charLimit function
+                  onChange={charLimit}
                 />
+
+                <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="link"
+                      className="mt-2 text-blue-600 dark:text-blue-400"
+                    >
+                      Get AI Suggestions
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-72 p-4">
+                    <p className="text-gray-500 text-sm mb-2">
+                      Describe your income source:
+                    </p>
+                    <Input
+                      type="text"
+                      placeholder="e.g. Content Writing"
+                      value={incomeDescription}
+                      onChange={(e) => setIncomeDescription(e.target.value)}
+                      className="mb-2"
+                    />
+                    <Button
+                      onClick={fetchSuggestions}
+                      className="w-full mb-3"
+                      disabled={loading}
+                    >
+                      {loading ? "Generating..." : "Get Suggestions"}
+                    </Button>
+
+                    {suggestions.length > 0 && (
+                      <ul className="space-y-1">
+                        {suggestions.map((suggestion, index) => (
+                          <li
+                            key={index}
+                            className="flex items-center justify-between p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
+                          >
+                            <span>{suggestion}</span>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                setName(suggestion);
+                                setRemainingChars(
+                                  maxLength - suggestion.length
+                                );
+                                setPopoverOpen(false);
+                              }}
+                            >
+                              Add
+                            </Button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </PopoverContent>
+                </Popover>
+
                 <span
                   className={`absolute right-3 top-1/2 -translate-y-1/2 text-sm ${
                     warning
@@ -384,13 +460,11 @@ function addRegularIncome({ refreshData }) {
               )}
             </div>
             <div className="mt-1">
-              <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                Basic Pay
-              </h2>
+              <h2 className="budg-text1">Basic Pay</h2>
               <Input
                 type="text"
                 placeholder="Rs. 1,50,000"
-                className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
+                className="budg-select-field focus-visible:ring-cyan-400 dark:focus-visible:ring-blue-400 focus-visible:ring-[3px]"
                 value={basicPay}
                 onChange={(e) => {
                   let inputValue = e.target.value;
@@ -401,13 +475,11 @@ function addRegularIncome({ refreshData }) {
               />
             </div>
             <div className="mt-1">
-              <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                Dearness Allowance (DA)
-              </h2>
+              <h2 className="budg-text1">Dearness Allowance (DA)</h2>
               <Input
                 type="text"
                 placeholder="e.g. Rs.8000"
-                className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
+                className="budg-select-field focus-visible:ring-cyan-400 dark:focus-visible:ring-blue-400 focus-visible:ring-[3px]"
                 value={da}
                 onChange={(e) => {
                   let inputValue = e.target.value;
@@ -418,13 +490,11 @@ function addRegularIncome({ refreshData }) {
               />
             </div>
             <div className="mt-1">
-              <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                House Rent Allowance (HRA)
-              </h2>
+              <h2 className="budg-text1">House Rent Allowance (HRA)</h2>
               <Input
                 type="text"
                 placeholder="e.g. Rs.8000"
-                className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
+                className="budg-select-field focus-visible:ring-cyan-400 dark:focus-visible:ring-blue-400 focus-visible:ring-[3px]"
                 value={hra}
                 onChange={(e) => {
                   let inputValue = e.target.value;
@@ -435,13 +505,11 @@ function addRegularIncome({ refreshData }) {
               />
             </div>
             <div className="mt-1">
-              <h2 className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-                Other Allowances
-              </h2>
+              <h2 className="budg-text1">Other Allowances</h2>
               <Input
                 type="text"
                 placeholder="e.g. Rs.8000"
-                className="budg-select-field focus:ring-cyan-400 dark:focus:ring-blue-400 focus:ring-[3px]"
+                className="budg-select-field focus-visible:ring-cyan-400 dark:focus-visible:ring-blue-400 focus-visible:ring-[3px]"
                 value={otherAllowances}
                 onChange={(e) => {
                   let inputValue = e.target.value;
@@ -460,7 +528,7 @@ function addRegularIncome({ refreshData }) {
       border border-blue-300 dark:border-0 transition-all"
             >
               <div>
-                <h3 className="flex gap-2 items-center text-sm font-extrabold tracking-wide text-gray-900 dark:text-white">
+                <h3 className="flex gap-2 items-center budg-text font-extrabold tracking-wide">
                   New Income Regime
                   {isNewRegime && (
                     <Badge className="border-0 bg-gradient-to-r from-green-400 to-green-600 text-white px-2 rounded-3xl text-xs dark:from-green-500 dark:to-green-700">
@@ -468,7 +536,7 @@ function addRegularIncome({ refreshData }) {
                     </Badge>
                   )}
                 </h3>
-                <p className="mt-2 text-xs text-gray-900 dark:text-blue-100">
+                <p className="mt-2 text-xs font-bold text-gray-900 dark:text-white">
                   New regime will be effective from the start date.
                 </p>
               </div>
@@ -577,9 +645,7 @@ function addRegularIncome({ refreshData }) {
             <Button
               onClick={() => setShowDetails(!showDetails)}
               className={`px-6 py-3 [&_svg]:size-6 text-sm font-bold uppercase rounded-xl transition-all focus:outline-none shadow-md ${
-                showDetails
-                  ? "del1"
-                  : "inc-btn2"
+                showDetails ? "del1" : "inc-btn2"
               }`}
             >
               {showDetails ? <ShieldCloseIcon /> : <NotepadTextIcon />}
