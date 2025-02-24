@@ -1,4 +1,11 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+import { startCronJobs } from "./lib/cron.js";
+
+const nextConfig = {
+  reactStrictMode: true,
+};
+
+// Start cron jobs when the server starts
+startCronJobs();
 
 export default nextConfig;
