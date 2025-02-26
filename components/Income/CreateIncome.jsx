@@ -162,7 +162,7 @@ function CreateIncomes({ refreshData }) {
             +
           </h2>
           <h2 className="text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 dark:from-blue-400 dark:via-teal-400 dark:to-indigo-400">
-            Create New Income
+            Create Additional Income
           </h2>
         </div>
       </DialogTrigger>
@@ -176,13 +176,8 @@ function CreateIncomes({ refreshData }) {
 
         {/* Dialog Header */}
         <DialogHeader>
-          <DialogTitle className="inline-flex gap-2 items-center text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 dark:from-blue-400 dark:via-cyan-400 dark:to-indigo-400">
-            Create New Income Source
-            {isRecurring && (
-              <Badge className="border-0 bg-gradient-to-r from-green-400 to-green-600 text-white px-4 rounded-3xl text-sm dark:from-green-500 dark:to-green-700">
-                Recurring Income
-              </Badge>
-            )}
+          <DialogTitle className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 dark:from-blue-400 dark:via-cyan-400 dark:to-indigo-400">
+            Create Additional Income Source
           </DialogTitle>
           <DialogDescription className="text-sm text-gray-600 dark:text-gray-400">
             Fill in the details below to add your income source.

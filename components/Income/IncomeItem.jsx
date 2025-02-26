@@ -187,7 +187,6 @@ function IncomeItem({ income, refreshData }) {
       await db
         .update(Transactions)
         .set({
-          isDeleted: true,
           lastUpdated: getISTDate(),
           status: "deleted",
           deletionRemark: `Income deleted by user at ${getISTDateTime()}`,

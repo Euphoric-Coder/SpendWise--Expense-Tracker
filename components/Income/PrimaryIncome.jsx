@@ -30,7 +30,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { db } from "@/utils/dbConfig";
-import { RegularIncome, Transactions } from "@/utils/schema";
+import { PrimaryIncome, Transactions } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 import {
@@ -114,9 +114,9 @@ function addRegularIncome({ refreshData }) {
     // Check if an entry already exists for the user
     const result = await db
       .select()
-      .from(RegularIncome)
+      .from(PrimaryIncome)
       .where(
-        eq(RegularIncome.createdBy, user.primaryEmailAddress.emailAddress)
+        eq(PrimaryIncome.createdBy, user.primaryEmailAddress.emailAddress)
       );
 
     if (result.length === 0) {
@@ -133,7 +133,7 @@ function addRegularIncome({ refreshData }) {
    * To Create New Source of Income
    */
   const createRegularIncome = async () => {
-    const regularIncome = {
+    const primaryIncome = {
       name: name,
       basicPay: normalizeAmount(basicPay),
       grossIncome:
@@ -152,9 +152,9 @@ function addRegularIncome({ refreshData }) {
     };
     try {
       const result = await db
-        .insert(RegularIncome)
-        .values(regularIncome)
-        .returning({ insertedId: RegularIncome.id });
+        .insert(PrimaryIncome)
+        .values(primaryIncome)
+        .returning({ insertedId: PrimaryIncome.id });
 
       // const transaction = await db
       //   .insert(Transactions)
@@ -196,7 +196,7 @@ function addRegularIncome({ refreshData }) {
   };
 
   const updateRegularIncome = async () => {
-    const regularIncome = {
+    const primaryIncome = {
       name: name,
       basicPay: normalizeAmount(basicPay),
       grossIncome:
@@ -215,9 +215,9 @@ function addRegularIncome({ refreshData }) {
       lastUpdated: getISTDateTime(),
     };
     const result = await db
-      .update(RegularIncome)
-      .set(regularIncome)
-      .where(eq(RegularIncome.createdBy, user.primaryEmailAddress.emailAddress))
+      .update(PrimaryIncome)
+      .set(primaryIncome)
+      .where(eq(PrimaryIncome.createdBy, user.primaryEmailAddress.emailAddress))
       .returning();
 
     if (result) {
@@ -228,8 +228,8 @@ function addRegularIncome({ refreshData }) {
 
   const deleteRegularIncome = async () => {
     await db
-      .delete(RegularIncome)
-      .where(eq(RegularIncome.createdBy, user.primaryEmailAddress.emailAddress))
+      .delete(PrimaryIncome)
+      .where(eq(PrimaryIncome.createdBy, user.primaryEmailAddress.emailAddress))
       .returning();
     fetchOrCreateRegularIncome();
     toast.success("Income Source Deleted Successfully!");

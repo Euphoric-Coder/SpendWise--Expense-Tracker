@@ -14,7 +14,7 @@ export const Users = pgTable("users", {
   email: varchar("email").notNull().unique(),
 });
 
-export const RegularIncome = pgTable("regularIncome", {
+export const PrimaryIncome = pgTable("primaryIncome", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name").notNull(),
   basicPay: numeric("basicPay").notNull(),
@@ -65,7 +65,7 @@ export const Expenses = pgTable("expenses", {
 });
 
 /**
- * Planning for expense que 
+ * Planning for expense que
  * Implementation of expense que by creating a table expenseQue
  */
 
@@ -76,7 +76,7 @@ export const ExpenseQue = pgTable("expenseQue", {
   description: varchar("description"),
   budgetId: uuid("budgetId").references(() => Budgets.id),
   initiatedOn: varchar("initiatedOn"),
-})
+});
 
 export const Incomes = pgTable("incomes", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -106,6 +106,7 @@ export const Transactions = pgTable("transactions", {
   lastUpdated: varchar("lastUpdated"),
   status: varchar("status"), // 'active', 'deleted', 'expired', 'upcoming'
   deletionRemark: varchar("deletionRemark"),
+  deletedAt: varchar("deletedAt"),
   referenceId: varchar("referenceId"), //.notNull(),
   name: varchar("name").notNull(), // Transaction name
   amount: numeric("amount").notNull(),
@@ -118,6 +119,7 @@ export const Settings = pgTable("settings", {
   createdBy: varchar("createdBy").notNull().unique(),
   showcsvimport: boolean("showcsvimport").notNull().default(true), // True or False
   showrecieptimport: boolean("showrecieptimport").notNull().default(true),
+  primaryIncomeAddDate: varchar("primaryIncomeAddDate").default("first"),
 });
 
 export const Notifications = pgTable("notifications", {

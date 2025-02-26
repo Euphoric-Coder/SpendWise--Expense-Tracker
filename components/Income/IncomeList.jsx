@@ -18,7 +18,8 @@ import {
 } from "@/components/ui/tooltip";
 import Link from "next/link";
 import { RefreshCcw } from "lucide-react";
-import RegularIncome from "./RegularIncome";
+import PrimaryIncome from "./PrimaryIncome";
+import { toast } from "sonner";
 
 function IncomeList() {
   const [incomelist, setIncomelist] = useState([]);
@@ -49,7 +50,7 @@ function IncomeList() {
     setIncomelist(result);
     setUpcomingItems(upcomingItems);
     setCurrentItems(currentItems);
-    console.log(currentItems.length)
+    console.log(currentItems.length);
   };
 
   return (
@@ -60,9 +61,7 @@ function IncomeList() {
         </h2>
         <div className="flex gap-3 justify-center md:justify-between">
           <Link href="/dashboard/budgets">
-            <Button className="inc-btn4">
-              Go to Budget Tab
-            </Button>
+            <Button className="inc-btn4">Go to Budget Tab</Button>
           </Link>
           <DeleteIncome
             incomeData={incomelist}
@@ -72,8 +71,11 @@ function IncomeList() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  className="rounded-full text-md bg-gradient-to-r from-cyan-400 via-blue-400 to-sky-400 dark:from-blue-600 dark:via-cyan-500 dark:to-teal-500 text-white px-6 py-3 font-semibold shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300"
-                  onClick={() => getIncomelist()}
+                  className="rounded-full text-md [&_svg]:size-5 bg-gradient-to-r from-cyan-400 via-blue-400 to-sky-400 dark:from-blue-600 dark:via-cyan-500 dark:to-teal-500 text-white px-6 py-3 font-semibold shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300"
+                  onClick={() => {
+                    toast.success("Income Details Refreshed!");
+                    getIncomelist();
+                  }}
                 >
                   <RefreshCcw />
                 </Button>
@@ -86,7 +88,7 @@ function IncomeList() {
         </div>
       </div>
       <div className="mb-7 grid grid-cols-1 xl:grid-cols-2 gap-7">
-        <RegularIncome refreshData={() => getIncomelist()} />
+        <PrimaryIncome refreshData={() => getIncomelist()} />
         <CreateIncomes refreshData={() => getIncomelist()} />
       </div>
       <h2 className="mb-5 p-2 font-extrabold text-3xl md:text-4xl text-transparent bg-clip-text bg-gradient-to-tr from-cyan-600 via-blue-600 to-sky-500 dark:from-blue-400 dark:via-cyan-400 dark:to-teal-400">
