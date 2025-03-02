@@ -618,7 +618,7 @@ function addRegularIncome({ refreshData }) {
           <div className="flex flex-col sm:flex-row justify-between items-center">
             {/* Header Section with Gradient Title */}
             <div className="flex items-center gap-4">
-              <div className="p-4 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 shadow-md">
+              <div className="p-4 rounded-full bg-gradient-to-r from-cyan-300 via-blue-300 to-indigo-300 dark:from-blue-500 dark:via-cyan-500 dark:to-indigo-500 text-cyan-600 dark:text-cyan-300 shadow-md">
                 <Image
                   src={"/salary.png"}
                   alt=""
@@ -628,7 +628,7 @@ function addRegularIncome({ refreshData }) {
                 />
               </div>
               <div>
-                <h2 className="font-extrabold text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500">
+                <h2 className="font-extrabold text-lg md:text-2xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 dark:from-blue-400 dark:via-cyan-400 dark:to-indigo-400">
                   {regularIncomeData[0].name}
                 </h2>
                 <p className="text-gray-500 dark:text-gray-400 text-sm">
@@ -672,7 +672,7 @@ function addRegularIncome({ refreshData }) {
               <DialogTrigger asChild>
                 <Button
                   onClick={() => startEditing(regularIncomeData[0])}
-                  className="inc-btn2"
+                  className="inc-btn2 [&_svg]:size-6"
                 >
                   <PenBox />
                   Edit

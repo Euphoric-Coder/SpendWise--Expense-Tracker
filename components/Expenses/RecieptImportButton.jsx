@@ -12,9 +12,9 @@ import { ScanText } from "lucide-react";
 import CsvDataTable from "./CsvDataTable";
 import RecieptUpload from "./RecieptUpload";
 import RecieptDataTable from "./RecieptDataTable";
+import { v4 as uuidv4 } from "uuid";
 
 const RecieptImportButton = () => {
-  const { v4: uuidv4 } = require("uuid");
   const [showTutorialDialog, setShowTutorialDialog] = useState(false);
   const [showUploadDialog, setShowUploadDialog] = useState(false);
   const [currentTutorialPage, setCurrentTutorialPage] = useState(0);

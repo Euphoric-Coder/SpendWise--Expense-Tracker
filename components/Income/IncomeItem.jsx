@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  addOneMonth,
   calculateNonRecurringProgress,
   calculateRecurringProgress,
   dateDifference,
@@ -52,6 +53,7 @@ import {
   Calendar1,
   CalendarIcon,
   Edit,
+  PenBox,
   Repeat,
   Trash,
 } from "lucide-react";
@@ -120,7 +122,7 @@ function IncomeItem({ income, refreshData }) {
   };
 
   const saveEditedIncome = async () => {
-    if (pastDate(startDate)) {
+    if (pastDate(editedStartDate)) {
       toast.error("Start Date cannot be in the past.");
       return;
     }
@@ -585,7 +587,7 @@ function IncomeItem({ income, refreshData }) {
                 <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-3" />
                 <div>
                   <AlertTitle className="text-blue-700 dark:text-blue-300 font-bold">
-                    Invalid Data
+                    Invalid Date
                   </AlertTitle>
                   <AlertDescription className="text-blue-600 dark:text-blue-400">
                     Start Date cannot be in the past.
@@ -599,10 +601,11 @@ function IncomeItem({ income, refreshData }) {
             <DialogFooter className="mt-1">
               <DialogClose asChild>
                 <Button
-                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 dark:from-blue-600 dark:via-cyan-500 dark:to-teal-500 text-white font-bold shadow-lg hover:shadow-[0_0_30px_rgba(0,100,255,0.5)] transition-transform transform hover:scale-105 disabled:opacity-50"
+                  className="w-full [&_svg]:size-5 py-4 rounded-2xl bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 dark:from-blue-600 dark:via-cyan-500 dark:to-teal-500 text-white font-bold shadow-lg hover:shadow-[0_0_30px_rgba(0,100,255,0.5)] transition-transform transform hover:scale-105 disabled:opacity-50"
                   onClick={() => saveEditedIncome()}
                   disabled={!(editedName && editedAmount)}
                 >
+                  <PenBox />
                   Edit Income Source
                 </Button>
               </DialogClose>

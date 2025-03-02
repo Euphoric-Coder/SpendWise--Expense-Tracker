@@ -45,7 +45,7 @@ import { frequencyTypes, incomeCategoriesList } from "@/utils/data";
 import { Switch } from "../ui/switch";
 import { Badge } from "../ui/badge";
 import { Calendar } from "../ui/calendar";
-import { AlertCircle, CalendarIcon } from "lucide-react";
+import { AlertCircle, CalendarIcon, CirclePlus } from "lucide-react";
 import { format } from "date-fns";
 
 function CreateIncomes({ refreshData }) {
@@ -392,10 +392,11 @@ function CreateIncomes({ refreshData }) {
         <DialogFooter className="mt-2">
           <DialogClose asChild>
             <Button
-              className="w-full py-4 rounded-2xl bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 dark:from-blue-600 dark:via-cyan-500 dark:to-teal-500 text-white font-bold shadow-lg hover:shadow-[0_0_30px_rgba(0,100,255,0.5)] transition-transform transform hover:scale-105 disabled:opacity-50"
+              className="w-full [&_svg]:size-5 py-4 rounded-2xl bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-500 dark:from-blue-600 dark:via-cyan-500 dark:to-teal-500 text-white font-bold shadow-lg hover:shadow-[0_0_30px_rgba(0,100,255,0.5)] transition-transform transform hover:scale-105 disabled:opacity-50"
               onClick={() => onCreateIncomes()}
               disabled={!(name && amount)}
             >
+              <CirclePlus />
               Create Income Source
             </Button>
           </DialogClose>

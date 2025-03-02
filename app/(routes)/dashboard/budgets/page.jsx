@@ -283,7 +283,7 @@ const ExpenseDashboard = () => {
                     Categories
                   </label>
                   <div className="flex flex-wrap gap-2 space-y-2">
-                    {expenseCategoriesList.slice(1).map((category) => (
+                    {expenseCategoriesList.map((category) => (
                       <button
                         key={category}
                         onClick={() => {
