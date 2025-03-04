@@ -99,6 +99,8 @@ export const Transactions = pgTable("transactions", {
   id: uuid("id").defaultRandom().primaryKey(),
   type: varchar("type").notNull(), // 'expense' or 'income'
   category: varchar("category").notNull(), // Category of either expenses or incomes
+  subCategory: varchar("subCategory"),
+  description: varchar("description"),
   isRecurring: boolean("isRecurring").notNull().default(false),
   frequency: varchar("frequency"), // 'daily', 'weekly', 'monthly', 'yearly'
   nextRecurringDate: varchar("nextRecurringDate"),

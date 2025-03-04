@@ -65,22 +65,23 @@ export const incomeCategoriesList = ["Salary",
 ];
 
 export const expenseCategoriesList = [
-  "Housing",
-  "Transportation",
-  "Groceries",
-  "Utilities",
+  "Bills/Fees",
+  "Education",
   "Entertainment",
   "Food",
-  "Shopping",
-  "Healthcare",
-  "Education",
-  "Personal Care",
-  "Travel",
-  "Insurance",
   "Gifts/Donations",
-  "Bills/Fees",
+  "Groceries",
+  "Healthcare",
+  "Housing",
+  "Insurance",
   "Other Expenses",
+  "Personal Care",
+  "Shopping",
+  "Transportation",
+  "Travel",
+  "Utilities",
 ];
+
 
 export const expenseSubcategories = {
   housing: [

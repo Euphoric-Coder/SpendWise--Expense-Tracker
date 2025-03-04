@@ -289,16 +289,16 @@ const ExpenseDashboard = () => {
         <div className="flex gap-3">
           <Dialog onOpenChange={handleDialogClose}>
             <DialogTrigger asChild>
-              <button
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+              <Button
+                className={`flex items-center gap-2 px-4 py-2 rounded-3xl transition-colors ${
                   filterCount > 0
-                    ? "bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 text-white hover:from-purple-600 hover:via-purple-700 hover:to-purple-800"
-                    : "bg-gradient-to-r from-purple-100 via-purple-200 to-purple-300 text-purple-700 hover:from-purple-200 hover:via-purple-300 hover:to-purple-400"
+                    ? "bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 text-white hover:from-purple-600 hover:via-purple-700 hover:to-purple-800 dark:from-violet-700 dark:via-violet-800 dark:to-violet-900 dark:text-white dark:hover:from-violet-800 dark:hover:via-violet-900 dark:hover:to-violet-950"
+                    : "bg-gradient-to-r from-purple-100 via-purple-200 to-purple-300 text-purple-700 hover:from-purple-200 hover:via-purple-300 hover:to-purple-400 dark:from-violet-900 dark:via-violet-950 dark:to-purple-900 dark:text-violet-300 dark:hover:from-violet-800 dark:hover:via-violet-900 dark:hover:to-purple-950"
                 }`}
               >
                 <Filter size={20} />
                 {filterCount > 0 ? `Filters (${filterCount})` : "Filter"}
-              </button>
+              </Button>
             </DialogTrigger>
             <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-br from-white via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-8 rounded-3xl shadow-[0_0_40px_rgba(0,200,255,0.3)] w-[95%] max-w-lg max-h-[80vh] md:max-h-[90vh] overflow-y-auto">
               {/* Background Effects */}
@@ -320,7 +320,7 @@ const ExpenseDashboard = () => {
               <div className="space-y-6">
                 {/* Date Range */}
                 <div>
-                  <label className="budg-text1">Date Range</label>
+                  <label className="budg-text1">Budget Creation Date Range</label>
                   <div className="mt-2">
                     <Popover>
                       <PopoverTrigger asChild>
