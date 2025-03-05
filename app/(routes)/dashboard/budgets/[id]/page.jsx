@@ -32,6 +32,7 @@ import { toast } from "sonner";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import EditBudget from "@/components/Budgets/EditBudget";
+import ExpenseQueTest from "@/components/Expenses/ExpenseQueTest";
 
 const ExpensesDashboard = () => {
   const params = useParams();
@@ -175,6 +176,18 @@ const ExpensesDashboard = () => {
           <Skeleton className="h-[145px] rounded-3xl bg-gradient-to-r from-cyan-200 via-blue-300 to-indigo-300 dark:from-gray-700 dark:via-gray-800 dark:to-gray-900 shadow-lg animate-pulse" />
         )}
         <AddExpense
+          budgetId={params.id}
+          budgetAmount={budgetInfo ? budgetInfo.amount : 0}
+          user={user}
+          isRecurringBudget={
+            budgetInfo?.budgetType === "recurring" ? true : false
+          }
+          frequency={budgetInfo?.frequency}
+          refreshData={() => getBudgetInfo()}
+        />
+        
+        {/* Working on the Expense Queing System */}
+        <ExpenseQueTest
           budgetId={params.id}
           budgetAmount={budgetInfo ? budgetInfo.amount : 0}
           user={user}

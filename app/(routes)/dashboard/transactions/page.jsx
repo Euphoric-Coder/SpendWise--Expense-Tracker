@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   Search,
   Filter,
@@ -25,87 +25,15 @@ import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
-
-const transactions = [
-  {
-    id: 1,
-    desc: "Grocery Shopping",
-    amount: 120,
-    date: "2024-03-15",
-    category: "groceries",
-    status: "completed",
-    type: "Expense",
-    recurring: false,
-    frequency: null,
-    deletionRemark: null,
-  },
-  {
-    id: 2,
-    desc: "Salary Deposit",
-    amount: 3500,
-    date: "2024-03-14",
-    category: "salary",
-    status: "completed",
-    type: "Income",
-    recurring: true,
-    frequency: "monthly",
-    deletionRemark: null,
-  },
-  {
-    id: 3,
-    desc: "Utility Bills",
-    amount: 250,
-    date: "2024-03-13",
-    category: "utilities",
-    status: "pending",
-    type: "Expense",
-    recurring: true,
-    frequency: "weekly",
-    deletionRemark: null,
-  },
-  {
-    id: 4,
-    desc: "Freelance Work",
-    amount: 800,
-    date: "2024-03-12",
-    category: "freelance",
-    status: "completed",
-    type: "Income",
-    recurring: true,
-    frequency: "monthly",
-    deletionRemark: null,
-  },
-  {
-    id: 5,
-    desc: "Restaurant",
-    amount: 85,
-    date: "2024-03-11",
-    category: "food",
-    status: "completed",
-    type: "Expense",
-    recurring: false,
-    frequency: null,
-    deletionRemark: null,
-  },
-  {
-    id: 6,
-    desc: "Transport",
-    amount: 30,
-    date: "2024-03-10",
-    category: "travel",
-    status: "completed",
-    type: "Expense",
-    recurring: false,
-    frequency: null,
-    deletionRemark: null,
-  },
-];
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 // const transactions = [];
 const categories = ["All Categories", "food", "bills", "income", "travel"];
 const statuses = ["All Statuses", "completed", "pending"];
 
 export default function Transactions() {
+  const [transactions, setTransactions] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedIndex, setExpandedIndex] = useState(null);
   const [tempFilters, setTempFilters] = useState({
@@ -118,6 +46,21 @@ export default function Transactions() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const isSearchActive = searchTerm !== ""; // Check if there is text in the search bar
+
+  useEffect(() => {
+    fetchTransactions();
+  }, []);
+
+  const fetchTransactions = async () => {
+    try {
+      const response = await fetch("/api/transactions");
+      const data = await response.json();
+      console.log(data);
+      setTransactions(data);
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+    }
+  };
 
   const filterCount = useMemo(() => {
     let count = 0;
@@ -135,9 +78,9 @@ export default function Transactions() {
       const filtersToApply = appliedFilters;
 
       const matchesSearch =
-        tx.desc.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        tx.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         tx.amount.toString().includes(searchTerm) ||
-        tx.date.includes(searchTerm);
+        tx.createdAt.includes(searchTerm);
 
       const matchesCategory =
         filtersToApply.categories.length === 0 ||
@@ -167,7 +110,7 @@ export default function Transactions() {
         matchesAmountRange
       );
     });
-  }, [searchTerm, appliedFilters]);
+  }, [searchTerm, appliedFilters, transactions]);
 
   const previewedTransactions = useMemo(() => {
     return transactions.filter((tx) => {
@@ -197,7 +140,7 @@ export default function Transactions() {
         matchesAmountRange
       );
     });
-  }, [tempFilters]);
+  }, [tempFilters, transactions]);
 
   const applyFilters = () => {
     setAppliedFilters({ ...tempFilters });
@@ -269,7 +212,7 @@ export default function Transactions() {
       ...filteredTransactions.map((tx) => [
         tx.name,
         tx.date,
-        tx.desc,
+        tx.description,
         tx.category,
         tx.amount,
         tx.frequency ? tx.frequency : "One-Time",
@@ -546,7 +489,7 @@ export default function Transactions() {
                     <span className="md:hidden table-cell">({tx.type})</span>
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
-                    {tx.desc}
+                    {tx.description}
                   </TableCell>
                   <TableCell>{format(tx.date, "PPP")}</TableCell>
 
@@ -659,6 +602,7 @@ export default function Transactions() {
 
             {/* Table Body */}
             <tbody>
+              {/* {transactions.map((tx, index) => { */}
               {displayedTransactions.map((tx, index) => {
                 const category =
                   tx.type === "Income"
@@ -672,8 +616,8 @@ export default function Transactions() {
                   >
                     {/* Name Column */}
                     <td className="py-4 px-6 font-medium text-gray-700 flex gap-2 items-center">
-                      INV001
-                      {tx.type === "Income" ? (
+                      {tx.name}
+                      {tx.type === "income" ? (
                         <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-semibold hover:bg-green-200">
                           Income
                         </span>
@@ -686,12 +630,12 @@ export default function Transactions() {
 
                     {/* Description Column */}
                     <td className="py-4 px-6 hidden md:table-cell text-gray-600">
-                      {tx.desc && tx.desc.length > 10 ? (
+                      {tx.description && tx.description.length > 10 ? (
                         <div>
                           <span>
                             {expandedIndex === index
-                              ? tx.desc
-                              : `${tx.desc.substring(0, 10)}...`}
+                              ? tx.description
+                              : `${tx.description.substring(0, 10)}...`}
                           </span>
                           <button
                             onClick={() => toggleDescription(index)}
@@ -703,38 +647,91 @@ export default function Transactions() {
                           </button>
                         </div>
                       ) : (
-                        tx.desc || "No description"
+                        tx.description || "No description"
                       )}
                     </td>
 
                     {/* Date Column */}
                     <td className="flex gap-1 items-center py-4 px-6 text-gray-600">
-                      <Calendar size={18} /> {format(tx.date, "PPP")}
+                      <Calendar size={18} />{" "}
+                      {format(tx.createdAt.split(" ")[0], "PPP")}
                     </td>
 
                     {/* Category Column */}
                     <td className="py-4 px-6">
-                      {category && (
-                        <span
-                          className="inline-flex px-3 py-1 rounded-full text-xs font-semibold items-center gap-2"
-                          style={{
-                            background: `linear-gradient(90deg, ${category.color} 0%, ${category.color} 100%)`,
-                            color: category.textColor || "white",
-                          }}
-                        >
-                          {category.icon && <category.icon size={16} />}
-                          {category.name}
-                        </span>
-                      )}
+                      {tx.category &&
+                        (() => {
+                          // Find the correct category from either expense or income list
+                          const category =
+                            tx.type === "expense"
+                              ? expenseCategories.find(
+                                  (cat) => cat.id === tx.category
+                                )
+                              : incomeCategories.find(
+                                  (cat) => cat.id === tx.category
+                                );
+
+                          if (!category) return null; // Return nothing if category not found
+
+                          return (
+                            <Badge
+                              className={cn(
+                                "inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium transition-colors duration-200",
+                                {
+                                  // **Expense Category Colors (Light Mode: Softer, Dark Mode: Deeper)**
+                                  "bg-red-200 dark:bg-red-600 text-red-900 dark:text-red-100 hover:bg-red-300 dark:hover:bg-red-500":
+                                    category.color === "#ef4444",
+                                  "bg-orange-200 dark:bg-orange-600 text-orange-900 dark:text-orange-100 hover:bg-orange-300 dark:hover:bg-orange-500":
+                                    category.color === "#f97316",
+                                  "bg-lime-200 dark:bg-lime-600 text-lime-900 dark:text-lime-100 hover:bg-lime-300 dark:hover:bg-lime-500":
+                                    category.color === "#84cc16",
+                                  "bg-cyan-200 dark:bg-cyan-600 text-cyan-900 dark:text-cyan-100 hover:bg-cyan-300 dark:hover:bg-cyan-500":
+                                    category.color === "#06b6d4",
+                                  "bg-violet-200 dark:bg-violet-600 text-violet-900 dark:text-violet-100 hover:bg-violet-300 dark:hover:bg-violet-500":
+                                    category.color === "#8b5cf6",
+                                  "bg-rose-200 dark:bg-rose-600 text-rose-900 dark:text-rose-100 hover:bg-rose-300 dark:hover:bg-rose-500":
+                                    category.color === "#f43f5e",
+                                  "bg-pink-200 dark:bg-pink-600 text-pink-900 dark:text-pink-100 hover:bg-pink-300 dark:hover:bg-pink-500":
+                                    category.color === "#ec4899",
+                                  "bg-teal-200 dark:bg-teal-600 text-teal-900 dark:text-teal-100 hover:bg-teal-300 dark:hover:bg-teal-500":
+                                    category.color === "#14b8a6",
+                                  "bg-indigo-200 dark:bg-indigo-600 text-indigo-900 dark:text-indigo-100 hover:bg-indigo-300 dark:hover:bg-indigo-500":
+                                    category.color === "#6366f1",
+                                  "bg-fuchsia-200 dark:bg-fuchsia-600 text-fuchsia-900 dark:text-fuchsia-100 hover:bg-fuchsia-300 dark:hover:bg-fuchsia-500":
+                                    category.color === "#d946ef",
+                                  "bg-sky-200 dark:bg-sky-600 text-sky-900 dark:text-sky-100 hover:bg-sky-300 dark:hover:bg-sky-500":
+                                    category.color === "#0ea5e9",
+                                  "bg-slate-200 dark:bg-slate-600 text-slate-900 dark:text-slate-100 hover:bg-slate-300 dark:hover:bg-slate-500":
+                                    category.color === "#64748b",
+
+                                  // **Income Category Colors (Light Mode: Softer, Dark Mode: Deeper)**
+                                  "bg-emerald-200 dark:bg-emerald-600 text-emerald-900 dark:text-emerald-100 hover:bg-emerald-300 dark:hover:bg-emerald-500":
+                                    category.color === "#34d399",
+                                  "bg-sky-200 dark:bg-sky-600 text-sky-900 dark:text-sky-100 hover:bg-sky-300 dark:hover:bg-sky-500":
+                                    category.color === "#38bdf8",
+                                  "bg-indigo-200 dark:bg-indigo-600 text-indigo-900 dark:text-indigo-100 hover:bg-indigo-300 dark:hover:bg-indigo-500":
+                                    category.color === "#818cf8",
+                                  "bg-pink-200 dark:bg-pink-600 text-pink-900 dark:text-pink-100 hover:bg-pink-300 dark:hover:bg-pink-500":
+                                    category.color === "#f472b6",
+                                  "bg-yellow-200 dark:bg-yellow-600 text-yellow-900 dark:text-yellow-100 hover:bg-yellow-300 dark:hover:bg-yellow-500":
+                                    category.color === "#facc15",
+                                }
+                              )}
+                            >
+                              <category.icon size={16} className="mr-1" />
+                              {category.name}
+                            </Badge>
+                          );
+                        })()}
                     </td>
 
                     {/* Amount Column */}
                     <td
                       className={`py-4 px-6 text-right font-medium ${
-                        tx.type === "Income" ? "text-green-600" : "text-red-600"
+                        tx.type === "income" ? "text-green-600" : "text-red-600"
                       } flex gap-1 items-center`}
                     >
-                      {tx.type === "Income" ? <TrendingUp /> : <TrendingDown />}
+                      {tx.type === "income" ? <TrendingUp /> : <TrendingDown />}
                       {tx.amount}
                     </td>
 
@@ -742,12 +739,12 @@ export default function Transactions() {
                     <td className="py-4 px-6">
                       <span
                         className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                          tx.recurring
+                          tx.isRecurring
                             ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
                             : "bg-cyan-100 text-cyan-700 hover:bg-cyan-200"
                         }`}
                       >
-                        {tx.recurring ? (
+                        {tx.isRecurring ? (
                           <>
                             <TimerReset size={16} />
                             {tx.frequency.toUpperCase()}

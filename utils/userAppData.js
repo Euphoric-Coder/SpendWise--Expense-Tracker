@@ -1,7 +1,7 @@
 // utils/budget.js
 import { db } from "@/utils/dbConfig";
 import { asc, desc, eq, getTableColumns, sql } from "drizzle-orm";
-import { Budgets, Expenses, Incomes } from "@/utils/schema";
+import { Budgets, Expenses, Incomes, Transactions } from "@/utils/schema";
 
 export const getBudgetInfo = async (createdBy) => {
   const budgets = await db
@@ -28,6 +28,16 @@ export const getIncomeInfo = async (createdBy) => {
     .orderBy(desc(Incomes.createdAt));
 
   return incomes;
+};
+
+export const getTransactionInfo = async (createdBy) => {
+  const transactions = await db
+    .select()
+    .from(Transactions)
+    .where(eq(Transactions.createdBy, createdBy))
+    .orderBy(desc(Transactions.createdAt));
+
+  return transactions;
 };
 
 export const getExpensesInfo = async (createdBy) => {

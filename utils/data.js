@@ -9,6 +9,16 @@ import {
   Zap,
   UtensilsCrossed,
   Plane,
+  Car,
+  Film,
+  ShoppingBag,
+  HeartPulse,
+  GraduationCap,
+  Smile,
+  Shield,
+  Gift,
+  Receipt,
+  MoreHorizontal,
 } from "lucide-react";
 
 export const incomeCategories = [
@@ -147,105 +157,105 @@ export const expenseCategories = [
     id: "housing",
     name: "Housing",
     color: "#ef4444", // red-500
-    icon: "Home",
+    icon: Home,
     subcategories: expenseSubcategories.housing,
   },
   {
     id: "transportation",
     name: "Transportation",
     color: "#f97316", // orange-500
-    icon: "Car",
+    icon: Car,
     subcategories: expenseSubcategories.transportation,
   },
   {
     id: "groceries",
     name: "Groceries",
     color: "#84cc16", // lime-500
-    icon: "ShoppingBasket",
+    icon: ShoppingBasket,
     subcategories: expenseSubcategories.groceries,
   },
   {
     id: "utilities",
     name: "Utilities",
     color: "#06b6d4", // cyan-500
-    icon: "Zap",
+    icon: Zap,
     subcategories: expenseSubcategories.utilities,
   },
   {
     id: "entertainment",
     name: "Entertainment",
     color: "#8b5cf6", // violet-500
-    icon: "Film",
+    icon: Film,
     subcategories: expenseSubcategories.entertainment,
   },
   {
     id: "food",
     name: "Food",
     color: "#f43f5e", // rose-500
-    icon: "UtensilsCrossed",
+    icon: UtensilsCrossed,
     subcategories: expenseSubcategories.food,
   },
   {
     id: "shopping",
     name: "Shopping",
     color: "#ec4899", // pink-500
-    icon: "ShoppingBag",
+    icon: ShoppingBag,
     subcategories: expenseSubcategories.shopping,
   },
   {
     id: "healthcare",
     name: "Healthcare",
     color: "#14b8a6", // teal-500
-    icon: "HeartPulse",
+    icon: HeartPulse,
     subcategories: expenseSubcategories.healthcare,
   },
   {
     id: "education",
     name: "Education",
     color: "#6366f1", // indigo-500
-    icon: "GraduationCap",
+    icon: GraduationCap,
     subcategories: expenseSubcategories.education,
   },
   {
     id: "personal",
     name: "Personal Care",
     color: "#d946ef", // fuchsia-500
-    icon: "Smile",
+    icon: Smile,
     subcategories: expenseSubcategories.personal,
   },
   {
     id: "travel",
     name: "Travel",
     color: "#0ea5e9", // sky-500
-    icon: "Plane",
+    icon: Plane,
     subcategories: expenseSubcategories.travel,
   },
   {
     id: "insurance",
     name: "Insurance",
     color: "#64748b", // slate-500
-    icon: "Shield",
+    icon: Shield,
     subcategories: expenseSubcategories.insurance,
   },
   {
     id: "gifts",
     name: "Gifts & Donations",
     color: "#f472b6", // pink-400
-    icon: "Gift",
+    icon: Gift,
     subcategories: expenseSubcategories.gifts,
   },
   {
     id: "bills",
     name: "Bills & Fees",
     color: "#fb7185", // rose-400
-    icon: "Receipt",
+    icon: Receipt,
     subcategories: expenseSubcategories.bills,
   },
   {
     id: "other-expense",
     name: "Other Expenses",
     color: "#94a3b8", // slate-400
-    icon: "MoreHorizontal",
+    icon: MoreHorizontal,
     subcategories: expenseSubcategories.other_expense,
   },
 ];

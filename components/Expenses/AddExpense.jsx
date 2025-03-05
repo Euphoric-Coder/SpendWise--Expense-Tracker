@@ -58,6 +58,8 @@ const AddExpense = ({
       .where(eq(Budgets.id, budgetId))
       .groupBy(Budgets.id);
 
+    console.log(result);
+
     return result[0].totalSpend ?? 0;
   };
 
@@ -65,6 +67,13 @@ const AddExpense = ({
     // Fetch the current total expenses
     const currentTotal = await fetchTotalExpenses();
     const newTotal = currentTotal + parseFloat(amount);
+
+    if (newTotal >= 0.9 * budgetAmount) {
+      // TODO: Send Notification & E-Mail to User 
+      toast.success("90% of your budget has been spent");
+      console.log("90% of your budget has been spent");
+      return;
+    }
 
     // Check if adding this expense will exceed the budget
     if (newTotal > budgetAmount) {
@@ -82,7 +91,7 @@ const AddExpense = ({
 
       return;
     }
-    console.log(newTotal);
+
     const result = await db
       .insert(Expenses)
       .values({
@@ -165,9 +174,7 @@ const AddExpense = ({
 
       {/* Expense Name Input */}
       <div className="mt-6">
-        <h3 className="budg-text">
-          Expense Name
-        </h3>
+        <h3 className="budg-text">Expense Name</h3>
         <Input
           type="text"
           placeholder="e.g. Home Decor"
@@ -179,9 +186,7 @@ const AddExpense = ({
 
       {/* Expense Amount Input */}
       <div className="mt-6">
-        <h3 className="budg-text">
-          Expense Amount
-        </h3>
+        <h3 className="budg-text">Expense Amount</h3>
         <Input
           type="number"
           placeholder="e.g. Rs.5000"
@@ -193,9 +198,7 @@ const AddExpense = ({
 
       {/* Expense Description Input */}
       <div className="mt-6">
-        <h3 className="budg-text">
-          Expense Description (Optional)
-        </h3>
+        <h3 className="budg-text">Expense Description (Optional)</h3>
         <Input
           type="text"
           placeholder="e.g. For decorating the living room"
@@ -207,9 +210,7 @@ const AddExpense = ({
 
       {isRecurringBudget && (
         <div className="mt-6">
-          <h3 className="budg-text">
-            Due Date (Optional)
-          </h3>
+          <h3 className="budg-text">Due Date (Optional)</h3>
           <Popover modal>
             <PopoverTrigger asChild>
               <Button
