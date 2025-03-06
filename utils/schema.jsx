@@ -72,8 +72,9 @@ export const Expenses = pgTable("expenses", {
 export const ExpenseQue = pgTable("expenseQue", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name"),
-  amount: numeric("amount"),
+  amount: varchar("amount"),
   description: varchar("description"),
+  dueDate: varchar("dueDate"),
   budgetId: uuid("budgetId").references(() => Budgets.id),
   initiatedOn: varchar("initiatedOn"),
 });

@@ -169,7 +169,7 @@ const ExpensesDashboard = () => {
         </div>
       </div>
       {/* Budget Item and Skeleton Placeholder */}
-      <div className="grid grid-cols-1 2xl:grid-cols-2 mt-8 gap-6">
+      <div className="grid grid-cols-1 2xl:grid-cols-2 mt-8 gap-6 mb-8">
         {budgetInfo ? (
           <BudgetItem budget={budgetInfo} />
         ) : (
@@ -185,9 +185,10 @@ const ExpensesDashboard = () => {
           frequency={budgetInfo?.frequency}
           refreshData={() => getBudgetInfo()}
         />
-        
+
+      </div>
         {/* Working on the Expense Queing System */}
-        <ExpenseQueTest
+        {/* <ExpenseQueTest
           budgetId={params.id}
           budgetAmount={budgetInfo ? budgetInfo.amount : 0}
           user={user}
@@ -196,8 +197,7 @@ const ExpensesDashboard = () => {
           }
           frequency={budgetInfo?.frequency}
           refreshData={() => getBudgetInfo()}
-        />
-      </div>
+        /> */}
 
       {/* Latest Expenses Section */}
       <div className="mt-12">

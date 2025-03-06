@@ -205,15 +205,17 @@ export default function Transactions() {
         "Date",
         "Description",
         "Category",
+        "Subcategory",
         "Amount",
         "Recurring",
         "Status",
       ],
       ...filteredTransactions.map((tx) => [
         tx.name,
-        tx.date,
+        tx.createdAt,
         tx.description,
         tx.category,
+        tx.subCategory,
         tx.amount,
         tx.frequency ? tx.frequency : "One-Time",
         tx.status,
@@ -586,7 +588,7 @@ export default function Transactions() {
 
           <table className="w-full border-collapse text-base rounded-3xl shadow-lg overflow-hidden">
             {/* Table Header */}
-            <thead className="bg-gradient-to-r from-blue-600 via-cyan-600 to-teal-500 text-white uppercase">
+            <thead className="bg-gradient-to-r uppercase via-cyan-600 from-blue-600 to-teal-500 dark:from-blue-400 dark:via-pink-500 dark:to-purple-600 text-white">
               <tr>
                 <th className="py-4 px-6 font-bold text-left">Name</th>
                 <th className="py-4 px-6 font-bold text-left hidden md:table-cell">
