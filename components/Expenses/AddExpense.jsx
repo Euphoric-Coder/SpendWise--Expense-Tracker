@@ -21,6 +21,7 @@ import { cn } from "@/lib/utils";
 import { formatDate, getISTDate, isSameDate } from "@/utils/utilities";
 import { format } from "date-fns";
 import RecieptImportButton from "./RecieptImportButton";
+import BudgetList from "../Budgets/BudgetList";
 
 const AddExpense = ({
   budgetId,
@@ -69,10 +70,10 @@ const AddExpense = ({
     const newTotal = currentTotal + parseFloat(amount);
 
     if (newTotal >= 0.9 * budgetAmount) {
-      // TODO: Send Notification & E-Mail to User 
+      // TODO: Send Notification & E-Mail to User
       toast.success("90% of your budget has been spent");
       console.log("90% of your budget has been spent");
-      return;
+      console.log(BudgetList);
     }
 
     // Check if adding this expense will exceed the budget

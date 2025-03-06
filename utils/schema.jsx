@@ -34,6 +34,7 @@ export const Budgets = pgTable("budgets", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name").notNull(),
   amount: numeric("amount").notNull(),
+  nintyPercent: boolean("nintyPercent").default(false),
   icon: varchar("icon"),
   category: varchar("category").notNull().default("travel"), // Category of either expenses or incomes
   subCategory: varchar("subCategory"),
@@ -62,21 +63,6 @@ export const Expenses = pgTable("expenses", {
   budgetId: uuid("budgetId").references(() => Budgets.id),
   description: varchar("description"), //.notNull(),
   createdAt: varchar("createdAt").notNull(),
-});
-
-/**
- * Planning for expense que
- * Implementation of expense que by creating a table expenseQue
- */
-
-export const ExpenseQue = pgTable("expenseQue", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  name: varchar("name"),
-  amount: varchar("amount"),
-  description: varchar("description"),
-  dueDate: varchar("dueDate"),
-  budgetId: uuid("budgetId").references(() => Budgets.id),
-  initiatedOn: varchar("initiatedOn"),
 });
 
 export const Incomes = pgTable("incomes", {

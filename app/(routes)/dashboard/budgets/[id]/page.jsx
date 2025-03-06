@@ -185,11 +185,10 @@ const ExpensesDashboard = () => {
           frequency={budgetInfo?.frequency}
           refreshData={() => getBudgetInfo()}
         />
-
       </div>
-        {/* Working on the Expense Queing System */}
-        {/* <ExpenseQueTest
-          budgetId={params.id}
+      {/* Working on the Expense Queing System */}
+      <ExpenseQueTest budgetId={params.id} />
+      {/* <ExpenseQueTest
           budgetAmount={budgetInfo ? budgetInfo.amount : 0}
           user={user}
           isRecurringBudget={
