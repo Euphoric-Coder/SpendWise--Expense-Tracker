@@ -66,6 +66,15 @@ export const Expenses = pgTable("expenses", {
   createdAt: varchar("createdAt").notNull(),
 });
 
+export const SaveForLaterExpenses = pgTable("saveForLaterExpenses", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: varchar("name").notNull(),
+  amount: numeric("amount").notNull().default(0),
+  dueDate: varchar("dueDate"),
+  description: varchar("description"),
+  createdAt: varchar("createdAt").notNull(),
+});
+
 export const Incomes = pgTable("incomes", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name").notNull(),

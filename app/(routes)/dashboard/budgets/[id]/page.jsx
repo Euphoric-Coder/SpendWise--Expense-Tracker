@@ -32,7 +32,6 @@ import { toast } from "sonner";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import EditBudget from "@/components/Budgets/EditBudget";
-import ExpenseQueTest from "@/components/Expenses/ExpenseQueTest";
 
 const ExpensesDashboard = () => {
   const params = useParams();
@@ -187,17 +186,6 @@ const ExpensesDashboard = () => {
           refreshData={() => getBudgetInfo()}
         />
       </div>
-      {/* Working on the Expense Queing System */}
-      <ExpenseQueTest budgetId={params.id} />
-      {/* <ExpenseQueTest
-          budgetAmount={budgetInfo ? budgetInfo.amount : 0}
-          user={user}
-          isRecurringBudget={
-            budgetInfo?.budgetType === "recurring" ? true : false
-          }
-          frequency={budgetInfo?.frequency}
-          refreshData={() => getBudgetInfo()}
-        /> */}
 
       {/* Latest Expenses Section */}
       <div className="mt-12">

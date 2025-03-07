@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { db } from "@/utils/dbConfig";
@@ -8,8 +8,18 @@ import { Budgets, Expenses } from "@/utils/schema";
 import { toast } from "sonner";
 import { desc, eq, getTableColumns, sql } from "drizzle-orm";
 import { useUser } from "@clerk/nextjs";
-import { AlertCircle, CalendarIcon, Eraser } from "lucide-react";
+import { AlertCircle, CalendarIcon, Eraser, XCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -31,21 +41,53 @@ const AddExpense = ({
   frequency,
 }) => {
   const { user } = useUser();
-  const [name, setname] = useState("");
-  const [amount, setamount] = useState("");
+  const [name, setName] = useState("");
+  const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const [overBudget, setOverBudget] = useState(false);
   const [overBudgetAmount, setOverBudgetAmount] = useState(0);
   const [dueDate, setDueDate] = useState(getISTDate());
+  const [pendingExpense, setPendingExpense] = useState(false);
+  const [clearPendingAlert, setClearPendingAlert] = useState(false);
   const alertTimeoutRef = useRef(null);
 
-  /**PLAN TO MAINTAIN A QUEING SYSTEM FOR EXPENSES
-   *
-   * @todo Add a Queing System for unfinished expense data
-   * @todo After Adding the expense delete it from the que
-   * @todo If remained unfinished, prompt the user to either cancel or edit it
-   *
-   */
+  // Generate a unique key for each budget's pending expense
+  const storageKey = `pendingExpense_${budgetId}`;
+
+  useEffect(() => {
+    if (!budgetId) return; // Ensure budgetId is available before fetching
+
+    const storedExpense = JSON.parse(localStorage.getItem(storageKey) || "{}");
+    if (storedExpense.name || storedExpense.amount) {
+      setName(storedExpense.name || "");
+      setAmount(storedExpense.amount || "");
+      setDescription(storedExpense.description || "");
+      setDueDate(
+        storedExpense.dueDate ? new Date(storedExpense.dueDate) : getISTDate()
+      );
+      setPendingExpense(true);
+    }
+  }, [budgetId]); // Only re-run when budgetId changes
+
+  const handleInputChange = (field, value) => {
+    const updatedExpense = {
+      name: field === "name" ? value : name,
+      amount: field === "amount" ? value : amount,
+      description: field === "description" ? value : description,
+      dueDate: field === "dueDate" ? value : dueDate,
+    };
+    localStorage.setItem(storageKey, JSON.stringify(updatedExpense));
+  };
+
+  const clearPendingExpense = () => {
+    localStorage.removeItem(storageKey);
+    setPendingExpense(false);
+    setName("");
+    setAmount("");
+    setDescription("");
+    setDueDate(getISTDate());
+  };
+
   // Function to fetch the total expenses for the specified budget
   const fetchTotalExpenses = async () => {
     const result = await db
@@ -104,8 +146,8 @@ const AddExpense = ({
       })
       .returning({ insertedId: Budgets.id });
 
-    setname("");
-    setamount("");
+    setName("");
+    setAmount("");
     setDescription("");
     setDueDate(getISTDate());
     if (result) {
@@ -115,8 +157,10 @@ const AddExpense = ({
   };
 
   const clearData = () => {
-    setname("");
-    setamount("");
+    localStorage.removeItem(storageKey);
+    setPendingExpense(false);
+    setName("");
+    setAmount("");
     setDescription("");
     setDueDate(getISTDate());
   };
@@ -142,7 +186,13 @@ const AddExpense = ({
         </h2>
         <div className="flex flex-col md:flex-row gap-3">
           <Button
-            onClick={() => clearData()}
+            onClick={() => {
+              if (pendingExpense) {
+                setClearPendingAlert(true);
+              } else {
+                clearData();
+              }
+            }}
             className="expense-btn1 rounded-full"
           >
             <Eraser /> Clear Data
@@ -153,6 +203,46 @@ const AddExpense = ({
           </div>
         </div>
       </div>
+
+      <AlertDialog open={clearPendingAlert}>
+        <AlertDialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-br from-white via-blue-50 to-cyan-200 dark:from-gray-800 dark:via-gray-900 dark:to-blue-800 p-8 rounded-3xl shadow-[0_0_40px_rgba(0,150,255,0.3)] dark:shadow-[0_0_40px_rgba(0,75,150,0.5)] w-[95%] max-w-lg">
+          {/* Background Effects */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute -top-10 -left-10 w-60 h-60 bg-gradient-radial from-blue-500 via-blue-400 to-transparent dark:from-blue-900 dark:via-gray-800 dark:to-transparent opacity-25 blur-3xl"></div>
+            <div className="absolute bottom-20 right-10 w-80 h-80 bg-gradient-radial from-cyan-400 via-blue-300 to-transparent dark:from-cyan-800 dark:via-blue-900 dark:to-transparent opacity-30 blur-[120px]"></div>
+          </div>
+
+          {/* Dialog Header */}
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-cyan-500 to-blue-400 dark:from-blue-300 dark:via-cyan-400 dark:to-blue-500">
+              Are you absolutely sure to delete?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-sm text-gray-600 dark:text-gray-300 mt-2">
+              This action cannot be undone. This will permanently delete your
+              income <strong>""</strong> and all of its associated data.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          {/* Dialog Footer */}
+          <AlertDialogFooter className="flex gap-4 mt-6">
+            <AlertDialogCancel
+              onClick={() => setClearPendingAlert(false)}
+              className="w-full py-3 rounded-2xl border border-blue-300 bg-gradient-to-r from-white to-blue-50 text-blue-600 font-semibold shadow-sm hover:shadow-md hover:bg-blue-100 transition-transform transform hover:scale-105 active:scale-95 dark:border-blue-500 dark:bg-gradient-to-r dark:from-gray-800 dark:to-blue-900 dark:text-blue-300 dark:hover:bg-blue-800 hover:text-indigo-500 dark:hover:text-indigo-200"
+            >
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                clearData();
+                setClearPendingAlert(false);
+              }}
+              className="w-full py-3 rounded-2xl bg-gradient-to-r from-red-500 via-red-600 to-red-700 text-white font-bold shadow-lg hover:shadow-[0_0_20px_rgba(255,100,100,0.5)] hover:scale-105 active:scale-95 transition-transform transform dark:bg-gradient-to-r dark:from-red-700 dark:via-red-800 dark:to-red-900 dark:shadow-[0_0_20px_rgba(200,50,50,0.5)] dark:hover:shadow-[0_0_30px_rgba(200,50,50,0.7)]"
+            >
+              Continue
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Over Budget Alert */}
       {overBudget && (
@@ -173,6 +263,34 @@ const AddExpense = ({
         </Alert>
       )}
 
+      {/* Pending Expense Alert */}
+      {pendingExpense && (
+        <Alert
+          variant="warning"
+          className="mt-6 bg-gradient-to-br from-yellow-100 to-orange-100 dark:from-gray-800 dark:to-gray-700 border border-yellow-400 dark:border-gray-600 shadow-lg p-4 rounded-xl flex items-center hover:shadow-xl transition-transform transform hover:scale-105"
+        >
+          <AlertCircle className="h-5 w-5 text-yellow-600 dark:text-yellow-400 mr-3" />
+          <div>
+            <AlertTitle className="text-yellow-700 dark:text-yellow-300 font-bold">
+              Pending Expense
+            </AlertTitle>
+            <AlertDescription className="text-yellow-600 dark:text-yellow-400">
+              You have an unfinished expense: "<b>{name}</b>". Would you like to
+              continue?
+            </AlertDescription>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="ml-auto"
+            onClick={clearPendingExpense}
+          >
+            <XCircle className="h-4 w-4 mr-1" />
+            Dismiss
+          </Button>
+        </Alert>
+      )}
+
       {/* Expense Name Input */}
       <div className="mt-6">
         <h3 className="budg-text">Expense Name</h3>
@@ -181,7 +299,10 @@ const AddExpense = ({
           placeholder="e.g. Home Decor"
           className="exp-input-field focus-visible:ring-blue-500 dark:focus-visible:ring-offset-gray-800 dark:focus-visible:ring-blue-400 focus-visible:ring-[3px]"
           value={name}
-          onChange={(e) => setname(e.target.value)}
+          onChange={(e) => {
+            setName(e.target.value);
+            handleInputChange("name", e.target.value);
+          }}
         />
       </div>
 
@@ -193,7 +314,10 @@ const AddExpense = ({
           placeholder="e.g. Rs.5000"
           className="exp-input-field focus-visible:ring-blue-500 dark:focus-visible:ring-offset-gray-800 dark:focus-visible:ring-blue-400 focus-visible:ring-[3px]"
           value={amount}
-          onChange={(e) => setamount(e.target.value)}
+          onChange={(e) => {
+            setAmount(e.target.value);
+            handleInputChange("amount", e.target.value);
+          }}
         />
       </div>
 
@@ -205,7 +329,10 @@ const AddExpense = ({
           placeholder="e.g. For decorating the living room"
           className="exp-input-field focus-visible:ring-blue-500 dark:focus-visible:ring-blue-400 focus-visible:ring-[3px]"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(e) => {
+            setDescription(e.target.value);
+            handleInputChange("description", e.target.value);
+          }}
         />
       </div>
 
@@ -228,7 +355,10 @@ const AddExpense = ({
               <Calendar
                 mode="single"
                 selected={dueDate}
-                onSelect={setDueDate}
+                onSelect={(date) => {
+                  setDueDate(date);
+                  handleInputChange("dueDate", date.toISOString());
+                }}
                 initialFocus
               />
             </PopoverContent>
