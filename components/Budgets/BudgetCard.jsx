@@ -15,8 +15,9 @@ import {
 import Link from "next/link";
 import { Info, Repeat } from "lucide-react";
 import { Badge } from "../ui/badge";
+import EditBudget from "./EditBudget";
 
-const ExpenseCard = ({ budget, onOpen }) => {
+const ExpenseCard = ({ budget, onOpen, refreshData }) => {
   const progress = Math.min(
     (budget.totalSpend / budget.amount) * 100,
     100 // Cap progress at 100%
@@ -181,9 +182,7 @@ const ExpenseCard = ({ budget, onOpen }) => {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link href={`/dashboard/budgets/${budget.id}`}>
-                  <Button className="budg-btn4">
-                    Manage Expenses
-                  </Button>
+                  <Button className="budg-btn4">Manage Expenses</Button>
                 </Link>
               </TooltipTrigger>
               <TooltipContent className="relative">
@@ -193,12 +192,10 @@ const ExpenseCard = ({ budget, onOpen }) => {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          <Button
-            onClick={onOpen}
-            className="budg-btn4"
-          >
+          <Button onClick={onOpen} className="budg-btn4">
             View Expenses
           </Button>
+          <EditBudget budgetInfo={budget} refreshData={refreshData} />
         </div>
       </div>
     </div>

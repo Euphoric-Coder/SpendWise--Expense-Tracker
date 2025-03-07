@@ -52,24 +52,30 @@ const ExpenseDashboard = () => {
   useEffect(() => {
     user && fetchBudgetsAndExpenses();
   }, [user]);
-
   const fetchBudgetsAndExpenses = async () => {
+    // Fetch budget data from the server
     const budg_response = await fetch(`/api/budgets`);
     const budgets = await budg_response.json();
 
+    // Fetch expense data from the server
     const exp_response = await fetch(`/api/expenses`);
     const expenses = await exp_response.json();
 
+    // Group expenses by budgetId
     const groupedExpenses = expenses?.reduce((acc, expense) => {
       acc[expense.budgetId] = acc[expense.budgetId] || [];
       acc[expense.budgetId].push(expense);
       return acc;
     }, {});
 
-    // console.log(groupedExpenses);
-
+    // Update state with the fetched budgets and grouped expenses
     setBudgetList(budgets);
     setExpensesByBudget(groupedExpenses);
+  };
+
+  const refreshData = () => {
+    toast.success("Budget Details Refreshed!");
+    fetchBudgetsAndExpenses();
   };
 
   const calculateStats = () => {
@@ -86,11 +92,6 @@ const ExpenseDashboard = () => {
       totalExpenses,
       remaining: totalBudgets - totalExpenses,
     };
-  };
-
-  const refreshData = () => {
-    toast.success("Budget Details Refreshed!");
-    fetchBudgetsAndExpenses();
   };
 
   const { totalBudgets, totalExpenses, remaining } = calculateStats();
@@ -670,6 +671,7 @@ const ExpenseDashboard = () => {
                   budget={budget}
                   expenses={expensesByBudget[budget.id] || []}
                   onOpen={() => setSelectedBudget(budget)} // Open dialog for selected budget
+                  refreshData={refreshData}
                 />
               </div>
             ))}

@@ -8,3 +8,12 @@ export const helloWorld = inngest.createFunction(
     return { message: `Hello ${event.data.email}!` };
   }
 );
+
+export const helloWorld1 = inngest.createFunction(
+  { id: "hello-world1" },
+  { event: "test/hello.world1" },
+  async ({ event, step }) => {
+    await step.sleep("wait-a-moment", "1s");
+    return { message: `Hello ${event.data.email}!` };
+  }
+);

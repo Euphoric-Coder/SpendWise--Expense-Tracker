@@ -115,6 +115,7 @@ const ExpensesDashboard = () => {
           <EditBudget
             budgetInfo={budgetInfo}
             refreshData={() => getBudgetInfo()}
+            isExpense
           />
 
           {/* Delete Budget Button */}

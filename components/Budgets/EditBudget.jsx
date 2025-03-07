@@ -36,7 +36,8 @@ import {
   frequencyTypes,
 } from "@/utils/data";
 import { ScrollArea } from "../ui/scroll-area";
-function EditBudget({ budgetInfo, refreshData }) {
+import { cn } from "@/lib/utils";
+function EditBudget({ budgetInfo, refreshData, isExpense = false }) {
   const [emojiIcon, setEmojiIcon] = useState(budgetInfo?.icon);
   const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
   const [name, setName] = useState();
@@ -87,7 +88,9 @@ function EditBudget({ budgetInfo, refreshData }) {
       <Dialog>
         <DialogTrigger asChild>
           <Button
-            className="expense-btn1 rounded-2xl"
+            className={`${
+              isExpense ? "expense-btn1 rounded-2xl" : "budg-btn4 rounded-3xl"
+            } `}
             onClick={() => {
               editLoader();
             }}
@@ -230,7 +233,7 @@ function EditBudget({ budgetInfo, refreshData }) {
                     (subCategory) => {
                       const lowerSubCategory = subCategory.toLowerCase();
                       const isSelected =
-                        selectedSubCategories.includes(lowerSubCategory);
+                        selectedSubCategories?.includes(lowerSubCategory);
 
                       return (
                         <Badge
