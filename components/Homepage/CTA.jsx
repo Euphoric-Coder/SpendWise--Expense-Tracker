@@ -6,7 +6,7 @@ const CTASection = () => {
   return (
     <section
       id="cta"
-      className="relative py-20 bg-gradient-to-br from-white via-white to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 flex flex-col items-center justify-center text-center px-6 md:px-12 lg:px-24 transition-colors duration-500"
+      className="relative py-20 flex flex-col items-center justify-center text-center px-6 md:px-12 lg:px-24 transition-colors duration-500"
     >
       {/* Background decorative elements */}
       <div className="absolute hidden md:block top-0 left-8 w-16 h-16 bg-gradient-to-r from-yellow-300 to-pink-300 dark:from-purple-600 dark:to-indigo-600 rounded-full shadow-lg"></div>

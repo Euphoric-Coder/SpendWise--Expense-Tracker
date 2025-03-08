@@ -152,6 +152,8 @@ const AddExpense = ({
     setDueDate(getISTDate());
     if (result) {
       refreshData();
+      localStorage.removeItem(storageKey);
+      setPendingExpense(false);
       toast.success("New Expense Added");
     }
   };

@@ -24,7 +24,10 @@ const features = [
 
 const KeyFeatures = () => {
   return (
-    <section id="key-features" className="p-16 cursor-default bg-gradient-to-b from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-black transition-colors duration-500">
+    <section
+      id="key-features"
+      className="p-20"
+    >
       <h2 className="text-3xl sm:text-4xl md:text-5xl pb-6 font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-yellow-500 to-red-500 dark:from-purple-500 dark:via-pink-500 dark:to-blue-500">
         Key Features
       </h2>
