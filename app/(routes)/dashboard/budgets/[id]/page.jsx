@@ -15,12 +15,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
 import { db } from "@/utils/dbConfig";
 import { Budgets, Expenses } from "@/utils/schema";
@@ -32,6 +26,7 @@ import { toast } from "sonner";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import EditBudget from "@/components/Budgets/EditBudget";
+import { getMonthlyStats, getUsers } from "@/utils/userAppData";
 
 const ExpensesDashboard = () => {
   const params = useParams();
@@ -48,6 +43,15 @@ const ExpensesDashboard = () => {
   const route = useRouter();
 
   const getBudgetInfo = async () => {
+    const userList = await getUsers();
+
+    const monthlyData = await getMonthlyStats(
+      user?.primaryEmailAddress?.emailAddress
+    );
+
+    console.log(userList);
+    console.log(monthlyData);
+
     const result = await db
       .select({
         ...getTableColumns(Budgets),

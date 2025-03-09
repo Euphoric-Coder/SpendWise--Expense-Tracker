@@ -221,7 +221,6 @@ export function calculateNonRecurringProgress(startDate, endDate) {
 }
 
 export function nextRecurringDate(date, frequency) {
-  console.log(date, frequency);
   if (date !== null && frequency !== null) {
     const next = new Date(date);
 
@@ -243,7 +242,7 @@ export function nextRecurringDate(date, frequency) {
         break;
 
       default:
-        console.log("error");
+        // console.log("error");
     }
 
     // Convert to IST (GMT +5:30) and format the date

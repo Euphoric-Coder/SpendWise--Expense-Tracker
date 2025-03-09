@@ -19,7 +19,7 @@ const steps = [
 
 const HowItWorks = () => {
   return (
-    <section id="how-it-works" className="py-20 p-8 cursor-default ">
+    <section id="how-it-works" className="p-20 cursor-default ">
       <div className="text-center mb-16">
         <h2 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-yellow-500 to-red-500 dark:from-purple-500 dark:via-pink-500 dark:to-blue-500">
           How It Works
