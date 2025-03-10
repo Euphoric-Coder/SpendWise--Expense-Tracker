@@ -6,13 +6,14 @@ import {
   Heading,
   Hr,
   Html,
-  Link,
+  Img,
   Preview,
   Row,
   Section,
   Tailwind,
   Text,
 } from "@react-email/components";
+import Image from "next/image";
 
 // Mock Financial Insights Function
 const FinancialInsights = (savings, debtToIncomeRatio) => {
@@ -36,45 +37,45 @@ export default function MonthlyFinanceReport({
   // debtToIncomeRatio,
   // incomeSavedPercentage,
   // expensesList,
-  month =  "February 2025",
-    totalBudgetAmount = 5000,
-    totalIncomeAmount = 4500,
-    totalExpenseAmount = 3200,
-    largestBudget = 1500,
-    highestExpense = 800,
-    savings = 1300,
-    debtToIncomeRatio = 20,
-    incomeSavedPercentage = 28.9,
-    expensesList = [
-      {
-        amount : 500,
-        category :  "Groceries",
-        budgetName :  "Household Budget",
-        description :  "Monthly grocery shopping",
-        date : "2025-02-10",
-      },
-      {
-        amount :  300,
-        category :  "Transport",
-        budgetName :  "Travel Budget",
-        description :  "Gas and public transport",
-        date :  "2025-02-15",
-      },
-      {
-        amount :  800,
-        category :  "Rent",
-        budgetName :  "Living Expenses",
-        description :  "Monthly house rent",
-        date :  "2025-02-01",
-      },
-      {
-        amount :  600,
-        category :  "Entertainment",
-        budgetName :  "Leisure Budget",
-        description :  "Streaming services and outings",
-        date :  "2025-02-20",
-      },
-    ],
+  month = "February 2025",
+  totalBudgetAmount = 5000,
+  totalIncomeAmount = 4500,
+  totalExpenseAmount = 3200,
+  largestBudget = 1500,
+  highestExpense = 800,
+  savings = 1300,
+  debtToIncomeRatio = 20,
+  incomeSavedPercentage = 28.9,
+  expensesList = [
+    {
+      amount: 500,
+      category: "Groceries",
+      budgetName: "Household Budget",
+      description: "Monthly grocery shopping",
+      date: "2025-02-10",
+    },
+    {
+      amount: 300,
+      category: "Transport",
+      budgetName: "Travel Budget",
+      description: "Gas and public transport",
+      date: "2025-02-15",
+    },
+    {
+      amount: 800,
+      category: "Rent",
+      budgetName: "Living Expenses",
+      description: "Monthly house rent",
+      date: "2025-02-01",
+    },
+    {
+      amount: 600,
+      category: "Entertainment",
+      budgetName: "Leisure Budget",
+      description: "Streaming services and outings",
+      date: "2025-02-20",
+    },
+  ],
 }) {
   return (
     <Html>
@@ -83,7 +84,12 @@ export default function MonthlyFinanceReport({
       <Tailwind>
         <Body className="bg-white font-sans">
           <Container className="mx-auto w-full max-w-[600px] p-0">
-            <Section className="p-8 text-center">
+            {/* Header with Gradient Background */}
+            <Text className="flex gap-2 items-center text-2xl justify-center text-center font-extrabold text-[#a63b00]">
+              <Img src="https://res.cloudinary.com/dltoavydo/image/upload/v1741564253/favicon_h2rmbt.png" width={"50px"} height={"50px"}/>
+              SpendWise - Expense Tracking
+            </Text>
+            <Section className="px-8 text-center">
               <Text className="mx-0 mb-8 mt-4 p-0 text-center text-2xl font-normal">
                 <span className="font-bold tracking-tighter">
                   Monthly Finance Report
@@ -96,22 +102,22 @@ export default function MonthlyFinanceReport({
                 Your Financial Overview
               </Heading>
               <Text className="mb-8 text-lg leading-8">
-                Here’s your detailed financial report for {month}, summarizing
+                Here&apos;s your detailed financial report for {month}, summarizing
                 your budgets, incomes, and expenses.
               </Text>
             </Section>
 
-            {/* Budget, Income, and Expenses Summary */}
-            <Section className="my-6 rounded-2xl bg-blue-100 p-8 text-center">
-              <Heading className="m-0 text-3xl font-medium text-blue-800">
-                Financial Summary
+            {/* Financial Summary Section */}
+            <Section className="my-6 rounded-2xl bg-[#4c51bf]/10 bg-[radial-gradient(circle_at_bottom_right,#4c51bf_0%,transparent_60%)] p-8 text-center">
+              <Heading className="text-2xl font-bold text-[#4c51bf]">
+                💰 Financial Summary
               </Heading>
               <Row className="mt-5">
                 <Column className="w-1/3 text-center">
-                  <Text className="text-sm font-medium text-blue-600">
+                  <Text className="text-sm font-medium text-[#4c51bf]">
                     Total Budget
                   </Text>
-                  <Text className="my-1 text-4xl font-bold text-gray-900">
+                  <Text className="text-4xl font-bold text-gray-900">
                     ${totalBudgetAmount}
                   </Text>
                 </Column>
@@ -119,7 +125,7 @@ export default function MonthlyFinanceReport({
                   <Text className="text-sm font-medium text-green-600">
                     Total Income
                   </Text>
-                  <Text className="my-1 text-4xl font-bold text-gray-900">
+                  <Text className="text-4xl font-bold text-gray-900">
                     ${totalIncomeAmount}
                   </Text>
                 </Column>
@@ -127,25 +133,24 @@ export default function MonthlyFinanceReport({
                   <Text className="text-sm font-medium text-red-600">
                     Total Expenses
                   </Text>
-                  <Text className="my-1 text-4xl font-bold text-gray-900">
+                  <Text className="text-4xl font-bold text-gray-900">
                     ${totalExpenseAmount}
                   </Text>
                 </Column>
               </Row>
-              <Hr className="mt-6" style={{ borderColor: "#2563EB" }} />
+              <Hr className="mt-6" style={{ borderColor: "#4c51bf" }} />
             </Section>
-
-            {/* Largest Budget & Highest Expense */}
-            <Section className="my-6 rounded-2xl bg-orange-100 p-8 text-center">
-              <Heading className="m-0 text-3xl font-medium text-orange-800">
-                Top Financial Highlights
+            {/* Largest Budget & Highest Expense Section */}
+            <Section className="my-6 rounded-2xl bg-[#f59e0b]/10 bg-[radial-gradient(circle_at_top_left,#f59e0b_0%,transparent_60%)] p-8 text-center">
+              <Heading className="text-2xl font-bold text-[#9c7b4a]">
+                🚀 Financial Highlights
               </Heading>
               <Row className="mt-5">
                 <Column className="w-1/2 text-center">
-                  <Text className="text-sm font-medium text-orange-600">
+                  <Text className="text-sm font-medium text-[#9c7b4a]">
                     Largest Budget
                   </Text>
-                  <Text className="my-1 text-4xl font-bold text-gray-900">
+                  <Text className="text-4xl font-bold text-gray-900">
                     ${largestBudget}
                   </Text>
                 </Column>
@@ -153,25 +158,24 @@ export default function MonthlyFinanceReport({
                   <Text className="text-sm font-medium text-red-600">
                     Highest Expense
                   </Text>
-                  <Text className="my-1 text-4xl font-bold text-gray-900">
+                  <Text className="text-4xl font-bold text-gray-900">
                     ${highestExpense}
                   </Text>
                 </Column>
               </Row>
-              <Hr className="mt-6" style={{ borderColor: "#EA580C" }} />
+              <Hr className="mt-6" style={{ borderColor: "#f59e0b" }} />
             </Section>
-
-            {/* Savings & Debt Analysis */}
-            <Section className="my-6 rounded-2xl bg-green-100 p-8 text-center">
-              <Heading className="m-0 text-3xl font-medium text-green-800">
-                Savings & Debt
+            {/* Savings & Debt Section */}
+            <Section className="my-6 rounded-2xl bg-[#10b981]/10 bg-[radial-gradient(circle_at_bottom_right,#10b981_0%,transparent_60%)] p-8 text-center">
+              <Heading className="text-2xl font-bold text-[#065f46]">
+                💵 Savings & Debt
               </Heading>
               <Row className="mt-5">
                 <Column className="w-1/2 text-center">
                   <Text className="text-sm font-medium text-green-600">
-                    Savings
+                    Total Savings
                   </Text>
-                  <Text className="my-1 text-4xl font-bold text-gray-900">
+                  <Text className="text-4xl font-bold text-gray-900">
                     ${savings}
                   </Text>
                 </Column>
@@ -179,28 +183,32 @@ export default function MonthlyFinanceReport({
                   <Text className="text-sm font-medium text-gray-700">
                     Income Saved
                   </Text>
-                  <Text className="my-1 text-4xl font-bold text-gray-900">
+                  <Text className="text-4xl font-bold text-gray-900">
                     {incomeSavedPercentage}%
                   </Text>
                 </Column>
               </Row>
-              <Hr className="mt-6" style={{ borderColor: "#10B981" }} />
+              <Hr className="mt-6" style={{ borderColor: "#10b981" }} />
             </Section>
-
             {/* Expense Breakdown */}
-            <Section className="my-6 rounded-2xl bg-gray-100 p-8 text-center">
-              <Heading className="m-0 text-3xl font-medium text-gray-800">
-                Expense Breakdown
+            <Section className="my-6 rounded-2xl bg-[#6b7280]/10 bg-[radial-gradient(circle_at_top_left,#6b7280_0%,transparent_60%)] p-8 text-center">
+              <Heading className="text-2xl font-bold text-gray-800">
+                📉 Expense Breakdown
               </Heading>
               {expensesList.map((expense, index) => (
-                <Row key={index} className="mt-4">
+                <Row key={index} className="mt-4 border-b border-gray-300 pb-3">
                   <Column>
-                    <Text className="text-lg font-medium text-gray-900">
+                    <Text className="text-lg font-bold text-gray-900">
                       {expense.budgetName}
                     </Text>
                     <Text className="text-sm text-gray-600">
-                      Category: {expense.category} | Amount: ${expense.amount} |{" "}
-                      {expense.date}
+                      <strong>Category:</strong> {expense.category} |{" "}
+                      <strong>Amount:</strong>
+                      <span className="font-bold text-red-600">
+                        {" "}
+                        ${expense.amount}
+                      </span>{" "}
+                      | {expense.date}
                     </Text>
                     <Text className="text-sm italic text-gray-500">
                       "{expense.description}"
@@ -209,21 +217,20 @@ export default function MonthlyFinanceReport({
                 </Row>
               ))}
             </Section>
-
-            {/* Financial Suggestions */}
-            <Section className="my-6 rounded-2xl bg-yellow-100 p-8 text-center">
-              <Heading className="m-0 text-3xl font-medium text-yellow-800">
-                Financial Insights
+            {/* Financial Insights */}
+            <Section className="my-6 rounded-2xl bg-[#eab308]/10 bg-[radial-gradient(circle_at_bottom_right,#eab308_0%,transparent_60%)] p-8 text-center">
+              <Heading className="text-2xl font-bold text-[#9c7b4a]">
+                📢 Financial Insights
               </Heading>
               <Text className="text-lg text-gray-900">
                 {FinancialInsights(savings, debtToIncomeRatio)}
               </Text>
             </Section>
-
+            {/* Footer */}
             <Section className="pb-6 text-center">
               <Text className="text-xl leading-8 text-gray-900">
-                Stay financially smart! <br />
-                See you next month!
+                Stay financially smart! 💡 <br />
+                See you next month! 🎉
               </Text>
             </Section>
           </Container>
