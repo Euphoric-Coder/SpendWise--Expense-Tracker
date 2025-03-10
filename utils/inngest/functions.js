@@ -1,4 +1,6 @@
+import MonthlyFinanceReport from "@/emails/monthlyReportTemplate";
 import { FinancialInsights } from "../aiSuggest";
+import { sendEmail } from "../sendEmail";
 import { getUsers } from "../userAppData";
 import { inngest } from "./client";
 
@@ -11,12 +13,56 @@ export const helloWorld = inngest.createFunction(
   }
 );
 
-export const helloWorld1 = inngest.createFunction(
-  { id: "hello-world1" },
-  { event: "test/hello.world1" },
-  async ({ event, step }) => {
+export const sendMonthlyReport = inngest.createFunction(
+  { id: "monthly-report" },
+  { event: "send/monthly.report" },
+  async ({ step }) => {
     await step.sleep("wait-a-moment", "1s");
-    return { message: `Hello ${event.data.email}!` };
+    return await sendEmail({
+      to: "deydsagnik@gmail.com",
+      subject: `Welcome to SpendWise Expense Tracker`,
+      react: MonthlyFinanceReport({
+        month: "February 2025",
+        totalBudgetAmount: 5000,
+        totalIncomeAmount: 4500,
+        totalExpenseAmount: 3200,
+        largestBudget: 1500,
+        highestExpense: 800,
+        savings: 1300,
+        debtToIncomeRatio: 20,
+        incomeSavedPercentage: 8.9,
+        expensesList: [
+          {
+            amount: 500,
+            category: "Groceries",
+            budgetName: "Household Budget",
+            description: "Monthly grocery shopping",
+            date: "2025-02-10",
+          },
+          {
+            amount: 300,
+            category: "Transport",
+            budgetName: "Travel Budget",
+            description: "Gas and public transport",
+            date: "2025-02-15",
+          },
+          {
+            amount: 800,
+            category: "Rent",
+            budgetName: "Living Expenses",
+            description: "Monthly house rent",
+            date: "2025-02-01",
+          },
+          {
+            amount: 600,
+            category: "Entertainment",
+            budgetName: "Leisure Budget",
+            description: "Streaming services and outings",
+            date: "2025-02-20",
+          },
+        ],
+      }),
+    });
   }
 );
 
@@ -28,7 +74,7 @@ export const generateMonthlyReports = inngest.createFunction(
   { cron: "0 0 1 * *" }, // First day of each month
   async ({ step }) => {
     const users = await step.run("fetch-users", async () => {
-  return await getUsers();
+      return await getUsers();
     });
 
     for (const user of users) {

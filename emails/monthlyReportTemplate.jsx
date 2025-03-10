@@ -27,55 +27,55 @@ const FinancialInsights = (savings, debtToIncomeRatio) => {
 };
 
 export default function MonthlyFinanceReport({
-  // month ,
-  // totalBudgetAmount,
-  // totalIncomeAmount,
-  // totalExpenseAmount,
-  // largestBudget,
-  // highestExpense,
-  // savings,
-  // debtToIncomeRatio,
-  // incomeSavedPercentage,
-  // expensesList,
-  month = "February 2025",
-  totalBudgetAmount = 5000,
-  totalIncomeAmount = 4500,
-  totalExpenseAmount = 3200,
-  largestBudget = 1500,
-  highestExpense = 800,
-  savings = 1300,
-  debtToIncomeRatio = 20,
-  incomeSavedPercentage = 28.9,
-  expensesList = [
-    {
-      amount: 500,
-      category: "Groceries",
-      budgetName: "Household Budget",
-      description: "Monthly grocery shopping",
-      date: "2025-02-10",
-    },
-    {
-      amount: 300,
-      category: "Transport",
-      budgetName: "Travel Budget",
-      description: "Gas and public transport",
-      date: "2025-02-15",
-    },
-    {
-      amount: 800,
-      category: "Rent",
-      budgetName: "Living Expenses",
-      description: "Monthly house rent",
-      date: "2025-02-01",
-    },
-    {
-      amount: 600,
-      category: "Entertainment",
-      budgetName: "Leisure Budget",
-      description: "Streaming services and outings",
-      date: "2025-02-20",
-    },
-  ],
+  month = "",
+  totalBudgetAmount = 0,
+  totalIncomeAmount = 0,
+  totalExpenseAmount = 0,
+  largestBudget = 0,
+  highestExpense = 0,
+  savings = 0,
+  debtToIncomeRatio = 0,
+  incomeSavedPercentage = 0,
+  expensesList = [],
+  // month = "February 2025",
+  // totalBudgetAmount = 5000,
+  // totalIncomeAmount = 4500,
+  // totalExpenseAmount = 3200,
+  // largestBudget = 1500,
+  // highestExpense = 800,
+  // savings = 1300,
+  // debtToIncomeRatio = 20,
+  // incomeSavedPercentage = 28.9,
+  // expensesList = [
+  //   {
+  //     amount: 500,
+  //     category: "Groceries",
+  //     budgetName: "Household Budget",
+  //     description: "Monthly grocery shopping",
+  //     date: "2025-02-10",
+  //   },
+  //   {
+  //     amount: 300,
+  //     category: "Transport",
+  //     budgetName: "Travel Budget",
+  //     description: "Gas and public transport",
+  //     date: "2025-02-15",
+  //   },
+  //   {
+  //     amount: 800,
+  //     category: "Rent",
+  //     budgetName: "Living Expenses",
+  //     description: "Monthly house rent",
+  //     date: "2025-02-01",
+  //   },
+  //   {
+  //     amount: 600,
+  //     category: "Entertainment",
+  //     budgetName: "Leisure Budget",
+  //     description: "Streaming services and outings",
+  //     date: "2025-02-20",
+  //   },
+  // ],
 }) {
   return (
     <Html>
@@ -85,10 +85,31 @@ export default function MonthlyFinanceReport({
         <Body className="bg-white font-sans">
           <Container className="mx-auto w-full max-w-[600px] p-0">
             {/* Header with Gradient Background */}
-            <Text className="flex gap-2 items-center text-2xl justify-center text-center font-extrabold text-[#a63b00]">
-              <Img src="https://res.cloudinary.com/dltoavydo/image/upload/v1741564253/favicon_h2rmbt.png" width={"50px"} height={"50px"}/>
-              SpendWise - Expense Tracking
-            </Text>
+            <Section className="p-2 text-center">
+              <Text
+                style={{
+                  fontSize: "22px",
+                  fontWeight: "bold",
+                  color: "#a63b00",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px", // Adjust spacing between image and text
+                }}
+              >
+                <Img
+                  src="https://res.cloudinary.com/dltoavydo/image/upload/v1741564253/favicon_h2rmbt.png"
+                  width="40"
+                  height="40"
+                  alt="SpendWise Logo"
+                  style={{
+                    display: "inline-block",
+                    verticalAlign: "middle",
+                  }}
+                />
+                <span className="text-2xl">SpendWise - Expense Tracking</span>
+              </Text>
+            </Section>
+
             <Section className="px-8 text-center">
               <Text className="mx-0 mb-8 mt-4 p-0 text-center text-2xl font-normal">
                 <span className="font-bold tracking-tighter">
@@ -102,8 +123,8 @@ export default function MonthlyFinanceReport({
                 Your Financial Overview
               </Heading>
               <Text className="mb-8 text-lg leading-8">
-                Here&apos;s your detailed financial report for {month}, summarizing
-                your budgets, incomes, and expenses.
+                Here&apos;s your detailed financial report for {month},
+                summarizing your budgets, incomes, and expenses.
               </Text>
             </Section>
 
@@ -195,7 +216,7 @@ export default function MonthlyFinanceReport({
               <Heading className="text-2xl font-bold text-gray-800">
                 📉 Expense Breakdown
               </Heading>
-              {expensesList.map((expense, index) => (
+              {expensesList?.map((expense, index) => (
                 <Row key={index} className="mt-4 border-b border-gray-300 pb-3">
                   <Column>
                     <Text className="text-lg font-bold text-gray-900">

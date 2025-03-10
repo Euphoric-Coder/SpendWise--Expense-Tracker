@@ -27,6 +27,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import EditBudget from "@/components/Budgets/EditBudget";
 import { getMonthlyStats, getUsers } from "@/utils/userAppData";
+import { sendEmail } from "@/utils/sendEmail";
 
 const ExpensesDashboard = () => {
   const params = useParams();
@@ -44,6 +45,52 @@ const ExpensesDashboard = () => {
 
   const getBudgetInfo = async () => {
     const userList = await getUsers();
+
+    // await sendEmail({
+    //       to: "deydsagnik@gmail.com",
+    //       subject: `Welcome to SpendWise`,
+    //       react: MonthlyFinanceReport(
+    //         ("February 2025"),
+    //         (5000),
+    //         (4500),
+    //         (3200),
+    //         (largestBudget = 1500),
+    //         (highestExpense = 800),
+    //         (savings = 1300),
+    //         (debtToIncomeRatio = 20),
+    //         (incomeSavedPercentage = 28.9),
+    //         (expensesList = [
+    //           {
+    //             amount: 500,
+    //             category: "Groceries",
+    //             budgetName: "Household Budget",
+    //             description: "Monthly grocery shopping",
+    //             date: "2025-02-10",
+    //           },
+    //           {
+    //             amount: 300,
+    //             category: "Transport",
+    //             budgetName: "Travel Budget",
+    //             description: "Gas and public transport",
+    //             date: "2025-02-15",
+    //           },
+    //           {
+    //             amount: 800,
+    //             category: "Rent",
+    //             budgetName: "Living Expenses",
+    //             description: "Monthly house rent",
+    //             date: "2025-02-01",
+    //           },
+    //           {
+    //             amount: 600,
+    //             category: "Entertainment",
+    //             budgetName: "Leisure Budget",
+    //             description: "Streaming services and outings",
+    //             date: "2025-02-20",
+    //           },
+    //         ])
+    //       ),
+    //     });
 
     const monthlyData = await getMonthlyStats(
       user?.primaryEmailAddress?.emailAddress
