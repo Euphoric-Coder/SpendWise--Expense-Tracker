@@ -10,14 +10,14 @@ const AppTitle = () => {
       {/* Center-Aligned Title Section at the Top */}
       <div className="flex items-center justify-center gap-3 transition-transform transform duration-500 ease-in-out hover:scale-105 cursor-default">
         <Image
-          src="/wallet.png" // Replace with an appropriate icon for SpendWise
-          alt="SpendWise Icon"
+          src="/wallet.png" // Replace with an appropriate icon for BudgetEase
+          alt="BudgetEase Icon"
           width={500}
           height={400}
           className="p-2 w-14 sm:w-16 md:w-20 lg:w-24"
         />
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-teal-400 hover:from-teal-500 hover:via-indigo-500 hover:to-pink-500 dark:from-cyan-400 dark:via-indigo-500 dark:to-purple-600 dark:hover:from-purple-500 dark:hover:via-pink-500 dark:hover:to-blue-500">
-          SpendWise: Expense Tracker
+          BudgetEase: Expense Tracker
         </h1>
       </div>
 
@@ -27,7 +27,7 @@ const AppTitle = () => {
       </div>
 
       <p className="text-lg md:text-xl lg:text-2xl text-gray-700 dark:text-gray-300 opacity-90 px-4 md:px-8 lg:px-12 leading-relaxed font-mono">
-        Take control of your finances with SpendWise, your personal expense
+        Take control of your finances with BudgetEase, your personal expense
         tracking tool.
       </p>
     </header>

@@ -55,7 +55,6 @@ export default function Transactions() {
     try {
       const response = await fetch("/api/transactions");
       const data = await response.json();
-      console.log(data);
       setTransactions(data);
     } catch (error) {
       console.error("Error fetching transactions:", error);

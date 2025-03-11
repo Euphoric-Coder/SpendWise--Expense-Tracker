@@ -85,10 +85,10 @@ export default function MonthlyFinanceReport({
         <Body className="bg-white font-sans">
           <Container className="mx-auto w-full max-w-[600px] p-0">
             {/* Header with Gradient Background */}
-            <Section className="p-2 text-center">
+            {/* <Section className="p-2 text-center">
               <Text
                 style={{
-                  fontSize: "22px",
+                  fontSize: "28px",
                   fontWeight: "bold",
                   color: "#a63b00",
                   display: "inline-flex",
@@ -100,14 +100,25 @@ export default function MonthlyFinanceReport({
                   src="https://res.cloudinary.com/dltoavydo/image/upload/v1741564253/favicon_h2rmbt.png"
                   width="40"
                   height="40"
-                  alt="SpendWise Logo"
+                  alt="BudgetEase Logo"
                   style={{
                     display: "inline-block",
                     verticalAlign: "middle",
                   }}
                 />
-                <span className="text-2xl">SpendWise - Expense Tracking</span>
+                <span className="">BudgetEase - Expense Tracker</span>
               </Text>
+            </Section> */}
+
+            {/* Logo */}
+            <Section>
+              <Img
+                src="https://res.cloudinary.com/dltoavydo/image/upload/v1741564253/favicon_h2rmbt.png"
+                width="60"
+                height="60"
+                alt="BudgetEase Logo"
+                className="mx-auto"
+              />
             </Section>
 
             <Section className="px-8 text-center">
@@ -254,6 +265,13 @@ export default function MonthlyFinanceReport({
                 See you next month! 🎉
               </Text>
             </Section>
+
+            {/* Footer */}
+            <Hr className="my-6 border-gray-300 text-center" />
+            <Text className="text-sm text-gray-500 text-center">
+              © {new Date().getFullYear()} BudgetEase, Inc. All Rights
+              Reserved.
+            </Text>
           </Container>
         </Body>
       </Tailwind>

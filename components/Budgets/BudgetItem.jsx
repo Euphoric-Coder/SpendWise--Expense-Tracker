@@ -48,7 +48,7 @@ const RecurringBudgetInfo = () => {
           structured approach to tracking and controlling predictable expenses.
         </p>
         <p className="mb-2 text-justify">
-          In SpendWise, you can easily set up a recurring budget to ensure that
+          In BudgetEase, you can easily set up a recurring budget to ensure that
           these expenses are accounted for and do not disrupt your overall
           financial planning.
         </p>
@@ -65,7 +65,7 @@ const RecurringBudgetInfo = () => {
           <li>Allows you to visualize recurring trends in your spending.</li>
         </ul>
         <p>
-          <strong>Pro Tip:</strong> Use the SpendWise insights feature to
+          <strong>Pro Tip:</strong> Use the BudgetEase insights feature to
           analyze your recurring expenses and identify potential areas for
           savings.
         </p>

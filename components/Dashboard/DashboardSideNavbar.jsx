@@ -59,14 +59,14 @@ const DashboardSideNavbar = () => {
       >
         <Image
           src="/favicon.png"
-          alt="SpendWise Logo"
-          width={60}
-          height={60}
+          alt="BudgetEase Logo"
+          width={50}
+          height={50}
           draggable={false}
           className="drop-shadow-xl dark:drop-shadow-neon"
         />
         <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 font-extrabold text-4xl hover:animate-glow">
-          SpendWise
+          BudgetEase
         </span>
       </Link>
 

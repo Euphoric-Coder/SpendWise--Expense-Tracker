@@ -103,7 +103,6 @@ const page = () => {
           .where(eq(Budgets.createdBy, user?.primaryEmailAddress.emailAddress))
           .orderBy(desc(Expenses.id));
         setExpensesList(result);
-        console.log(result);
       };
 
   return (

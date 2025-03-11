@@ -18,8 +18,8 @@ const CTASection = () => {
         Take Control of Your Finances Effortlessly
       </h2>
       <p className="text-lg mb-8 text-gray-700 dark:text-gray-300 max-w-2xl">
-        Join thousands of users who trust SpendWise to track their expenses, set
-        budgets, and achieve their financial goals with ease.
+        Join thousands of users who trust BudgetEase to track their expenses,
+        set budgets, and achieve their financial goals with ease.
       </p>
       <Link href={"/dashboard"}>
         <Button className="px-8 py-4 text-lg font-bold rounded-full bg-gradient-to-r from-pink-500 via-yellow-500 to-green-500 dark:from-purple-500 dark:via-blue-500 dark:to-indigo-500 text-white hover:from-yellow-500 hover:via-orange-500 hover:to-red-500 dark:hover:from-blue-500 dark:hover:via-teal-500 dark:hover:to-green-400 transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:scale-105">

@@ -91,7 +91,7 @@ function DashboardCard({ budgetList, incomeList, expenseList }) {
       {/* Card Section  */}
       <div className="space-y-6 min-h-screen">
         <h1 className="text-4xl font-extrabold mb-8 text-center text-[#1e3a8a]">
-          SpendWise Dashboard
+          BudgetEase Dashboard
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-4 gap-8">
           {dummyData.map((data, index) => (
@@ -169,8 +169,8 @@ const DashboardStats = ({
               alert.type === "warning"
                 ? "text-red-600 dark:text-red-400"
                 : alert.type === "stable"
-                ? "text-green-600 dark:text-green-400"
-                : "text-yellow-600 dark:text-yellow-400"
+                  ? "text-green-600 dark:text-green-400"
+                  : "text-yellow-600 dark:text-yellow-400"
             }`}
           >
             {alert.message}

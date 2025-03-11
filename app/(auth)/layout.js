@@ -52,7 +52,7 @@ const Layout = ({ children }) => {
           {/* Logo */}
           <Image
             src="/favicon.png"
-            alt="SpendWise Logo"
+            alt="BudgetEase Logo"
             width={100}
             height={50}
             className="transition-all duration-500 hover:scale-110 drop-shadow-lg"
@@ -74,7 +74,7 @@ const Layout = ({ children }) => {
                   strings: [
                     "Track, Analyze, and Optimize Your Expenses",
                     "Achieve Your Financial Goals Effortlessly",
-                    "Master Your Budget with SpendWise",
+                    "Master Your Budget with BudgetEase",
                   ],
                   autoStart: true,
                   loop: true,
@@ -187,7 +187,7 @@ const Layout = ({ children }) => {
               <p className="mt-4 text-lg leading-relaxed text-gray-700 dark:text-gray-300">
                 Take charge of your finances with{" "}
                 <span className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-400">
-                  SpendWise
+                  BudgetEase
                 </span>
                 . Your journey to financial freedom starts here.
               </p>

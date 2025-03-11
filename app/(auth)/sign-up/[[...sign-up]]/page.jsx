@@ -19,7 +19,13 @@ export default function SignUpPage() {
           className="w-full space-y-6 rounded-2xl bg-white px-4 py-10 shadow-md ring-1 ring-black/5 sm:w-96 sm:px-8"
         >
           <div className="flex flex-col items-center justify-center text-center">
-            <Image src={"/favicon.png"} alt="SpendWise" width={50} height={50} className="align-middle"/>
+            <Image
+              src={"/favicon.png"}
+              alt="BudgetEase"
+              width={50}
+              height={50}
+              className="align-middle"
+            />
             <h1 className="mt-4 text-2xl font-semibold tracking-tight text-zinc-950">
               Create an account
             </h1>

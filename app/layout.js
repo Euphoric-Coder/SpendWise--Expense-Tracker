@@ -11,7 +11,7 @@ const outfit = Outfit({
 });
 
 export const metadata = {
-  title: "SpendWise",
+  title: "BudgetEase",
   description: "Track your expenses and manage your finances with ease.",
 };
 

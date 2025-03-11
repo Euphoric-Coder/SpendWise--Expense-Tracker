@@ -77,13 +77,13 @@ const Header = () => {
         >
           <Image
             src={"/favicon.png"}
-            alt="Logo of SpendWise"
+            alt="Logo of BudgetEase"
             width={35}
             height={35}
             className="drop-shadow-lg sm:w-[50px] sm:h-[50px]"
           />
           <span className="text-transparent text-xl sm:text-4xl bg-clip-text bg-gradient-to-r from-teal-400 via-yellow-500 to-red-500 font-extrabold hover:animate-pulse dark:from-purple-400 dark:via-pink-500 dark:to-blue-500">
-            SpendWise
+            BudgetEase
           </span>
         </Link>
 

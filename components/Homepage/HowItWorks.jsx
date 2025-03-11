@@ -1,7 +1,7 @@
 import React from "react";
 
 const steps = [
-  { step: "Sign Up", description: "Create your free SpendWise account." },
+  { step: "Sign Up", description: "Create your free BudgetEase account." },
   {
     step: "Add Your Expenses",
     description: "Easily log your daily, weekly, or monthly expenses.",
@@ -25,7 +25,7 @@ const HowItWorks = () => {
           How It Works
         </h2>
         <p className="text-gray-700 dark:text-gray-300 mt-4 max-w-2xl mx-auto text-lg font-mono">
-          Follow these simple steps to get started with SpendWise and take
+          Follow these simple steps to get started with BudgetEase and take
           control of your expenses. Simplify budgeting, track your spending, and
           achieve your financial goals with ease.
         </p>

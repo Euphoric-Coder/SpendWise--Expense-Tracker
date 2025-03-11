@@ -55,7 +55,7 @@ const ExpenseCard = ({ budget, onOpen, refreshData }) => {
             expenses.
           </p>
           <p className="mb-2 text-justify">
-            In SpendWise, you can easily set up a recurring budget to ensure
+            In BudgetEase, you can easily set up a recurring budget to ensure
             that these expenses are accounted for and do not disrupt your
             overall financial planning.
           </p>
@@ -74,7 +74,7 @@ const ExpenseCard = ({ budget, onOpen, refreshData }) => {
             <li>Allows you to visualize recurring trends in your spending.</li>
           </ul>
           <p>
-            <strong>Pro Tip:</strong> Use the SpendWise insights feature to
+            <strong>Pro Tip:</strong> Use the BudgetEase insights feature to
             analyze your recurring expenses and identify potential areas for
             savings.
           </p>
@@ -168,8 +168,8 @@ const ExpenseCard = ({ budget, onOpen, refreshData }) => {
               progress > 75
                 ? "text-red-500 dark:text-pink-500"
                 : progress > 50
-                ? "text-orange-500 dark:text-purple-500"
-                : "text-green-500 dark:text-blue-500"
+                  ? "text-orange-500 dark:text-purple-500"
+                  : "text-green-500 dark:text-blue-500"
             }`}
           >
             {progress.toFixed(1)}% of budget used

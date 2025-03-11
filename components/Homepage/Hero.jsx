@@ -44,7 +44,7 @@ const Hero = () => {
         <p className="text-sm sm:text-base md:text-lg lg:text-xl font-mono font-bold text-gray-700 dark:text-gray-300 opacity-90 leading-relaxed text-justify">
           With{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-pink-500 dark:from-indigo-500 dark:to-purple-500 font-bold">
-            SpendWise
+            BudgetEase
           </span>
           , you gain insights into your spending habits and make better
           financial decisions. Whether you're tracking daily{" "}
@@ -55,7 +55,7 @@ const Hero = () => {
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-purple-500 dark:from-pink-400 dark:to-purple-600 font-bold">
             financial goals
           </span>
-          , SpendWise helps you stay on top of your{" "}
+          , BudgetEase helps you stay on top of your{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-orange-500 dark:from-purple-500 dark:to-blue-500 font-bold">
             budget
           </span>

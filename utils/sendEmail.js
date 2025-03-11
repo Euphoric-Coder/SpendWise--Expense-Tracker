@@ -7,9 +7,9 @@ export async function sendEmail({ to, subject, react }) {
 
   try {
     const data = await resend.emails.send({
-      from: "SpendWise Expense Tracker <welcome@spendwise-expense.com>",
-      to,
-      subject,
+      from: "BudgetEase Expense Tracker <welcome@budgetease.in>",
+      to: "sagnikdey.rouge@gmail.com",
+      subject: "Welcome to BudgetEase Expense Tracker",
       react,
     });
 

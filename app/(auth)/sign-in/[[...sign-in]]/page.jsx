@@ -35,12 +35,12 @@ export default function SignInPage() {
                   <CardHeader className="text-center">
                     <Image
                       src={"/favicon.png"}
-                      alt="SpendWise"
+                      alt="BudgetEase"
                       width={50}
                       height={50}
                       className="mx-auto"
                     />
-                    <CardTitle>Sign in to SpendWise</CardTitle>
+                    <CardTitle>Sign in to BudgetEase</CardTitle>
                     <CardDescription>
                       Welcome back! Please sign in to continue
                     </CardDescription>
