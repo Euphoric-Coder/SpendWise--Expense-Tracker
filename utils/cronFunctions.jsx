@@ -1,7 +1,7 @@
 import { db } from "./dbConfig";
 import { and, eq, sql } from "drizzle-orm";
 import { Incomes, Transactions } from "./schema";
-import { getISTDate, getISTDateTime } from "./utilities";
+import { getISTDate } from "./utilities";
 
 
 export const incomeExpiration = async () => {

@@ -6,6 +6,7 @@ import { db } from "@/utils/dbConfig";
 import { Users } from "@/utils/schema";
 import { sendEmail } from "@/utils/sendEmail";
 
+// Add user to DB
 export async function POST() {
   try {
     const user = await currentUser();

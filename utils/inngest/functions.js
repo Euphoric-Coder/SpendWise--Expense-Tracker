@@ -5,6 +5,7 @@ import { getUsers } from "../userAppData";
 import { inngest } from "./client";
 import { currentUser } from "@clerk/nextjs/server";
 import BudgetEaseWelcomeEmail from "@/emails/welcomeTemplate";
+import { incomeExpiration } from "../cronFunctions";
 
 export const helloWorld = inngest.createFunction(
   { id: "hello-world" },
@@ -74,13 +75,16 @@ export const sendMonthlyReport = inngest.createFunction(
   }
 );
 
-export const fetchUser = inngest.createFunction(
-  { id: "fetch-user" },
-  { event: "fetch/user" },
+export const checkExpiredItems = inngest.createFunction(
+  { id: "check-expired-incomes" },
+  { cron: "0 0 * * *" }, // Every day at 12:01 AM
   async ({ step }) => {
-    const user = await currentUser();
+    await step.run("fetch-expired-incomes", async () => {
+      return await incomeExpiration();
+    });
   }
 );
+
 
 export const generateMonthlyReports = inngest.createFunction(
   {

@@ -12,7 +12,6 @@ export const Users = pgTable("users", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name").notNull(),
   email: varchar("email").notNull().unique(),
-  hasWelcomed: boolean("hasWelcomed").notNull().default(false),
 });
 
 export const PrimaryIncome = pgTable("primaryIncome", {
