@@ -3,6 +3,7 @@ import { FinancialInsights } from "../aiSuggest";
 import { sendEmail } from "../sendEmail";
 import { getUsers } from "../userAppData";
 import { inngest } from "./client";
+import { currentUser } from "@clerk/nextjs/server";
 import BudgetEaseWelcomeEmail from "@/emails/welcomeTemplate";
 
 export const helloWorld = inngest.createFunction(
@@ -70,6 +71,14 @@ export const sendMonthlyReport = inngest.createFunction(
         username: "Sagnik",
       }),
     });
+  }
+);
+
+export const fetchUser = inngest.createFunction(
+  { id: "fetch-user" },
+  { event: "fetch/user" },
+  async ({ step }) => {
+    const user = await currentUser();
   }
 );
 

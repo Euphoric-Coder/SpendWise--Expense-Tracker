@@ -7,9 +7,10 @@ import Header from "@/components/Homepage/Header";
 import Hero from "@/components/Homepage/Hero";
 import HowItWorks from "@/components/Homepage/HowItWorks";
 import KeyFeatures from "@/components/Homepage/KeyFeatures";
-import React from "react";
+import React, { useEffect } from "react";
 
 const page = () => {
+
   return (
     <div>
       <Header />

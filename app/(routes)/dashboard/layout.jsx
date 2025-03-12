@@ -10,6 +10,8 @@ import DashboardSideNavbar from "@/components/Dashboard/DashboardSideNavbar";
 import NotificationTab from "@/components/Dashboard/Notifications";
 import DashboardMobile from "@/components/Dashboard/DashboardMobile";
 import { ModeToggle } from "@/components/ThemeButton";
+import { sendEmail } from "@/utils/sendEmail";
+import BudgetEaseWelcomeEmail from "@/emails/welcomeTemplate";
 
 const DashboardLayout = ({ children }) => {
   const { user } = useUser();
@@ -24,25 +26,41 @@ const DashboardLayout = ({ children }) => {
   };
 
   useEffect(() => {
-      const fetchOrCreateUser = async () => {
-        if (!user?.primaryEmailAddress?.emailAddress) return;
-  
-        const userData = await db
-          .select()
-          .from(Users)
-          .where(eq(Users.email, user.primaryEmailAddress.emailAddress));
-  
-        if (userData.length === 0) {
-          // If no entry exists, insert a new one with default `showcsvimport` value
-          await db.insert(Users).values({
-            email: user?.primaryEmailAddress.emailAddress,
-            name: user?.fullName, // Default to showing the tutorial
-          });
-        }
-      };
-  
-      fetchOrCreateUser();
-    }, [user]);
+    // const fetchOrCreateUser = async () => {
+    //   if (!user?.primaryEmailAddress?.emailAddress) return;
+
+    //   const userData = await db
+    //     .select()
+    //     .from(Users)
+    //     .where(eq(Users.email, user.primaryEmailAddress.emailAddress));
+
+    //   if (userData.length === 0) {
+    //     // If no entry exists, insert a new one with default `showcsvimport` value
+    //     await db.insert(Users).values({
+    //       email: user?.primaryEmailAddress.emailAddress,
+    //       name: user?.fullName, // Default to showing the tutorial
+    //     });
+    //     // TODO: Send welcome mail to user
+    //     console.log("User created and sent welcome mail to", user?.fullName);
+    //     // await sendEmail({
+    //     //   to: user?.primaryEmailAddress.emailAddress,
+    //     //   subject: "Welcome to BudgetEase! Ready to Take Control of Your Finances?",
+    //     //   replyTo: "BudgetEase Support <support@budgetease.in>",
+    //     //   react: (
+    //     //     <BudgetEaseWelcomeEmail username={user?.fullName.split(" ")[0]} />
+    //     //   ),
+    //     //   tag: [
+    //     //     {
+    //     //       name: "label",
+    //     //       value: "welcome-email",
+    //     //     },
+    //     //   ],
+    //     // });
+    //   }
+    // };
+
+    // fetchOrCreateUser();
+  }, [user]);
 
   useEffect(() => {
     const checkUserBudgets = async () => {
@@ -55,8 +73,8 @@ const DashboardLayout = ({ children }) => {
           );
         if (result?.length === 0) {
           router.replace("/dashboard/budgets");
-        } 
-      } 
+        }
+      }
     };
 
     user && checkUserBudgets();

@@ -2,18 +2,23 @@
 
 import { Resend } from "resend";
 
-export async function sendEmail({ to, subject, react }) {
-  const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_API_KEY || "");
+export async function sendEmail({ from, to, subject, replyTo, react }) {
+  const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_API_KEY);
 
   try {
-    const data = await resend.emails.send({
-      from: "BudgetEase Expense Tracker <welcome@budgetease.in>",
-      to: "sagnikdey.rouge@gmail.com",
-      subject: "Welcome to BudgetEase Expense Tracker",
-      react,
-    });
-
-    return { success: true, data };
+    if (to !== process.env.NEXT_PUBLIC_TEST_USER_EMAIL) {
+      const data = await resend.emails.send({
+        from,
+        to,
+        replyTo,
+        subject,
+        react,
+      });
+      return { success: true, data };
+    } else {
+      console.log("Email not sent to test user");
+      return { success: true };
+    }
   } catch (error) {
     console.error("Failed to send email:", error);
     return { success: false, error };

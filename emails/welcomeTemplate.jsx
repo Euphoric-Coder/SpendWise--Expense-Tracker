@@ -6,6 +6,7 @@ import {
   Hr,
   Html,
   Img,
+  Link,
   Preview,
   Section,
   Tailwind,
@@ -27,13 +28,15 @@ export default function BudgetEaseWelcomeEmail({ username = "John" }) {
           <Container className="mx-auto w-full max-w-[600px] p-6 text-center bg-white shadow-md rounded-lg">
             {/* Logo */}
             <Section>
-              <Img
-                src="https://res.cloudinary.com/dltoavydo/image/upload/v1741564253/favicon_h2rmbt.png"
-                width="60"
-                height="60"
-                alt="BudgetEase Logo"
-                className="mx-auto"
-              />
+              <Link href={`${WEBSITE_URL}`}>
+                <Img
+                  src="https://res.cloudinary.com/dltoavydo/image/upload/v1741564253/favicon_h2rmbt.png"
+                  width="60"
+                  height="60"
+                  alt="BudgetEase Logo"
+                  className="mx-auto"
+                />
+              </Link>
             </Section>
 
             {/* Welcome Message */}
@@ -89,7 +92,7 @@ export default function BudgetEaseWelcomeEmail({ username = "John" }) {
             {/* Footer */}
             <Hr className="my-6 border-gray-300" />
             <Text className="text-sm text-gray-500">
-              © {new Date().getFullYear()} BudgetEase Expense Inc. All Rights
+              &copy; {new Date().getFullYear()} BudgetEase Inc. All Rights
               Reserved.
               <br />
               Visit us at{" "}
