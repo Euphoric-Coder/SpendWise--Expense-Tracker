@@ -1,6 +1,6 @@
 import { db } from "./dbConfig";
-import { and, eq, sql } from "drizzle-orm";
-import { Incomes, Transactions } from "./schema";
+import { and, asc, eq, sql } from "drizzle-orm";
+import { Budgets, Expenses, Incomes, Transactions } from "./schema";
 import { getISTDate } from "./utilities";
 
 
@@ -39,5 +39,35 @@ export const incomeExpiration = async () => {
     }
   } catch {
     console.error("Error processing deletion of expired incomes!");
+  }
+};
+
+export const budgetPercentage = async () => {
+  const budgets = await db
+    .select({
+      id: Budgets.id,
+      totalSpend: sql`coalesce(sum(${Expenses.amount}), 0)`.mapWith(Number),
+      totalItem: sql`coalesce(count(${Expenses.id}), 0)`.mapWith(Number),
+      amount: Budgets.amount,
+    })
+    .from(Budgets)
+    .leftJoin(Expenses, eq(Budgets.id, Expenses.budgetId))
+    .groupBy(Budgets.id, Budgets.amount)
+    .orderBy(asc(Budgets.createdAt));
+
+  const percentages = budgets.map((budget) => ({
+    id: budget.id,
+    percentage:
+      budget.totalItem > 0
+        ? ((budget.totalSpend / budget.amount) * 100).toFixed(2)
+        : "0",
+  }));
+
+  for(const budget of percentages) {
+    await db
+      .update(Budgets)
+      .set({ nintyPercent: budget.percentage > 90 ? true : false })
+      .where(eq(Budgets.id, budget.id))
+      .returning();
   }
 };

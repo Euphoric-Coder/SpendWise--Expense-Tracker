@@ -5,7 +5,7 @@ import { getUsers } from "../userAppData";
 import { inngest } from "./client";
 import { currentUser } from "@clerk/nextjs/server";
 import BudgetEaseWelcomeEmail from "@/emails/welcomeTemplate";
-import { incomeExpiration } from "../cronFunctions";
+import { budgetPercentage, incomeExpiration } from "../cronFunctions";
 
 export const helloWorld = inngest.createFunction(
   { id: "hello-world" },
@@ -85,6 +85,18 @@ export const checkExpiredItems = inngest.createFunction(
   }
 );
 
+export const checkBudgetPercentage = inngest.createFunction(
+  { id: "check-budget-percentage" },
+  { cron: "0 0 * * *" }, // Every day at 12:01 AM
+  async ({ step }) => {
+    await step.run("fetch-budget-percentage", async () => {
+      return await budgetPercentage();
+    });
+
+    await step.run("send-budget-percentage-email", async () => {
+    });
+  }
+);
 
 export const generateMonthlyReports = inngest.createFunction(
   {

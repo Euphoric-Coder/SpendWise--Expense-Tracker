@@ -46,46 +46,14 @@ export default function SignInPage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="grid gap-y-4">
-                    <div className="grid grid-cols-2 gap-x-4">
-                      <Clerk.Connection name="github" asChild>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          type="button"
-                          disabled={isGlobalLoading}
-                          className="rounded-2xl hover:shadow-lg hover:shadow-slate-400 hover:scale-110 transition-all duration-500"
-                        >
-                          <Clerk.Loading scope="provider:github">
-                            {(isLoading) =>
-                              isLoading ? (
-                                <Image
-                                  src={"/loader.svg"}
-                                  width={20}
-                                  height={20}
-                                  className="size-4 animate-spin"
-                                />
-                              ) : (
-                                <>
-                                  <Image
-                                    src="/github.png"
-                                    alt="GitHub"
-                                    width={20}
-                                    height={20}
-                                  />
-                                  GitHub
-                                </>
-                              )
-                            }
-                          </Clerk.Loading>
-                        </Button>
-                      </Clerk.Connection>
+                    <div className="flex justify-center gap-x-4">
                       <Clerk.Connection name="google" asChild>
                         <Button
                           size="sm"
                           variant="outline"
                           type="button"
                           disabled={isGlobalLoading}
-                          className="rounded-2xl hover:shadow-lg hover:shadow-slate-400 hover:scale-110 transition-all duration-500"
+                          className="w-full rounded-2xl hover:shadow-lg hover:shadow-slate-400 hover:scale-110 transition-all duration-500"
                         >
                           <Clerk.Loading scope="provider:google">
                             {(isLoading) =>
