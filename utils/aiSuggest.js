@@ -34,7 +34,7 @@ export const getSuggestions = async (incomeDescription, maxLength = 25) => {
 
 export const FinancialInsights = async (stats, month) => {
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
   const prompt = `
     Analyze this financial data and provide 3 concise, actionable insights.

@@ -1,8 +1,13 @@
 import { db } from "./dbConfig";
-import { and, asc, eq, sql } from "drizzle-orm";
-import { Budgets, Expenses, Incomes, Transactions } from "./schema";
+import { and, asc, desc, eq, getTableColumns, sql } from "drizzle-orm";
+import {
+  Budgets,
+  Expenses,
+  Incomes,
+  Notifications,
+  Transactions,
+} from "./schema";
 import { getISTDate } from "./utilities";
-
 
 export const incomeExpiration = async () => {
   const today = getISTDate();
@@ -24,17 +29,17 @@ export const incomeExpiration = async () => {
 
       // Ensure deletion only happens if the current time is past 23:59:00 of the end date
       // if (getISTDateTime() >= expirationDateTime) {
-        // Delete income from the database
-        await db.delete(Incomes).where(eq(Incomes.id, income.id)).returning();
-        await db
-          .update(Transactions)
-          .set({
-            lastUpdated: getISTDate(),
-            status: "expired",
-            deletionRemark: `Income ${income.name} has expired on ${income.endDate}`,
-          })
-          .where(eq(Transactions.referenceId, income.id))
-          .returning();
+      // Delete income from the database
+      await db.delete(Incomes).where(eq(Incomes.id, income.id)).returning();
+      await db
+        .update(Transactions)
+        .set({
+          lastUpdated: getISTDate(),
+          status: "expired",
+          deletionRemark: `Income ${income.name} has expired on ${income.endDate}`,
+        })
+        .where(eq(Transactions.referenceId, income.id))
+        .returning();
       // }
     }
   } catch {
@@ -63,11 +68,62 @@ export const budgetPercentage = async () => {
         : "0",
   }));
 
-  for(const budget of percentages) {
+  for (const budget of percentages) {
+    const updateFields = {
+      ninetyPercent: budget.percentage >= 90, // Ensures true if >=90, false if below 90
+    };
+
+    // Only update `mailed` to `false` if percentage < 90
+    if (budget.percentage < 90) {
+      updateFields.mailed = false;
+    }
+
     await db
       .update(Budgets)
-      .set({ nintyPercent: budget.percentage > 90 ? true : false })
+      .set(updateFields)
       .where(eq(Budgets.id, budget.id))
       .returning();
+  }
+};
+
+export const notifyBudgetLimit = async () => {
+  const budgets = await db
+    .select({
+      ...getTableColumns(Budgets),
+      totalSpend: sql`coalesce(sum(${Expenses.amount}), 0)`.mapWith(Number),
+      totalItem: sql`coalesce(count(${Expenses.id}), 0)`.mapWith(Number),
+    })
+    .from(Budgets)
+    .leftJoin(Expenses, eq(Budgets.id, Expenses.budgetId))
+    .groupBy(Budgets.id)
+    .orderBy(desc(Budgets.createdAt));
+
+  console.log(budgets);
+
+  for (const budget of budgets) {
+    if (
+      budget.ninetyPercent &&
+      budget.mailed === false &&
+      budget.notified === false
+    ) {
+      {
+        try {
+          await db.insert(Notifications).values({
+            createdFor: budget.createdBy,
+            type: "alert",
+            title: "Nearing Budget Limit!",
+            message: `Budget "${budget.name}" has reached 90% or above of its limit!`,
+          });
+        } catch (error) {
+          console.error("Error inserting notification:", error);
+        } finally {
+          await db
+            .update(Budgets)
+            .set({ notified: true })
+            .where(eq(Budgets.id, budget.id))
+            .returning();
+        }
+      }
+    }
   }
 };

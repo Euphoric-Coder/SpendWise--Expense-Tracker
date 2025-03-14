@@ -6,7 +6,7 @@ const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY);
 export async function processReciept(file) {
   try {
     const model = genAI.getGenerativeModel({
-      model: "models/gemini-1.5-flash",
+      model: "models/gemini-2.0-flash",
     });
     console.log(file);
     // Convert File to ArrayBuffer

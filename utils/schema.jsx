@@ -34,7 +34,9 @@ export const Budgets = pgTable("budgets", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name").notNull(),
   amount: numeric("amount").notNull(),
-  nintyPercent: boolean("nintyPercent").default(false),
+  ninetyPercent: boolean("ninetyPercent").default(false),
+  mailed: boolean("mailed").default(false),
+  notified: boolean("notified").default(false),
   icon: varchar("icon"),
   category: varchar("category").notNull().default("travel"), // Category of either expenses or incomes
   subCategory: varchar("subCategory"),
@@ -123,6 +125,7 @@ export const Notifications = pgTable("notifications", {
   id: uuid("id").defaultRandom().primaryKey(),
   createdFor: varchar("createdFor").notNull(),
   createdAt: timestamp("createdAt").notNull().defaultNow(),
+  type: varchar("type").notNull().default("regular"),
   message: varchar("message").notNull(),
   title: varchar("title").default("Notification Title"),
   read: boolean("read").notNull().default(false),
