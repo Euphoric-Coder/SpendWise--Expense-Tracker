@@ -15,7 +15,7 @@ export async function GET() {
       .where(
         and(
           eq(Notifications.createdFor, user?.emailAddresses[0].emailAddress),
-          eq(Notifications.type, "regular")
+          eq(Notifications.type, "alert")
         )
       )
       .orderBy(desc(Notifications.createdAt));

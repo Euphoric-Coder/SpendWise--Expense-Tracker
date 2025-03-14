@@ -38,7 +38,7 @@ export const Budgets = pgTable("budgets", {
   mailed: boolean("mailed").default(false),
   notified: boolean("notified").default(false),
   icon: varchar("icon"),
-  category: varchar("category").notNull().default("travel"), // Category of either expenses or incomes
+  category: varchar("category").notNull().default("housing"), // Category of either expenses or incomes
   subCategory: varchar("subCategory"),
   budgetType: varchar("budgetType"), // 'recurring' or 'non-recurring'
   frequency: varchar("frequency"), // 'daily', 'weekly', 'monthly', 'yearly'

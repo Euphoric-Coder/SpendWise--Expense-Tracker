@@ -3,11 +3,8 @@ import { FinancialInsights } from "../aiSuggest";
 import { sendEmail } from "../sendEmail";
 import { getUsers } from "../userAppData";
 import { inngest } from "./client";
-import { currentUser } from "@clerk/nextjs/server";
 import BudgetEaseWelcomeEmail from "@/emails/welcomeTemplate";
 import { budgetPercentage, incomeExpiration, notifyBudgetLimit } from "../cronFunctions";
-import { Notifications } from "../schema";
-import { getISTDateTime } from "../utilities";
 
 export const helloWorld = inngest.createFunction(
   { id: "hello-world" },
@@ -89,7 +86,7 @@ export const checkExpiredItems = inngest.createFunction(
 
 export const checkBudgetPercentage = inngest.createFunction(
   { id: "check-budget-percentage" },
-  { cron: "TZ=Asia/Kolkata 0/1 * * * *" }, // Every minute
+  { cron: "TZ=Asia/Kolkata 20 1 * * *" }, // Every minute
   async ({ step }) => {
     await step.run("fetch-budget-percentage", async () => {
       return await budgetPercentage();
