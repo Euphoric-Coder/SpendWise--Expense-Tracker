@@ -106,7 +106,7 @@ const NotificationTab = () => {
         aria-label="Open notifications"
       >
         <Bell
-          className={`text-white dark:text-gray-300 w-6 h-6 sm:w-10 sm:h-10 ${
+          className={`text-white dark:text-gray-300 w-6 h-6 sm:w-9 sm:h-9 ${
             unreadCount > 0 ? "animate-wiggle transition-all duration-1000" : ""
           }`}
         />
