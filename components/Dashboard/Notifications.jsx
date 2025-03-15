@@ -102,23 +102,24 @@ const NotificationTab = () => {
   return (
     <Popover>
       <PopoverTrigger
-        className="m-2 relative flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-gray-300 to-gray-400 dark:from-gray-950 dark:to-gray-950 shadow-xl hover:shadow-2xl transition-transform transform hover:scale-110 focus:outline-none"
+        className="m-2 relative flex h-10 w-10 md:h-14 md:w-14 items-center justify-center rounded-full bg-gradient-to-br from-gray-300 to-gray-400 dark:from-gray-950 dark:to-gray-950 shadow-xl hover:shadow-2xl transition-transform transform hover:scale-110 focus:outline-none"
         aria-label="Open notifications"
       >
         <Bell
-          className={`text-white dark:text-gray-300 w-8 h-8 ${
+          className={`text-white dark:text-gray-300 w-6 h-6 sm:w-10 sm:h-10 ${
             unreadCount > 0 ? "animate-wiggle transition-all duration-1000" : ""
           }`}
         />
         {unreadCount > 0 && (
           <div
-            className="absolute left-8 top-2 px-3 py-1 rounded-full bg-gradient-to-r from-pink-500 to-red-500 text-white text-sm font-bold shadow-lg"
+            className="absolute left-8 top-2 px-[0.3rem] py-[0.01rem] md:px-2 md:py-1 rounded-full bg-gradient-to-r from-pink-500 to-red-500 text-white text-sm font-bold shadow-lg"
             aria-live="polite"
           >
             {unreadCount}
           </div>
         )}
       </PopoverTrigger>
+
       <PopoverContent
         align="end"
         className="w-full max-h-[600px] md:max-h-[800px] max-w-sm md:max-w-2xl lg:max-w-3xl xl:max-w-4xl p-8 rounded-3xl bg-gradient-to-br from-white/50 to-gray-100/50 dark:from-gray-900/80 dark:to-gray-800/80 backdrop-blur-md shadow-3xl border border-gray-200 dark:border-gray-700 overflow-y-scroll"
