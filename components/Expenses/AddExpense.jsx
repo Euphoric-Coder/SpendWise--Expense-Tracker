@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { db } from "@/utils/dbConfig";
-import { Budgets, Expenses } from "@/utils/schema";
+import { Budgets, Expenses, Transactions } from "@/utils/schema";
 import { toast } from "sonner";
 import { desc, eq, getTableColumns, sql } from "drizzle-orm";
 import { useUser } from "@clerk/nextjs";
@@ -28,7 +28,13 @@ import {
 } from "@/components/ui/popover";
 import CSVImportButton from "./CSVImportButton";
 import { cn } from "@/lib/utils";
-import { formatDate, getISTDate, isSameDate } from "@/utils/utilities";
+import {
+  formatDate,
+  getISTDate,
+  getISTDateTime,
+  isSameDate,
+  nextRecurringDate,
+} from "@/utils/utilities";
 import { format } from "date-fns";
 import RecieptImportButton from "./RecieptImportButton";
 import BudgetList from "../Budgets/BudgetList";
@@ -49,14 +55,13 @@ const AddExpense = ({
   const [dueDate, setDueDate] = useState(getISTDate());
   const [pendingExpense, setPendingExpense] = useState(false);
   const [clearPendingAlert, setClearPendingAlert] = useState(false);
+  const [budgetDetails, setBudgetDetails] = useState([]);
   const alertTimeoutRef = useRef(null);
 
   // Generate a unique key for each budget's pending expense
   const storageKey = `pendingExpense_${budgetId}`;
 
   useEffect(() => {
-    if (!budgetId) return; // Ensure budgetId is available before fetching
-
     const storedExpense = JSON.parse(localStorage.getItem(storageKey) || "{}");
     if (storedExpense.name || storedExpense.amount) {
       setName(storedExpense.name || "");
@@ -67,6 +72,8 @@ const AddExpense = ({
       );
       setPendingExpense(true);
     }
+
+    fetchBudgetDetails();
   }, [budgetId]); // Only re-run when budgetId changes
 
   const handleInputChange = (field, value) => {
@@ -86,6 +93,16 @@ const AddExpense = ({
     setAmount("");
     setDescription("");
     setDueDate(getISTDate());
+  };
+
+  // Function to fetch the current budget details
+  const fetchBudgetDetails = async () => {
+    const budgetDetails = await db
+      .select()
+      .from(Budgets)
+      .where(eq(Budgets.id, budgetId));
+
+    setBudgetDetails(budgetDetails);
   };
 
   // Function to fetch the total expenses for the specified budget
@@ -144,7 +161,45 @@ const AddExpense = ({
         description: description,
         createdAt: formatDate(dueDate),
       })
-      .returning({ insertedId: Budgets.id });
+      .returning({ insertedId: Expenses.id });
+
+    console.log(result);
+
+    const transaction = await db
+      .insert(Transactions)
+      .values({
+        id: result[0].insertedId,
+        referenceId: budgetId,
+        type: "expense",
+        category: budgetDetails[0].category,
+        subCategory: budgetDetails[0].subCategory,
+        isRecurring: budgetDetails[0].budgetType === "recurring",
+        frequency:
+          budgetDetails[0].budgetType === "recurring"
+            ? budgetDetails[0].frequency
+            : null,
+        nextRecurringDate:
+          budgetDetails[0].budgetType === "recurring"
+            ? nextRecurringDate(
+                budgetDetails[0].createdAt.split(" ")[0],
+                budgetDetails[0].frequency
+              )
+            : null,
+        status:
+          budgetDetails[0].budgetType === "recurring"
+            ? isSameDate(
+                formatDate(dueDate) ? formatDate(dueDate) : getISTDate(),
+                getISTDate()
+              )
+              ? "active"
+              : "upcoming"
+            : "active",
+        name: name,
+        amount: amount,
+        createdBy: budgetDetails[0].createdBy,
+        createdAt: getISTDateTime(),
+      })
+      .returning({ insertedId: Transactions.id });
 
     setName("");
     setAmount("");

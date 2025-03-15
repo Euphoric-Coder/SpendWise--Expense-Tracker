@@ -26,7 +26,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { db } from "@/utils/dbConfig";
-import { Expenses } from "@/utils/schema";
+import { Expenses, Transactions } from "@/utils/schema";
 import { eq } from "drizzle-orm";
 import { toast } from "sonner";
 import { expenseDateFormat, nextRecurringDate } from "@/utils/utilities";
@@ -73,6 +73,16 @@ const ExpenseTable = ({
       })
       .where(eq(Expenses.id, editingExpense.id))
       .returning();
+
+    const transactions = await db
+    .update(Transactions)
+    .set({
+      amount: editedAmount,
+      name: editedName,
+    })
+    .where(eq(Transactions.id, editingExpense.id))
+    .returning();
+
 
     if (result) {
       toast.success(`Expense "${editedName}" has been updated!`);

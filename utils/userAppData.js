@@ -2,6 +2,14 @@
 import { db } from "@/utils/dbConfig";
 import { asc, desc, eq, getTableColumns, sql } from "drizzle-orm";
 import { Budgets, Expenses, Incomes, Transactions, Users } from "@/utils/schema";
+import {
+  parse,
+  format,
+  isValid,
+  startOfMonth,
+  getDaysInMonth,
+  differenceInDays,
+} from "date-fns";
 
 export const getUsers = async () => {
   const users = await db
@@ -80,10 +88,166 @@ export const getExpensesInfo = async (createdBy) => {
   return expenses;
 };
 
+export const budgetTrends = async (createdBy) => {
+  // Fetch all budget data from DB
+  const budgets = await db.select().from(Budgets).where(eq(Budgets.createdBy, createdBy));
+
+  // Function to parse `createdAt` correctly
+  const parseDate = (dateString) => {
+    let parsedDate;
+
+    // Try parsing as `YYYY-MM-DD HH:mm:ss`
+    parsedDate = parse(dateString, "yyyy-MM-dd HH:mm:ss", new Date());
+    if (isValid(parsedDate)) return parsedDate;
+
+    // Try parsing as `DD/MM/YY HH:mm`
+    parsedDate = parse(dateString, "dd/MM/yy HH:mm", new Date());
+    if (isValid(parsedDate)) return parsedDate;
+
+    return null; // Invalid date
+  };
+
+  // Process budgets
+  const monthlyTrendsMap = new Map();
+
+  for (const budget of budgets) {
+    const createdAt = parseDate(budget.createdAt);
+    if (!createdAt) continue; // Skip invalid dates
+
+    // Get start of the creation month
+    const monthStart = format(startOfMonth(createdAt), "yyyy-MM-dd");
+
+    // Convert amount to a number
+    const amount = parseFloat(budget.amount) || 0;
+
+    if (budget.frequency === "weekly") {
+      // Calculate how many full weeks the budget applies to in the creation month
+      const totalDaysInMonth = getDaysInMonth(createdAt);
+      const remainingDays = totalDaysInMonth - createdAt.getDate() + 1;
+      const applicableWeeks = Math.ceil(remainingDays / 7);
+
+      let recurringMonth = createdAt;
+      while (recurringMonth <= new Date()) {
+        const recurringMonthStart = format(
+          startOfMonth(recurringMonth),
+          "yyyy-MM-dd"
+        );
+
+        // For the first month (createdAt month), only count from its creation date onward
+        if (recurringMonthStart === monthStart) {
+          monthlyTrendsMap.set(
+            recurringMonthStart,
+            (monthlyTrendsMap.get(recurringMonthStart) || 0) +
+              amount * applicableWeeks
+          );
+        } else {
+          // For future months, add full 4 weeks of budget
+          monthlyTrendsMap.set(
+            recurringMonthStart,
+            (monthlyTrendsMap.get(recurringMonthStart) || 0) + amount * 4
+          );
+        }
+
+        // Move to the next month
+        recurringMonth.setMonth(recurringMonth.getMonth() + 1);
+      }
+    } else if (budget.frequency === "monthly") {
+      // Monthly budgets → Start from `createdAt` month and continue monthly
+      let recurringMonth = createdAt;
+      while (recurringMonth <= new Date()) {
+        const recurringMonthStart = format(
+          startOfMonth(recurringMonth),
+          "yyyy-MM-dd"
+        );
+
+        monthlyTrendsMap.set(
+          recurringMonthStart,
+          (monthlyTrendsMap.get(recurringMonthStart) || 0) + amount
+        );
+
+        recurringMonth.setMonth(recurringMonth.getMonth() + 1);
+      }
+    } else if (budget.frequency === "daily") {
+      // Daily budgets → Calculate how many remaining days in the first month
+      const totalDaysInMonth = getDaysInMonth(createdAt);
+      const remainingDays = differenceInDays(
+        new Date(createdAt.getFullYear(), createdAt.getMonth() + 1, 1),
+        createdAt
+      );
+
+      let recurringMonth = createdAt;
+      while (recurringMonth <= new Date()) {
+        const recurringMonthStart = format(
+          startOfMonth(recurringMonth),
+          "yyyy-MM-dd"
+        );
+
+        // For the first month, only count from creation date
+        if (recurringMonthStart === monthStart) {
+          monthlyTrendsMap.set(
+            recurringMonthStart,
+            (monthlyTrendsMap.get(recurringMonthStart) || 0) +
+              amount * remainingDays
+          );
+        } else {
+          // For full months, add the amount for all days
+          monthlyTrendsMap.set(
+            recurringMonthStart,
+            (monthlyTrendsMap.get(recurringMonthStart) || 0) +
+              amount * getDaysInMonth(recurringMonth)
+          );
+        }
+
+        recurringMonth.setMonth(recurringMonth.getMonth() + 1);
+      }
+    } else if (budget.frequency === "yearly") {
+      // Yearly budgets → Start from `createdAt` year and repeat annually
+      let recurringYear = createdAt;
+      while (recurringYear <= new Date()) {
+        const recurringYearStart = format(
+          startOfMonth(recurringYear),
+          "yyyy-MM-dd"
+        );
+
+        monthlyTrendsMap.set(
+          recurringYearStart,
+          (monthlyTrendsMap.get(recurringYearStart) || 0) + amount / 12 // Spread across 12 months
+        );
+
+        recurringYear.setFullYear(recurringYear.getFullYear() + 1);
+      }
+    } else {
+      // One-time budgets → Only counted in the `createdAt` month
+      monthlyTrendsMap.set(
+        monthStart,
+        (monthlyTrendsMap.get(monthStart) || 0) + amount
+      );
+    }
+  }
+
+  // Convert to sorted array
+  const monthlyTrends = Array.from(monthlyTrendsMap)
+    .sort(([a], [b]) => new Date(a) - new Date(b)) // Sort by month
+    .map(([month, totalBudget]) => ({
+      month,
+      totalBudget: Math.round(totalBudget), // Convert to integer
+    }));
+
+  return { monthlyTrends };
+};
+
 export const dashboardData = async (createdBy) => {
   const budgetList = await getBudgetInfo(createdBy);
   const incomeList = await getIncomeInfo(createdBy);
   const expenseList = await getExpensesInfo(createdBy);
+  const budgetTrends = await budgetTrends(createdBy);
+
+  const budgetTrendPercentage = Math.round(
+    (budgetTrends.monthlyTrends[budgetTrends.monthlyTrends.length - 1].totalBudget -
+      budgetTrends.monthlyTrends[budgetTrends.monthlyTrends.length - 2].totalBudget) /
+      budgetTrends.monthlyTrends[budgetTrends.monthlyTrends.length - 2].totalBudget *
+      100
+  );
 
   let totalBudget = 0;
   let totalSpend = 0;
@@ -135,6 +299,7 @@ export const dashboardData = async (createdBy) => {
     highestExpense: highestExpense,
     savings: savings,
     incomeSavedPercentage: incomeSavedPercentage,
+    budgetTrendPercentage: budgetTrendPercentage,
   };
 };
 
