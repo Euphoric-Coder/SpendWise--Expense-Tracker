@@ -29,7 +29,7 @@ import { db } from "@/utils/dbConfig";
 import { Expenses, Transactions } from "@/utils/schema";
 import { eq } from "drizzle-orm";
 import { toast } from "sonner";
-import { expenseDateFormat, nextRecurringDate } from "@/utils/utilities";
+import { expenseDateFormat, getISTDate, getISTDateTime, nextRecurringDate } from "@/utils/utilities";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 
@@ -48,6 +48,17 @@ const ExpenseTable = ({
     const result = await db
       .delete(Expenses)
       .where(eq(Expenses.id, expense.id))
+      .returning();
+
+    const transactions = await db
+      .update(Transactions)
+      .set({
+        lastUpdated: getISTDate(),
+        deletedAt: getISTDate(),
+        status: "deleted",
+        deletionRemark: `Income deleted by user at ${getISTDateTime()}`,
+      })
+      .where(eq(Transactions.id, expense.id))
       .returning();
 
     if (result) {
@@ -75,14 +86,14 @@ const ExpenseTable = ({
       .returning();
 
     const transactions = await db
-    .update(Transactions)
-    .set({
-      amount: editedAmount,
-      name: editedName,
-    })
-    .where(eq(Transactions.id, editingExpense.id))
-    .returning();
-
+      .update(Transactions)
+      .set({
+        amount: editedAmount,
+        name: editedName,
+        description: editedDescription,
+      })
+      .where(eq(Transactions.id, editingExpense.id))
+      .returning();
 
     if (result) {
       toast.success(`Expense "${editedName}" has been updated!`);

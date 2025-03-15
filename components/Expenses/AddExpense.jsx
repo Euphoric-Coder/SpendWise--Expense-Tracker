@@ -196,6 +196,7 @@ const AddExpense = ({
             : "active",
         name: name,
         amount: amount,
+        description: description,
         createdBy: budgetDetails[0].createdBy,
         createdAt: getISTDateTime(),
       })
