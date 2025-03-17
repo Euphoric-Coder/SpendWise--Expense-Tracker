@@ -108,7 +108,7 @@ function CreateIncomes({ refreshData }) {
           isRecurring: isRecurring,
           frequency: isRecurring ? frequency : null,
           nextRecurringDate: isRecurring
-            ? nextRecurringDate(startDate, frequency)
+            ? nextRecurringDate(startDate ? startDate : getISTDate(), frequency)
             : null,
           lastProcessed: isSameDate(
             startDate ? formatDate(startDate) : getISTDate(),
@@ -120,7 +120,7 @@ function CreateIncomes({ refreshData }) {
             ? isSameDate(startDate ? startDate : getISTDate(), getISTDate())
               ? "active"
               : "upcoming"
-            : "active",
+            : "completed",
           name: name,
           amount: amount,
           createdBy: incomeData.createdBy,

@@ -163,7 +163,6 @@ const AddExpense = ({
       })
       .returning({ insertedId: Expenses.id });
 
-    console.log(result);
 
     const transaction = await db
       .insert(Transactions)

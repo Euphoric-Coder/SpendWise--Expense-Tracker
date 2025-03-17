@@ -11,6 +11,10 @@ import {
   TimerReset,
   CircleCheck,
   Calendar,
+  CircleX,
+  CircleDashed,
+  CircleCheckBig,
+  TimerResetIcon,
 } from "lucide-react";
 import {
   Dialog,
@@ -763,12 +767,27 @@ export default function Transactions() {
                     <td className="py-4 px-6">
                       <span
                         className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                          tx.status === "completed"
+                          tx.status === "completed" || tx.status === "active"
                             ? "bg-green-100 text-green-800"
-                            : "bg-yellow-100 text-yellow-800"
+                            : tx.status === "deleted"
+                              ? "bg-red-100 text-red-800"
+                              : "bg-yellow-100 text-yellow-800"
                         }`}
                       >
-                        <CircleCheck size={16} />
+                        {tx.status === "completed" ? (
+                          <CircleCheckBig size={16} />
+                        ) :
+                        tx.status === "active" ? (
+                          <TimerResetIcon size={16} />
+                        ) :
+                        tx.status === "deleted" ? (
+                          <CircleX size={16} />
+                        )
+                        :
+                        (
+                          <CircleDashed size={16} />
+                        )
+                        }
                         {tx.status}
                       </span>
                     </td>
