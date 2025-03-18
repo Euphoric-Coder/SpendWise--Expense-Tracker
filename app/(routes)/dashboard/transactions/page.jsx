@@ -239,12 +239,12 @@ export default function Transactions() {
   };
 
   return (
-    <div className="md:p-8">
+    <div className="p-10 bg-gradient-to-b from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 rounded-3xl shadow-2xl transition-colors duration-300">
       <div className="flex flex-col md:flex-row justify-center md:justify-between gap-2 items-center mb-6">
         <h1 className="text-2xl font-bold">Transactions</h1>
       </div>
 
-      <div className="bg-white rounded-xl shadow-lg p-6">
+      <div>
         <div className="w-full flex items-center justify-between gap-4 mb-6">
           <div className="relative flex-1 max-w-full">
             <Input
@@ -269,10 +269,10 @@ export default function Transactions() {
             <Dialog onOpenChange={handleDialogClose}>
               <DialogTrigger asChild>
                 <button
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-3xl transition-colors ${
                     filterCount > 0
-                      ? "bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 text-white hover:from-purple-600 hover:via-purple-700 hover:to-purple-800"
-                      : "bg-gradient-to-r from-purple-100 via-purple-200 to-purple-300 text-purple-700 hover:from-purple-200 hover:via-purple-300 hover:to-purple-400"
+                      ? "bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 text-white hover:from-purple-600 hover:via-purple-700 hover:to-purple-800 dark:from-violet-700 dark:via-violet-800 dark:to-violet-900 dark:text-white dark:hover:from-violet-800 dark:hover:via-violet-900 dark:hover:to-violet-950"
+                      : "bg-gradient-to-r from-purple-100 via-purple-200 to-purple-300 text-purple-700 hover:from-purple-200 hover:via-purple-300 hover:to-purple-400 dark:from-violet-900 dark:via-violet-950 dark:to-purple-900 dark:text-violet-300 dark:hover:from-violet-800 dark:hover:via-violet-900 dark:hover:to-purple-950"
                   }`}
                 >
                   <Filter size={20} />
@@ -461,341 +461,216 @@ export default function Transactions() {
         </div>
 
         <div className="hidden md:block">
-          {/* <Table>
-            <TableHeader>
-              <TableRow className="bg-gray-100 uppercase">
-                <TableHead className="w-[100px]">Name</TableHead>
-                <TableHead className="hidden md:table-cell">
-                  Description
-                </TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead className="">Category</TableHead>
-                <TableHead className="">Amount</TableHead>
-                <TableHead className="">Recurring</TableHead>
-                <TableHead className="">Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredTransactions.map((tx) => (
-                <TableRow key={tx.id}>
-                  <TableCell className="flex gap-1 font-medium">
-                    INV001{" "}
-                    <span>
-                      {tx.type === "Income" ? (
-                        <Badge className="bg-green-100 text-green-800 hover:bg-green-300 hover:scale-105 cursor-pointer transition-all duration-500">
-                          Income
-                        </Badge>
-                      ) : (
-                        <Badge className="bg-red-100 text-red-800 hover:bg-red-300 hover:scale-105 cursor-pointer transition-all duration-500">
-                          Expense
-                        </Badge>
-                      )}
-                    </span>
-                    <span className="md:hidden table-cell">({tx.type})</span>
-                  </TableCell>
-                  <TableCell className="hidden md:table-cell">
-                    {tx.description}
-                  </TableCell>
-                  <TableCell>{format(tx.date, "PPP")}</TableCell>
+          <div className="overflow-x-auto max-h-[300px] md:max-h-[500px]">
+            <table className="w-full border-collapse text-base rounded-3xl overflow-hidden">
+              {/* Table Header */}
+              <thead className="bg-gradient-to-r uppercase via-cyan-600 from-blue-600 to-teal-500 dark:from-blue-400 dark:via-pink-500 dark:to-purple-600 text-white">
+                <tr>
+                  <th className="py-4 px-6 font-bold text-left">Name</th>
+                  <th className="py-4 px-6 font-bold text-left hidden md:table-cell">
+                    Description
+                  </th>
+                  <th className="py-4 px-6 font-bold text-center">Date</th>
+                  <th className="py-4 px-6 font-bold text-left">Category</th>
+                  <th className="py-4 px-6 font-bold text-left">Amount</th>
+                  <th className="py-4 px-6 font-bold text-left">Recurring</th>
+                  <th className="py-4 px-6 font-bold text-left">Status</th>
+                </tr>
+              </thead>
 
-                  <TableCell className="">
-                    <span className="">
-                      {tx.type === "Income" &&
-                        (() => {
-                          const category = incomeCategories.find(
-                            (c) => c.id === tx.category
-                          );
-                          return category ? (
-                            <>
-                              <span
-                                className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full items-center gap-2"
-                                style={{
-                                  background: `linear-gradient(90deg, ${category.color} 0%, ${category.color} 100%)`,
-                                  color: category.textColor || "white", // Ensure text is readable
-                                }}
-                              >
-                                {category.icon && <category.icon size={18} />}
-                                {category.name}
-                              </span>
-                            </>
-                          ) : null;
-                        })()}
-                      {tx.type === "Expense" &&
-                        (() => {
-                          const category = expenseCategories.find(
-                            (c) => c.id === tx.category
-                          );
-                          return category ? (
-                            <>
-                              <span
-                                className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full items-center gap-2"
-                                style={{
-                                  background: `linear-gradient(90deg, ${category.color} 0%, ${category.color} 100%)`,
-                                  color: category.textColor || "white", // Ensure text is readable
-                                }}
-                              >
-                                {category.icon && <category.icon size={18} />}
-                                {category.name}
-                              </span>
-                            </>
-                          ) : null;
-                        })()}
-                    </span>
-                  </TableCell>
-                  <TableCell
-                    className={`flex gap-1 px-6 py-4 whitespace-nowrap text-md font-semibold ${
-                      tx.amount > 0 ? "text-green-600" : "text-red-600"
-                    }`}
-                  >
-                    {tx.amount > 0 ? <TrendingUp /> : <TrendingDown />}
-                    {tx.amount}
-                  </TableCell>
-                  <TableCell>
-                    <Badge
-                      className={`inline-flex items-center gap-1 rounded-full text-sm font-medium text-center transition duration-200 ease-in-out shadow-sm cursor-pointer ${
-                        tx.recurring
-                          ? "bg-blue-100 text-blue-700 hover:bg-blue-200 hover:text-blue-900" // Very light blue with hover effect for recurring
-                          : "bg-cyan-100 text-cyan-700 hover:bg-cyan-200 hover:text-cyan-900" // Very light cyan with hover effect for non-recurring
-                      }`}
+              {/* Table Body */}
+              <tbody>
+                {/* {transactions.map((tx, index) => { */}
+                {displayedTransactions.map((tx, index) => {
+                  const category =
+                    tx.type === "Income"
+                      ? incomeCategories.find((c) => c.id === tx.category)
+                      : expenseCategories.find((c) => c.id === tx.category);
+
+                  return (
+                    <tr
+                      key={tx.id}
+                      className="hover:bg-gradient-to-br hover:from-blue-200 hover:via-blue-100 hover:to-indigo-200 transition-all duration-300 odd:dark:bg-gray-700 even:bg-blue-50 even:dark:bg-gray-900 dark:hover:from-gray-700 dark:hover:via-gray-600 dark:hover:to-gray-500"
                     >
-                      {tx.recurring ? (
-                        <>
-                          <TimerReset className="text-blue-700" size={18} />
-                          {tx.frequency.toUpperCase()}
-                        </>
-                      ) : (
-                        <>
-                          <Timer className="text-cyan-700" size={18} />
-                          One-Time
-                        </>
-                      )}
-                    </Badge>
-                  </TableCell>
-
-                  <TableCell className="">
-                    <span
-                      className={`px-2 inline-flex gap-1 text-xs leading-5 font-semibold rounded-full ${
-                        tx.status === "completed"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-yellow-100 text-yellow-800"
-                      }`}
-                    >
-                      <CircleCheck size={20} />
-                      {tx.status}
-                    </span>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table> */}
-
-          <table className="w-full border-collapse text-base rounded-3xl shadow-lg overflow-hidden">
-            {/* Table Header */}
-            <thead className="bg-gradient-to-r uppercase via-cyan-600 from-blue-600 to-teal-500 dark:from-blue-400 dark:via-pink-500 dark:to-purple-600 text-white">
-              <tr>
-                <th className="py-4 px-6 font-bold text-left">Name</th>
-                <th className="py-4 px-6 font-bold text-left hidden md:table-cell">
-                  Description
-                </th>
-                <th className="py-4 px-6 font-bold text-center">Date</th>
-                <th className="py-4 px-6 font-bold text-left">Category</th>
-                <th className="py-4 px-6 font-bold text-left">Amount</th>
-                <th className="py-4 px-6 font-bold text-left">Recurring</th>
-                <th className="py-4 px-6 font-bold text-left">Status</th>
-              </tr>
-            </thead>
-
-            {/* Table Body */}
-            <tbody>
-              {/* {transactions.map((tx, index) => { */}
-              {displayedTransactions.map((tx, index) => {
-                const category =
-                  tx.type === "Income"
-                    ? incomeCategories.find((c) => c.id === tx.category)
-                    : expenseCategories.find((c) => c.id === tx.category);
-
-                return (
-                  <tr
-                    key={tx.id}
-                    className="hover:bg-gradient-to-br hover:from-blue-200 hover:via-blue-100 hover:to-indigo-200 transition-all duration-300 even:bg-blue-50"
-                  >
-                    {/* Name Column */}
-                    <td className="py-4 px-6 font-medium text-gray-700 flex gap-2 items-center">
-                      {tx.name}
-                      {tx.type === "income" ? (
-                        <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-semibold hover:bg-green-200">
-                          Income
-                        </span>
-                      ) : (
-                        <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-semibold hover:bg-red-200">
-                          Expense
-                        </span>
-                      )}
-                    </td>
-
-                    {/* Description Column */}
-                    <td className="py-4 px-6 hidden md:table-cell text-gray-600">
-                      {tx.description && tx.description.length > 10 ? (
-                        <div>
-                          <span>
-                            {expandedIndex === index
-                              ? tx.description
-                              : `${tx.description.substring(0, 10)}...`}
+                      {/* Name Column */}
+                      <td className="py-4 px-6 font-medium text-gray-700 dark:text-white flex gap-2 items-center">
+                        {tx.name}
+                        {tx.type === "income" ? (
+                          <span className="bg-green-100 dark:bg-green-300 text-green-800 dark:text-green-900 px-2 py-1 rounded-full text-xs font-semibold hover:bg-green-200">
+                            Income
                           </span>
-                          <button
-                            onClick={() => toggleDescription(index)}
-                            className="ml-2 text-blue-600 hover:underline text-sm"
-                          >
-                            {expandedIndex === index
-                              ? "Show Less"
-                              : "Show More"}
-                          </button>
-                        </div>
-                      ) : (
-                        tx.description || "No description"
-                      )}
-                    </td>
-
-                    {/* Date Column */}
-                    <td className="flex gap-1 items-center py-4 px-6 text-gray-600">
-                      <Calendar size={18} />{" "}
-                      {format(tx.createdAt.split(" ")[0], "PPP")}
-                    </td>
-
-                    {/* Category Column */}
-                    <td className="py-4 px-6">
-                      {tx.category &&
-                        (() => {
-                          // Find the correct category from either expense or income list
-                          const category =
-                            tx.type === "expense"
-                              ? expenseCategories.find(
-                                  (cat) => cat.id === tx.category
-                                )
-                              : incomeCategories.find(
-                                  (cat) => cat.id === tx.category
-                                );
-
-                          if (!category) return null; // Return nothing if category not found
-
-                          return (
-                            <Badge
-                              className={cn(
-                                "inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium transition-colors duration-200",
-                                {
-                                  // **Expense Category Colors (Light Mode: Softer, Dark Mode: Deeper)**
-                                  "bg-red-200 dark:bg-red-600 text-red-900 dark:text-red-100 hover:bg-red-300 dark:hover:bg-red-500":
-                                    category.color === "#ef4444",
-                                  "bg-orange-200 dark:bg-orange-600 text-orange-900 dark:text-orange-100 hover:bg-orange-300 dark:hover:bg-orange-500":
-                                    category.color === "#f97316",
-                                  "bg-lime-200 dark:bg-lime-600 text-lime-900 dark:text-lime-100 hover:bg-lime-300 dark:hover:bg-lime-500":
-                                    category.color === "#84cc16",
-                                  "bg-cyan-200 dark:bg-cyan-600 text-cyan-900 dark:text-cyan-100 hover:bg-cyan-300 dark:hover:bg-cyan-500":
-                                    category.color === "#06b6d4",
-                                  "bg-violet-200 dark:bg-violet-600 text-violet-900 dark:text-violet-100 hover:bg-violet-300 dark:hover:bg-violet-500":
-                                    category.color === "#8b5cf6",
-                                  "bg-rose-200 dark:bg-rose-600 text-rose-900 dark:text-rose-100 hover:bg-rose-300 dark:hover:bg-rose-500":
-                                    category.color === "#f43f5e",
-                                  "bg-pink-200 dark:bg-pink-600 text-pink-900 dark:text-pink-100 hover:bg-pink-300 dark:hover:bg-pink-500":
-                                    category.color === "#ec4899",
-                                  "bg-teal-200 dark:bg-teal-600 text-teal-900 dark:text-teal-100 hover:bg-teal-300 dark:hover:bg-teal-500":
-                                    category.color === "#14b8a6",
-                                  "bg-indigo-200 dark:bg-indigo-600 text-indigo-900 dark:text-indigo-100 hover:bg-indigo-300 dark:hover:bg-indigo-500":
-                                    category.color === "#6366f1",
-                                  "bg-fuchsia-200 dark:bg-fuchsia-600 text-fuchsia-900 dark:text-fuchsia-100 hover:bg-fuchsia-300 dark:hover:bg-fuchsia-500":
-                                    category.color === "#d946ef",
-                                  "bg-sky-200 dark:bg-sky-600 text-sky-900 dark:text-sky-100 hover:bg-sky-300 dark:hover:bg-sky-500":
-                                    category.color === "#0ea5e9",
-                                  "bg-slate-200 dark:bg-slate-600 text-slate-900 dark:text-slate-100 hover:bg-slate-300 dark:hover:bg-slate-500":
-                                    category.color === "#64748b",
-
-                                  // **Income Category Colors (Light Mode: Softer, Dark Mode: Deeper)**
-                                  "bg-emerald-200 dark:bg-emerald-600 text-emerald-900 dark:text-emerald-100 hover:bg-emerald-300 dark:hover:bg-emerald-500":
-                                    category.color === "#34d399",
-                                  "bg-sky-200 dark:bg-sky-600 text-sky-900 dark:text-sky-100 hover:bg-sky-300 dark:hover:bg-sky-500":
-                                    category.color === "#38bdf8",
-                                  "bg-indigo-200 dark:bg-indigo-600 text-indigo-900 dark:text-indigo-100 hover:bg-indigo-300 dark:hover:bg-indigo-500":
-                                    category.color === "#818cf8",
-                                  "bg-pink-200 dark:bg-pink-600 text-pink-900 dark:text-pink-100 hover:bg-pink-300 dark:hover:bg-pink-500":
-                                    category.color === "#f472b6",
-                                  "bg-yellow-200 dark:bg-yellow-600 text-yellow-900 dark:text-yellow-100 hover:bg-yellow-300 dark:hover:bg-yellow-500":
-                                    category.color === "#facc15",
-                                }
-                              )}
-                            >
-                              <category.icon size={16} className="mr-1" />
-                              {category.name}
-                            </Badge>
-                          );
-                        })()}
-                    </td>
-
-                    {/* Amount Column */}
-                    <td
-                      className={`py-4 px-6 text-right font-medium ${
-                        tx.type === "income" ? "text-green-600" : "text-red-600"
-                      } flex gap-1 items-center`}
-                    >
-                      {tx.type === "income" ? <TrendingUp /> : <TrendingDown />}
-                      {tx.amount}
-                    </td>
-
-                    {/* Recurring Column */}
-                    <td className="py-4 px-6">
-                      <span
-                        className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                          tx.isRecurring
-                            ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
-                            : "bg-cyan-100 text-cyan-700 hover:bg-cyan-200"
-                        }`}
-                      >
-                        {tx.isRecurring ? (
-                          <>
-                            <TimerReset size={16} />
-                            {tx.frequency.toUpperCase()}
-                          </>
                         ) : (
-                          <>
-                            <Timer size={16} />
-                            One-Time
-                          </>
+                          <span className="bg-red-100 dark:bg-red-300 text-red-800 dark:text-red-900 px-2 py-1 rounded-full text-xs font-semibold hover:bg-red-200">
+                            Expense
+                          </span>
                         )}
-                      </span>
-                    </td>
+                      </td>
 
-                    {/* Status Column */}
-                    <td className="py-4 px-6">
-                      <span
-                        className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
-                          tx.status === "completed" || tx.status === "active"
-                            ? "bg-green-100 text-green-800"
-                            : tx.status === "deleted"
-                              ? "bg-red-100 text-red-800"
-                              : "bg-yellow-100 text-yellow-800"
-                        }`}
+                      {/* Description Column */}
+                      <td className="py-4 px-6 hidden md:table-cell text-gray-600 dark:text-white">
+                        {tx.description && tx.description.length > 10 ? (
+                          <div>
+                            <span>
+                              {expandedIndex === index
+                                ? tx.description
+                                : `${tx.description.substring(0, 10)}...`}
+                            </span>
+                            <button
+                              onClick={() => toggleDescription(index)}
+                              className="ml-2 text-blue-600 hover:underline text-sm"
+                            >
+                              {expandedIndex === index
+                                ? "Show Less"
+                                : "Show More"}
+                            </button>
+                          </div>
+                        ) : (
+                          tx.description || "No description"
+                        )}
+                      </td>
+
+                      {/* Date Column */}
+                      <td className="flex gap-1 items-center py-4 px-6 text-gray-600 dark:text-white">
+                        <Calendar size={18} />{" "}
+                        {format(tx.createdAt.split(" ")[0], "PPP")}
+                      </td>
+
+                      {/* Category Column */}
+                      <td className="py-4 px-6">
+                        {tx.category &&
+                          (() => {
+                            // Find the correct category from either expense or income list
+                            const category =
+                              tx.type === "expense"
+                                ? expenseCategories.find(
+                                    (cat) => cat.id === tx.category
+                                  )
+                                : incomeCategories.find(
+                                    (cat) => cat.id === tx.category
+                                  );
+
+                            if (!category) return null; // Return nothing if category not found
+
+                            return (
+                              <Badge
+                                className={cn(
+                                  "inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium transition-colors duration-200",
+                                  {
+                                    // **Expense Category Colors (Light Mode: Softer, Dark Mode: Deeper)**
+                                    "bg-red-200 dark:bg-red-600 text-red-900 dark:text-red-100 hover:bg-red-300 dark:hover:bg-red-500":
+                                      category.color === "#ef4444",
+                                    "bg-orange-200 dark:bg-orange-600 text-orange-900 dark:text-orange-100 hover:bg-orange-300 dark:hover:bg-orange-500":
+                                      category.color === "#f97316",
+                                    "bg-lime-200 dark:bg-lime-600 text-lime-900 dark:text-lime-100 hover:bg-lime-300 dark:hover:bg-lime-500":
+                                      category.color === "#84cc16",
+                                    "bg-cyan-200 dark:bg-cyan-600 text-cyan-900 dark:text-cyan-100 hover:bg-cyan-300 dark:hover:bg-cyan-500":
+                                      category.color === "#06b6d4",
+                                    "bg-violet-200 dark:bg-violet-600 text-violet-900 dark:text-violet-100 hover:bg-violet-300 dark:hover:bg-violet-500":
+                                      category.color === "#8b5cf6",
+                                    "bg-rose-200 dark:bg-rose-600 text-rose-900 dark:text-rose-100 hover:bg-rose-300 dark:hover:bg-rose-500":
+                                      category.color === "#f43f5e",
+                                    "bg-pink-200 dark:bg-pink-600 text-pink-900 dark:text-pink-100 hover:bg-pink-300 dark:hover:bg-pink-500":
+                                      category.color === "#ec4899",
+                                    "bg-teal-200 dark:bg-teal-600 text-teal-900 dark:text-teal-100 hover:bg-teal-300 dark:hover:bg-teal-500":
+                                      category.color === "#14b8a6",
+                                    "bg-indigo-200 dark:bg-indigo-600 text-indigo-900 dark:text-indigo-100 hover:bg-indigo-300 dark:hover:bg-indigo-500":
+                                      category.color === "#6366f1",
+                                    "bg-fuchsia-200 dark:bg-fuchsia-600 text-fuchsia-900 dark:text-fuchsia-100 hover:bg-fuchsia-300 dark:hover:bg-fuchsia-500":
+                                      category.color === "#d946ef",
+                                    "bg-sky-200 dark:bg-sky-600 text-sky-900 dark:text-sky-100 hover:bg-sky-300 dark:hover:bg-sky-500":
+                                      category.color === "#0ea5e9",
+                                    "bg-slate-200 dark:bg-slate-600 text-slate-900 dark:text-slate-100 hover:bg-slate-300 dark:hover:bg-slate-500":
+                                      category.color === "#64748b",
+
+                                    // **Income Category Colors (Light Mode: Softer, Dark Mode: Deeper)**
+                                    "bg-emerald-200 dark:bg-emerald-600 text-emerald-900 dark:text-emerald-100 hover:bg-emerald-300 dark:hover:bg-emerald-500":
+                                      category.color === "#34d399",
+                                    "bg-sky-200 dark:bg-sky-600 text-sky-900 dark:text-sky-100 hover:bg-sky-300 dark:hover:bg-sky-500":
+                                      category.color === "#38bdf8",
+                                    "bg-indigo-200 dark:bg-indigo-600 text-indigo-900 dark:text-indigo-100 hover:bg-indigo-300 dark:hover:bg-indigo-500":
+                                      category.color === "#818cf8",
+                                    "bg-pink-200 dark:bg-pink-600 text-pink-900 dark:text-pink-100 hover:bg-pink-300 dark:hover:bg-pink-500":
+                                      category.color === "#f472b6",
+                                    "bg-yellow-200 dark:bg-yellow-600 text-yellow-900 dark:text-yellow-100 hover:bg-yellow-300 dark:hover:bg-yellow-500":
+                                      category.color === "#facc15",
+                                  }
+                                )}
+                              >
+                                <category.icon size={16} className="mr-1" />
+                                {category.name}
+                              </Badge>
+                            );
+                          })()}
+                      </td>
+
+                      {/* Amount Column */}
+                      <td
+                        className={`py-4 px-6 text-right font-medium ${
+                          tx.type === "income"
+                            ? "text-green-600"
+                            : "text-red-600"
+                        } flex gap-1 items-center`}
                       >
-                        {tx.status === "completed" ? (
-                          <CircleCheckBig size={16} />
-                        ) :
-                        tx.status === "active" ? (
-                          <TimerResetIcon size={16} />
-                        ) :
-                        tx.status === "deleted" ? (
-                          <CircleX size={16} />
-                        )
-                        :
-                        (
-                          <CircleDashed size={16} />
-                        )
-                        }
-                        {tx.status}
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                        {tx.type === "income" ? (
+                          <TrendingUp />
+                        ) : (
+                          <TrendingDown />
+                        )}
+                        {tx.amount}
+                      </td>
+
+                      {/* Recurring Column */}
+                      <td className="py-4 px-6">
+                        <span
+                          className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+                            tx.isRecurring
+                              ? "bg-blue-100 dark:bg-blue-500 text-blue-700 dark:text-white hover:bg-blue-200 dark:hover:bg-blue-900"
+                              : "bg-cyan-100 dark:bg-cyan-500 text-cyan-700 dark:text-white hover:bg-cyan-200 dark:hover:bg-cyan-700"
+                          }`}
+                        >
+                          {tx.isRecurring ? (
+                            <>
+                              <TimerReset size={16} />
+                              {tx.frequency.toUpperCase()}
+                            </>
+                          ) : (
+                            <>
+                              <Timer size={16} />
+                              One-Time
+                            </>
+                          )}
+                        </span>
+                      </td>
+
+                      {/* Status Column */}
+                      <td className="py-4 px-6">
+                        <span
+                          className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+                            tx.status === "completed" || tx.status === "active"
+                              ? "bg-green-100 dark:bg-green-500 text-green-800 dark:text-white"
+                              : tx.status === "deleted"
+                                ? "bg-red-100 dark:bg-red-500 text-red-800 dark:text-white "
+                                : "bg-yellow-100 dark:bg-yellow-500 text-yellow-800 dark:text-white"
+                          }`}
+                        >
+                          {tx.status === "completed" ? (
+                            <CircleCheckBig size={16} />
+                          ) : tx.status === "active" ? (
+                            <TimerResetIcon size={16} />
+                          ) : tx.status === "deleted" ? (
+                            <CircleX size={16} />
+                          ) : (
+                            <CircleDashed size={16} />
+                          )}
+                          {tx.status}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
 
           {displayedTransactions.length === 0 && transactions.length > 0 && (
             <div className="text-center py-8 text-gray-500">

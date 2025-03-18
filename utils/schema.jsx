@@ -111,6 +111,7 @@ export const Transactions = pgTable("transactions", {
   amount: numeric("amount").notNull(),
   createdBy: varchar("createdBy").notNull(),
   createdAt: varchar("createdAt").notNull(),
+  noOfRecurring: numeric("noOfRecurring").notNull().default(0),
 });
 
 export const Settings = pgTable("settings", {
